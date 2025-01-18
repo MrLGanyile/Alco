@@ -1,0 +1,4 @@
+enum StoreDrawState {
+  notConvertedToCompetition,
+  convertedToCompetition,
+}
