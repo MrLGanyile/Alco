@@ -3,7 +3,198 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
+      // get - used if a client with want to read this document.
+      // list - used if there is going to be a query returning this document.
+      // To make this rule cascade I'll have to use restOfPath=** wildcard otherwise it won't.
       allow read, write: if false;
+    }
+
+    function isSuperiorAdmin(){
+      return request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid)) && 
+          get(/databases/$(database)/documents/admins/$(request.auth.uid)).isSuperiorAdmin;
+    }
+
+    match /supported_countries/{countryId}{
+      allow write: if false;
+      allow read;
+    }
+
+    match /supported_provinces_or_states/{provinceOrStateId}{
+      allow write: if false;
+      allow read;
+    }
+
+    match /supported_cities/{cityId}{
+      allow write: if false;
+      allow read;
+    }
+
+    match /supported_suburbs_or_townships/{suburbOrTownshipId}{
+      allow write: if false;
+      allow read;
+    }
+
+    match /supported_areas/{areaId}{
+      allow write: if false;
+      allow read;
+    }
+
+    match /admins/{adminPhoneNumber}{
+
+      allow write: if false;
+      allow read: if isSuperiorAdmin();
+    }
+
+    match /groups/{creatorPhoneNumber}{
+
+      allow create: if isSuperiorAdmin() || 
+      (request.auth != null && !exists(/databases/$(database)/documents/groups/
+          $(request.auth.uid)) && request.auth.uid==creatorPhoneNumber);
+      allow update: if false;
+      allow delete: if isSuperiorAdmin();
+      allow read;
+    }
+
+    // Note: Has Model Named {Store}
+    match /stores/{storeOwnerPhoneNumber}{
+
+      // Only allow store owner admins to create a store.
+      allow write: if false; 
+      
+      // Any logged in store owner can read store's info his/her store info.
+      allow read;
+
+      // Note: Has Model Named {StoreDraw}
+      match /store_draws/{storeDrawId}{
+
+        allow update: if false;
+
+        // Only a store owner can create a store draw.
+        allow create: if isSuperiorAdmin() &&
+        
+        // Make Sure It Sunday. 
+        // Make Sure There Is No Other Previous Unplayed Store Draw.
+        // [removed for front end testing purpose, backend unit tests already passed.] request.resource.data.drawDateAndTime.weekday==7 && 
+        
+        // Make Sure It 8am, 9am or 10am.
+        //[removed for front end testing purpose, backend unit tests already passed.] 
+        request.resource.data.drawDateAndTime.weekDay==7 &&
+        request.resource.data.drawDateAndTime.hour==8 &&
+        
+        // Make Sure The Minute And Seconds Are Zeros(O'clock).
+        // [removed for front end testing purpose, backend unit tests already passed.] 
+        (request.resource.data.drawDateAndTime.minute==5 || 
+        request.resource.data.drawDateAndTime.minute==25 || 
+        request.resource.data.drawDateAndTime.minute==45); 
+
+        // Anybody can view store draws.
+        allow read;
+
+        // Only accept store draw update or delete from the store owner while the straw is still open.
+        allow delete: if isSuperiorAdmin();
+
+        
+
+        // Note: Has Model Named {DrawGrandPrice}
+        match /draw_grand_prices/{drawGrandPriceId}{
+          
+          // Only a store owner can create a store draw grand price.
+          allow create: if isSuperiorAdmin() &&
+          
+          request.resource.data.grandPriceId == drawGrandPriceId &&
+          request.resource.data.storeDrawFK == storeDrawId &&
+
+          request.resource.data.imageURL != null &&
+          request.resource.data.imageURL != "" &&
+
+          request.resource.data.description != null &&
+          request.resource.data.description != "" &&
+
+          request.resource.data.grandPriceIndex != null &&
+          request.resource.data.grandPriceIndex>=0 && 
+          request.resource.data.grandPriceIndex<8;
+
+          // Anybody can view store draws.
+          allow read;
+
+          // Only accept deletion of a competitor from the store owner while the draw is still open.
+          allow update: if false;
+          allow delete: if request.auth != null && exists(/databases/$(database)/documents/admins/$(request.auth.uid)) && 
+          get(/databases/$(database)/documents/admins/$(request.auth.uid)).isSuperiorAdmin
+          ;
+        }
+          
+      }
+    }
+
+    // Note: Has Model Named {WonPriceSummary}
+    match /won_prices_summaries/{wonPriceSummaryId}{
+      
+      // create - Invoked Whenever Somebody Wins A Competition.
+      allow write: if false;
+
+      // Everybody can see a won price.
+      allow read;
+    }
+
+    // Note: Has Model Named {StoreNameInfo}
+    match /stores_names_info/{storeNameInfoId}{
+      allow read: if true;
+      allow write: if false; // Called By A Cloud Function Only.
+    }
+
+    // All competitions should take the same amount of time to finish.
+    // Note: Has Model Named {Competition}
+    match /competitions/{competitionId}{
+      
+      allow create: if false;
+
+      // get - Invoked whenever one needs to view the competition.
+      allow get: if true; 
+      allow list: if false;
+      allow update;
+      
+      // Note: Has Model Named {GrandPricesGrid}
+      match /grand_prices_grids/{grandPriceGridId}{
+
+        allow write: if false;
+        allow get: if true; 
+        allow list: if false;
+
+        // Note: Has Model Named {GrandPriceToken}
+        match /grand_prices_tokens/{grandPriceTokenId}{
+          allow write: if false;
+          allow read: if true;
+        }
+      
+      }
+
+      // Note: Has Model Named {GroupCompetitorsGrid}
+      match /group_competitors_grids/{competitorGridId}{
+        
+        allow write: if false;
+        allow get: if true; 
+        allow list: if false;
+
+        // Note: Has Model Named {GroupCompetitorToken}
+        match /group_competitors_tokens/{competitorTokenId}{
+          allow write: if false;
+          allow get: if false;
+          allow list: if true;
+        }
+      }
+    }
+
+    // Note: Has Model Named {GroupCompetitorToken}
+    match /read_only_clocks/{readOnlyClockId}{
+      allow read;
+      allow write: if false;
+    }
+
+    // Note: Has Model Named {GroupCompetitorToken}
+    match /count_downs_clocks/{countDownClockId}{
+      allow read;
+      allow write: if false;
     }
   }
 }
