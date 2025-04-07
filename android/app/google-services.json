@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "12105173009",
+    "project_id": "alcoholic-expressions",
+    "storage_bucket": "alcoholic-expressions.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12105173009:android:3cd1f5c41a2d800f6c09b0",
+        "android_client_info": {
+          "package_name": "com.example.alcoholic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "12105173009-mkio7us2km7s94hra6p1voctabku8r4p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.alcoholic",
+            "certificate_hash": "994b99e5bb3953da5975615b82d6c0310782bfdd"
+          }
+        },
+        {
+          "client_id": "12105173009-gd2ub5jgd1p65ue5uak924lo8lpi1a4c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0lxUDKf6puOBlnSCZd4agK8LWHu_7hMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "12105173009-gd2ub5jgd1p65ue5uak924lo8lpi1a4c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "12105173009-jo0r5tfr7tduo8o3fob2bj4tv5sopdki.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.alcoholic"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
