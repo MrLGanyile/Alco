@@ -42,6 +42,6 @@ enum SectionName {
   kennedySydenhamDurbanKwaZuluNatalSouthAfrica,
   palmetSydenhamDurbanKwaZuluNatalSouthAfrica,
   burnwoodSydenhamDurbanKwaZuluNatalSouthAfrica,
-  sparksSydenhamDurbanKwaZuluNatalSouthAfrica,
+  sydenhamHeightSydenhamDurbanKwaZuluNatalSouthAfrica,
   spencerSydenhamDurbanKwaZuluNatalSouthAfrica,
 }

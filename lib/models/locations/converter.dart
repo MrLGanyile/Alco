@@ -400,7 +400,7 @@ class Converter {
           sectionName: sectionName,
           areaNo: "40",
         );
-      case SectionName.sparksSydenhamDurbanKwaZuluNatalSouthAfrica:
+      case SectionName.sydenhamHeightSydenhamDurbanKwaZuluNatalSouthAfrica:
         return SupportedArea(
           townOrInstitutionFK: "6",
           sectionName: sectionName,
@@ -515,8 +515,8 @@ class Converter {
       case 'Palmet-Sydenham-Durban-Kwa Zulu Natal-South Africa':
         return SectionName.palmetSydenhamDurbanKwaZuluNatalSouthAfrica;
 
-      case 'Sparks-Sydenham-Durban-Kwa Zulu Natal-South Africa':
-        return SectionName.sparksSydenhamDurbanKwaZuluNatalSouthAfrica;
+      case 'Sydenham Height-Sydenham-Durban-Kwa Zulu Natal-South Africa':
+        return SectionName.sydenhamHeightSydenhamDurbanKwaZuluNatalSouthAfrica;
 
       case 'Spencer-Sydenham-Durban-Kwa Zulu Natal-South Africa':
         return SectionName.spencerSydenhamDurbanKwaZuluNatalSouthAfrica;
@@ -614,8 +614,8 @@ class Converter {
         return 'Kennedy-Sydenham-Durban-Kwa Zulu Natal-South Africa';
       case SectionName.palmetSydenhamDurbanKwaZuluNatalSouthAfrica:
         return 'Palmet-Sydenham-Durban-Kwa Zulu Natal-South Africa';
-      case SectionName.sparksSydenhamDurbanKwaZuluNatalSouthAfrica:
-        return 'Sparks-Sydenham-Durban-Kwa Zulu Natal-South Africa';
+      case SectionName.sydenhamHeightSydenhamDurbanKwaZuluNatalSouthAfrica:
+        return 'Sydenham Height-Sydenham-Durban-Kwa Zulu Natal-South Africa';
       case SectionName.spencerSydenhamDurbanKwaZuluNatalSouthAfrica:
         return 'Spencer-Sydenham-Durban-Kwa Zulu Natal-South Africa';
       default:

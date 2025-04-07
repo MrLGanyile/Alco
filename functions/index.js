@@ -17,9 +17,11 @@ import { initializeApp } from "firebase-admin/app";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import { getAuth } from "firebase-admin/auth";
 
-// import { credentials } from "../alcoholic-expressions-credentials.json";
+import pkg from "firebase-admin";
+const { credential } = pkg;
 
-import findCompetitorsOrder from "./utility.js";
+
+
 
 import { log } from "firebase-functions/logger";
 
@@ -34,9 +36,26 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 const pickingMultipleInSeconds = 3;
 const superiorAdminId = "1HISOAjWZfQZrDr8r1duQaYYfBE3";
 let currentUID = null;
+// const serviceAccount = require("../alcoholic-expressions-credentials.json");
 
 initializeApp();
-// initializeApp({ credential: credential.cert(credentials) });
+// initializeApp({ credential: credential.cert(serviceAccount) });
+
+import CompetitorsOrder from "./competitors-order.js";
+const competitorsOrder = new CompetitorsOrder();
+import LocationController from './location-controller.js';
+const locationController = new LocationController();
+import SupportedCountry from './supported-country.js'
+import SupportedProvinceOrState from './supported-province-or-state.js';
+import SupportedCity from './supported-city.js';
+import SupportedTownOrInstitution from './supported-town-or-institution.js';
+import SupportedArea from "./supported-area.js";
+
+import CountriesCreation from "./countries-creation.js";
+import ProvinciesOrStatesCreation from "./provinces-or-states-creation.js";
+import CitiesCreation from "./cities-creation.js";
+import TownsOrInstitutionsCreation from "./towns-or-institutions-creation.js";
+import AreasCreation from "./areas-creation.js";
 
 
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createSupportedLocations/
@@ -77,500 +96,19 @@ export const setCurrentUID = onCall(async (request) => {
   }
 });
 
-const createSupportedCountries = async function () {
-  const country = {
-    countryCode: "ZA",
-    countryName: "South Africa",
-    countryNo: "1",
-  };
-
-  await getFirestore().collection("supported_countries").doc(country.countryCode).set(country);
-};
-
-const createSupportedProvincesOrStates = async function () {
-  const province = {
-    countryFK: "ZA",
-    provinceOrStateName: "Kwa Zulu Natal",
-    provinceOrStateNo: "1",
-  };
-
-  await getFirestore().collection("supported_provinces_or_states")
-    .doc(province.provinceOrStateNo).set(province);
-};
-
-const createSupportedCities = async function () {
-  const durban = {
-    provinceOrStateNo: "1",
-    cityName: "Durban",
-    cityNo: "1",
-  };
-
-  await getFirestore().collection("supported_cities")
-    .doc(durban.cityNo).set(durban);
-};
-
-const createSupportedTownsOrInstitutions = async function () {
-  const umlazi = {
-    cityFK: "1",
-    townOrInstitutionName: "Umlazi",
-    townOrInstitutionNo: "1",
-  };
-
-  await getFirestore().collection("supported_towns_or_institutions")
-    .doc(umlazi.townOrInstitutionNo).set(umlazi);
-
-  const mut = {
-    cityFK: "1",
-    townOrInstitutionName: "Mangosuthu (MUT)",
-    townOrInstitutionNo: "2",
-  };
-
-  await getFirestore().collection("supported_towns_or_institutions")
-    .doc(mut.townOrInstitutionNo).set(mut);
-
-  const dut = {
-    cityFK: "1",
-    townOrInstitutionName: "DUT",
-    townOrInstitutionNo: "3",
-  };
-
-  await getFirestore().collection("supported_towns_or_institutions")
-    .doc(dut.townOrInstitutionNo).set(dut);
-
-  const howard = {
-    cityFK: "1",
-    townOrInstitutionName: "Howard College UKZN",
-    townOrInstitutionNo: "4",
-  };
-
-  await getFirestore().collection("supported_towns_or_institutions")
-    .doc(howard.townOrInstitutionNo).set(howard);
-
-  const mayville = {
-    cityFK: "1",
-    townOrInstitutionName: "Mayville",
-    townOrInstitutionNo: "5",
-  };
-
-  await getFirestore().collection("supported_towns_or_institutions")
-    .doc(mayville.townOrInstitutionNo).set(mayville);
-
-  const sydenham = {
-    cityFK: "1",
-    townOrInstitutionName: "Sydenham",
-    townOrInstitutionNo: "6",
-  };
-
-  await getFirestore().collection("supported_towns_or_institutions")
-    .doc(sydenham.townOrInstitutionNo).set(sydenham);
-};
-
-const createUmlaziSupportedAreas = async function () {
-  const aSection = {
-    townOrInstitutionFK: "1",
-    areaName: "A Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "1",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(aSection.areaNo).set(aSection);
-
-  const aaSection = {
-    townOrInstitutionFK: "1",
-    areaName: "AA Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "2",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(aaSection.areaNo).set(aaSection);
-
-  const bSection = {
-    townOrInstitutionFK: "1",
-    areaName: "B Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "3",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(bSection.areaNo).set(bSection);
-
-  const bbSection = {
-    townOrInstitutionFK: "1",
-    areaName: "BB Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "4",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(bbSection.areaNo).set(bbSection);
-
-  const cSection = {
-    townOrInstitutionFK: "1",
-    areaName: "C Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "5",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(cSection.areaNo).set(cSection);
-
-  const ccSection = {
-    townOrInstitutionFK: "1",
-    areaName: "CC Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "6",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(ccSection.areaNo).set(ccSection);
-
-  const dSection = {
-    townOrInstitutionFK: "1",
-    areaName: "D Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "7",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(dSection.areaNo).set(dSection);
-
-  const eSection = {
-    townOrInstitutionFK: "1",
-    areaName: "E Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "8",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(eSection.areaNo).set(eSection);
-
-  const fSection = {
-    townOrInstitutionFK: "1",
-    areaName: "F Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "9",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(fSection.areaNo).set(fSection);
-
-  const gSection = {
-    townOrInstitutionFK: "1",
-    areaName: "G Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "10",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(gSection.areaNo).set(gSection);
-
-  const hSection = {
-    townOrInstitutionFK: "1",
-    areaName: "H Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "11",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(hSection.areaNo).set(hSection);
-
-  const jSection = {
-    townOrInstitutionFK: "1",
-    areaName: "J Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "12",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(jSection.areaNo).set(jSection);
-
-  const kSection = {
-    townOrInstitutionFK: "1",
-    areaName: "K Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "13",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(kSection.areaNo).set(kSection);
-
-  const lSection = {
-    townOrInstitutionFK: "1",
-    areaName: "L Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "14",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(lSection.areaNo).set(lSection);
-
-  const mSection = {
-    townOrInstitutionFK: "1",
-    areaName: "M Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "15",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(mSection.areaNo).set(mSection);
-
-  const nSection = {
-    townOrInstitutionFK: "1",
-    areaName: "N Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "16",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(nSection.areaNo).set(nSection);
-
-  const pSection = {
-    townOrInstitutionFK: "1",
-    areaName: "P Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "17",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(pSection.areaNo).set(pSection);
-
-  const qSection = {
-    townOrInstitutionFK: "1",
-    areaName: "Q Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "18",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(qSection.areaNo).set(qSection);
-
-  const rSection = {
-    townOrInstitutionFK: "1",
-    areaName: "R Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "19",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(rSection.areaNo).set(rSection);
-
-  const sSection = {
-    townOrInstitutionFK: "1",
-    areaName: "S Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "20",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(sSection.areaNo).set(sSection);
-
-  const uSection = {
-    townOrInstitutionFK: "1",
-    areaName: "U Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "21",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(uSection.areaNo).set(uSection);
-
-  const vSection = {
-    townOrInstitutionFK: "1",
-    areaName: "V Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "22",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(vSection.areaNo).set(vSection);
-
-  const wSection = {
-    townOrInstitutionFK: "1",
-    areaName: "W Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "23",
-  };
-
-  const malukazi = {
-    townOrInstitutionFK: "1",
-    areaName: "Malukazi-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "24",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(malukazi.areaNo).set(malukazi);
-
-  await getFirestore().collection("supported_areas")
-    .doc(wSection.areaNo).set(wSection);
-
-  const philani = {
-    townOrInstitutionFK: "1",
-    areaName: "Philani-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "25",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(philani.areaNo).set(philani);
-
-  const ySection = {
-    townOrInstitutionFK: "1",
-    areaName: "Y Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "26",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(ySection.areaNo).set(ySection);
-
-  const zSection = {
-    townOrInstitutionFK: "1",
-    areaName: "Z Section-Umlazi-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "27",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(zSection.areaNo).set(zSection);
-};
-
-const createMUTSupportedAreas = async function () {
-  const mut = {
-    townOrInstitutionFK: "2",
-    areaName: "Mangosuthu (MUT)-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "28",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(mut.areaNo).set(mut);
-};
-
-const createDUTSupportedAreas = async function () {
-  const dut = {
-    townOrInstitutionFK: "3",
-    areaName: "DUT-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "29",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(dut.areaNo).set(dut);
-};
-
-const createHowardSupportedAreas = async function () {
-  const howard = {
-    townOrInstitutionFK: "4",
-    areaName: "Howard College (UKZN)-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "30",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(howard.areaNo).set(howard);
-};
-
-const createMayvilleSupportedAreas = async function () {
-  const catoCrest = {
-    townOrInstitutionFK: "5",
-    areaName: "Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "31",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(catoCrest.areaNo).set(catoCrest);
-
-  const catoManor = {
-    townOrInstitutionFK: "5",
-    areaName: "Cato Manor-Mayville-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "32",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(catoManor.areaNo).set(catoManor);
-
-  const richView = {
-    townOrInstitutionFK: "5",
-    areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "33",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(richView.areaNo).set(richView);
-
-  const masxha = {
-    townOrInstitutionFK: "5",
-    areaName: "Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "34",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(masxha.areaNo).set(masxha);
-
-  const bonela = {
-    townOrInstitutionFK: "5",
-    areaName: "Bonela-Mayville-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "35",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(bonela.areaNo).set(bonela);
-
-  const nsimbini = {
-    townOrInstitutionFK: "5",
-    areaName: "Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "36",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(nsimbini.areaNo).set(nsimbini);
-};
-
-const createSydenhamSupportedAreas = async function () {
-  const foreman = {
-    townOrInstitutionFK: "6",
-    areaName: "Foreman-Sydenham-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "37",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(foreman.areaNo).set(foreman);
-
-  const kennedy = {
-    townOrInstitutionFK: "6",
-    areaName: "Kennedy-Sydenham-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "38",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(kennedy.areaNo).set(kennedy);
-
-  const burnwood = {
-    townOrInstitutionFK: "6",
-    areaName: "Burnwood-Sydenham-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "39",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(burnwood.areaNo).set(burnwood);
-
-  const palmet = {
-    townOrInstitutionFK: "6",
-    areaName: "Palmet-Sydenham-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "40",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(palmet.areaNo).set(palmet);
-
-  const sparks = {
-    townOrInstitutionFK: "6",
-    areaName: "Sparks-Sydenham-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "41",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(sparks.areaNo).set(sparks);
-
-  const spencer = {
-    townOrInstitutionFK: "6",
-    areaName: "Spencer-Sydenham-Durban-Kwa Zulu Natal-South Africa",
-    areaNo: "41",
-  };
-
-  await getFirestore().collection("supported_areas")
-    .doc(spencer.areaNo).set(spencer);
-};
-
-const createSupportedAreas = async function () {
-  await createUmlaziSupportedAreas();
-  await createMUTSupportedAreas();
-  await createDUTSupportedAreas();
-  await createHowardSupportedAreas();
-  await createMayvilleSupportedAreas();
-  await createSydenhamSupportedAreas();
-};
-
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createSupportedLocations/
 export const createSupportedLocations = onRequest(async (req, res) => {
-  createSupportedCountries();
-  createSupportedProvincesOrStates();
-  createSupportedCities();
-  createSupportedTownsOrInstitutions();
-  createSupportedAreas();
+
+  const countriesCreation = new CountriesCreation();
+  await countriesCreation.createSupportedCountries();
+  const provinciesOrStatesCreation = new ProvinciesOrStatesCreation();
+  await provinciesOrStatesCreation.createSupportedProvincesOrStates()
+  const citiesCreation = new CitiesCreation();
+  await citiesCreation.createSupportedCities();
+  const townsOrInstitutionsCreation = new TownsOrInstitutionsCreation();
+  await townsOrInstitutionsCreation.createSupportedTownsOrInstitutions();
+  const areasCreation = new AreasCreation();
+  await areasCreation.createSupportedAreas();
   res.json({ result: `Supported Areas Created Successfully.` });
 });
 
