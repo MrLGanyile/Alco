@@ -1,6 +1,6 @@
 import LocationCreation from './location-creation.js';
 import SupportedArea from "./supported-area.js";
-import LocationController from './location-controller.js';
+import LocationController from '../../controllers/location-controller.js';
 
 class AreasCreation extends LocationCreation {
 

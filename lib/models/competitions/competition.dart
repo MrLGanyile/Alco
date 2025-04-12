@@ -1,9 +1,12 @@
+import 'package:alco/models/locations/supported_town_or_institution.dart';
+
 import '../locations/converter.dart';
 import '/models/stores/draw_grand_price.dart';
 
-import '../locations/section_name.dart';
 import '../users/group.dart';
 import 'competition_state.dart';
+
+import 'dart:developer' as debug;
 
 // Collection Name /competition/competitionId
 // Branch : competition_resources_crud ->  create_competition_resources_front_end
@@ -15,7 +18,7 @@ class Competition {
   bool isOver;
   int joiningFee;
 
-  SectionName competitionSectionName;
+  SupportedTownOrInstitution competitionTownOrInstitution;
 
   DateTime dateTime;
   int pickingMultipleInSeconds;
@@ -42,7 +45,7 @@ class Competition {
   Competition({
     this.competitionId,
     required this.storeFK,
-    required this.competitionSectionName,
+    required this.competitionTownOrInstitution,
     this.isLive = false,
     required this.dateTime,
     required this.joiningFee,
@@ -85,8 +88,8 @@ class Competition {
         displayPeriodAfterWinners: json['displayPeriodAfterWinners'],
         competitionId: json['competitionId'],
         storeFK: json['storeFK'],
-        competitionSectionName:
-            Converter.toSectionName(json['competitionSectionName']),
+        competitionTownOrInstitution: SupportedTownOrInstitution.fromJson(
+            json['competitionTownOrInstitution']),
         isLive: json['isLive'],
         dateTime: DateTime(
           json['dateTime']['year'],
@@ -106,6 +109,14 @@ class Competition {
         competitorsGridId: json['competitorsGridId'],
         competitionState:
             Converter.toCompetitionState(json['competitionState']));
+  }
+
+  void setIsOver(bool isOver) {
+    this.isOver = isOver;
+  }
+
+  void setIsWonPricePicked(bool isWonCompetitorGroupPicked) {
+    this.isWonCompetitorGroupPicked = isWonCompetitorGroupPicked;
   }
 
   static List<int> convertGrandPricesOrder(List<dynamic> order) {

@@ -1,4 +1,4 @@
-import LocationController from './location-controller.js';
+import LocationController from '../../controllers/location-controller.js';
 
 class LocationCreation {
 

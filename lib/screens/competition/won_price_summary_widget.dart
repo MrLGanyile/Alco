@@ -84,7 +84,8 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  Converter.asString(widget.wonPriceSummary.groupSectionName),
+                  Converter.asString(
+                      widget.wonPriceSummary.groupArea.sectionName),
                   style: TextStyle(
                       fontSize: MyApplication.infoTextFontSize,
                       fontWeight: FontWeight.bold,
@@ -115,7 +116,8 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  widget.wonPriceSummary.groupSpecificLocation,
+                  Converter.townOrInstitutionAsString(widget
+                      .wonPriceSummary.townOrInstitution.townOrInstitutionName),
                   style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -132,75 +134,11 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
     );
   }
 
-  Column retrieveStoreInfo(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Store section
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Host Home',
-                style: TextStyle(
-                    fontSize: MyApplication.infoTextFontSize,
-                    fontWeight: FontWeight.bold,
-                    color: MyApplication.logoColor1,
-                    decoration: TextDecoration.none),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  Converter.asString(widget.wonPriceSummary.storeSection),
-                  style: TextStyle(
-                      fontSize: MyApplication.infoTextFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: MyApplication.logoColor2,
-                      decoration: TextDecoration.none,
-                      overflow: TextOverflow.ellipsis),
-                ),
-              ),
-            ),
-          ],
-        ),
-        // Store section
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Host Area',
-                style: TextStyle(
-                    fontSize: MyApplication.infoTextFontSize,
-                    fontWeight: FontWeight.bold,
-                    color: MyApplication.logoColor1,
-                    decoration: TextDecoration.none),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.wonPriceSummary.storeArea,
-                  style: TextStyle(
-                      fontSize: MyApplication.infoTextFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: MyApplication.logoColor2,
-                      decoration: TextDecoration.none,
-                      overflow: TextOverflow.ellipsis),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+  Column retrieveGroupAndPickUpInfo(BuildContext context) {
+    String groupHome =
+        Converter.asString(widget.wonPriceSummary.groupArea.sectionName);
+    groupHome = groupHome.substring(0, groupHome.indexOf('-'));
 
-  Column retrieveGroupInfo(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -222,7 +160,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  Converter.asString(widget.wonPriceSummary.groupSectionName),
+                  groupHome,
                   style: TextStyle(
                       fontSize: MyApplication.infoTextFontSize,
                       fontWeight: FontWeight.bold,
@@ -235,12 +173,12 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
           ],
         ),
 
-        // Group Location
+        // Pick Up Spot
         Row(
           children: [
             Expanded(
               child: Text(
-                'Group Area',
+                'Pick Up Spot',
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -253,7 +191,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  widget.wonPriceSummary.groupSpecificLocation,
+                  widget.wonPriceSummary.pickUpSpot,
                   style: TextStyle(
                       fontSize: MyApplication.infoTextFontSize,
                       fontWeight: FontWeight.bold,
@@ -374,9 +312,10 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
 
   // ===================Group Members Display Start===================
   Future<ListResult> findGroupMembersImageURLs() async {
+    String hostName = widget.wonPriceSummary.hostName.toLowerCase();
     return storageReference
         .child(
-            'group_members/${widget.wonPriceSummary.groupCreatorPhoneNumber}')
+            '$hostName/group_members/${widget.wonPriceSummary.groupCreatorPhoneNumber}/profile_images')
         .listAll();
   }
 
@@ -462,17 +401,17 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
       //height: 550,
       child: Column(
         children: [
-          // Store Name, Section & Area
+          // Host Name, Group Home & Pick Up Spot
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(children: [
-              // Store Name
+              // Host Name [Group Name]
               SizedBox(
                 height: 30,
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    widget.wonPriceSummary.storeName,
+                    '${widget.wonPriceSummary.hostName} [${widget.wonPriceSummary.groupName}]',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -486,8 +425,8 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
               const SizedBox(
                 height: 5,
               ),
-              // Group Location/Area Details
-              SizedBox(height: 40, child: retrieveStoreInfo(context)),
+              // Group Home & Pick Up Spot
+              SizedBox(height: 40, child: retrieveGroupAndPickUpInfo(context)),
               const SizedBox(
                 height: 5,
               ),
@@ -540,15 +479,6 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
                                   widget.wonPriceSummary.groupCreatorUsername,
                                   style: TextStyle(
                                     color: MyApplication.logoColor2,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Text(
-                                  widget.wonPriceSummary.groupName,
-                                  style: TextStyle(
-                                    color: MyApplication.attractiveColor1,
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     overflow: TextOverflow.ellipsis,
@@ -616,15 +546,6 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
               }),
           const SizedBox(
             height: 15,
-          ),
-
-          // Group Name & Won Price
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(children: [
-              // Group Location/Area Details
-              SizedBox(height: 50, child: retrieveGroupInfo(context)),
-            ]),
           ),
 
           Container(

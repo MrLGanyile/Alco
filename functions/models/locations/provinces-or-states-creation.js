@@ -1,6 +1,6 @@
 import LocationCreation from './location-creation.js';
 import SupportedProvinceOrState from './supported-province-or-state.js';
-import LocationController from './location-controller.js';
+import LocationController from '../../controllers/location-controller.js';
 
 class ProvinciesOrStatesCreation extends LocationCreation {
     constructor() {

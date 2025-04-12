@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:alco/models/locations/converter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -41,8 +42,12 @@ class GroupCompetitorWidget extends StatelessWidget {
   }
 
   Future<ListResult> findGroupMembersImageURLs() async {
+    String hostName = Converter.townOrInstitutionAsString(
+            group.groupTownOrInstitution.townOrInstitutionName)
+        .toLowerCase();
     return storageReference
-        .child('group_members/${group.groupCreatorPhoneNumber}')
+        .child(
+            '$hostName/group_members/${group.groupCreatorPhoneNumber}/profile_images')
         .listAll();
   }
 
@@ -65,7 +70,8 @@ class GroupCompetitorWidget extends StatelessWidget {
               ),
             );
           } else if (snapshot.hasError) {
-            debug.log("Error Fetching Data - ${snapshot.error}");
+            debug.log(
+                "Error Fetching Group Members Images Data - ${snapshot.error}");
             return const Center(
               child: CircularProgressIndicator(),
             );

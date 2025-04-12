@@ -1,7 +1,7 @@
 
 import SupportedCountry from './supported-country.js'
 import LocationCreation from './location-creation.js';
-import LocationController from './location-controller.js';
+import LocationController from '../../controllers/location-controller.js';
 
 class CountriesCreation extends LocationCreation {
     constructor() {

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:developer' as debug;
 
 import 'package:alco/models/locations/supported_area.dart';
+import 'package:alco/models/locations/supported_town_or_institution.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -650,10 +651,12 @@ class GroupController extends GetxController {
     return stream;
   }
 
-  Stream<List<Group>> readGroups(SectionName sectionName) {
+  Stream<List<Group>> readGroups(String townOrInstitutionNo) {
+    debug.log('townOrInstitutionNo $townOrInstitutionNo');
     Stream<List<Group>> stream = firestore
         .collection('groups')
-        .where("groupSectionName", isEqualTo: Converter.asString(sectionName))
+        .where("groupTownOrInstitution.townOrInstitutionNo",
+            isEqualTo: townOrInstitutionNo)
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) {
               Group group = Group.fromJson(doc.data());

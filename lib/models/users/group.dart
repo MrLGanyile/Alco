@@ -70,6 +70,11 @@ class Group implements Comparable<Group> {
     return groupName.compareTo(other.groupName);
   }
 
+  @override
+  String toString() {
+    return groupName;
+  }
+
   // For Learning Unit Testing Purpose.
   bool removeMember(String memberPhoneNumber) {
     if (memberPhoneNumber.compareTo(groupCreatorPhoneNumber) != 0 &&

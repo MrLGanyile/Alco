@@ -20,10 +20,7 @@ import { getAuth } from "firebase-admin/auth";
 import pkg from "firebase-admin";
 const { credential } = pkg;
 
-
-
-
-import { log } from "firebase-functions/logger";
+import { debug, log } from "firebase-functions/logger";
 
 import { onSchedule } from "firebase-functions/v2/scheduler";
 // import { credential } from "firebase-admin";
@@ -36,32 +33,26 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 const pickingMultipleInSeconds = 3;
 const superiorAdminId = "1HISOAjWZfQZrDr8r1duQaYYfBE3";
 let currentUID = null;
-// const serviceAccount = require("../alcoholic-expressions-credentials.json");
 
 initializeApp();
-// initializeApp({ credential: credential.cert(serviceAccount) });
+/* fetch("../alcoholic-expressions-credentials.json")
+  .then(response => {
+    const serviceAccount = response.json();
+    initializeApp({ credential: credential.cert(serviceAccount) });
+  }); */
 
-import CompetitorsOrder from "./competitors-order.js";
-const competitorsOrder = new CompetitorsOrder();
-import LocationController from './location-controller.js';
-const locationController = new LocationController();
-import SupportedCountry from './supported-country.js'
-import SupportedProvinceOrState from './supported-province-or-state.js';
-import SupportedCity from './supported-city.js';
-import SupportedTownOrInstitution from './supported-town-or-institution.js';
-import SupportedArea from "./supported-area.js";
-
-import CountriesCreation from "./countries-creation.js";
-import ProvinciesOrStatesCreation from "./provinces-or-states-creation.js";
-import CitiesCreation from "./cities-creation.js";
-import TownsOrInstitutionsCreation from "./towns-or-institutions-creation.js";
-import AreasCreation from "./areas-creation.js";
+import CountriesCreation from "./models/locations/countries-creation.js";
+import ProvinciesOrStatesCreation from "./models/locations/provinces-or-states-creation.js";
+import CitiesCreation from "./models/locations/cities-creation.js";
+import TownsOrInstitutionsCreation from "./models/locations/towns-or-institutions-creation.js";
+import AreasCreation from "./models/locations/areas-creation.js";
 
 
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createSupportedLocations/
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveStoreAndAdmins
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createFakeGroups?hostIndex=2
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createFakeDraws?hostIndex=2
+// http://127.0.0.1:5001/alcoholic-expressions/us-central1/convertStoreDrawsToCompetitions
 
 
 // ###################Production Functions [Start]########################
@@ -356,8 +347,8 @@ onSchedule("5,25,45 8 * * FRI,SUN", async (event) => {*/
 // onSchedule("*/5 * * * *", async (event) => { */
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/convertStoreDrawsToCompetitions
 export const convertStoreDrawsToCompetitions =
-  onSchedule("5,15,25,35,45 8 * SUN", async (event) => {
-    // onRequest(async (req, res) => {
+  // onSchedule("5,15,25,35,45 8 * SUN", async (event) => {
+  onRequest(async (req, res) => {
     try {
       // Consistent timestamp
       const justNow = Timestamp.now().toDate();
@@ -397,7 +388,7 @@ export const convertStoreDrawsToCompetitions =
 groups belonging in a section which is the same
 as the store draw's.*/
               getFirestore().collection("groups")
-                // .where("groupArea.townOrInstitutionFK", "==", townOrInstitution.townOrInstitutionNo)
+                .where("groupArea.townOrInstitutionFK", "==", townOrInstitution.townOrInstitutionNo)
                 .onSnapshot(async (groupsSnapshot) => {
                   if (groupsSnapshot.size > 0) {
                     storeDrawDoc.ref.update({ isOpen: false });
@@ -431,7 +422,7 @@ as the store draw's.*/
                     const competition = {
                       competitionId: reference.id,
                       storeFK: storeDraw.storeFK,
-                      townOrInstitution: storeDraw.townOrInstitution,
+                      competitionTownOrInstitution: storeDraw.townOrInstitution,
                       isLive: true,
                       dateTime: storeDraw.drawDateAndTime,
                       joiningFee: storeDraw.joiningFee,
@@ -470,7 +461,7 @@ as the store draw's.*/
           }
         });
 
-      // res.json({result: `Done Converting Store Draws Into Competitions.`});
+      res.json({ result: `Done Converting Store Draws Into Competitions.` });
     }
     catch (e) {
       logger.log(e);
@@ -563,7 +554,9 @@ export const createGrandPricesTokens =
           if (drawGrandPricesSnapshot.size > 0) {
             drawGrandPricesSnapshot.forEach(
               async (drawGrandPrice) => {
+                // Remember there are n + 1 elements in the grand prices order list. [n = no of grand prices]
                 if (drawGrandPrice.data().grandPriceIndex == grandPricesOrder[drawGrandPricesSnapshot.size]) {
+                  logger.log(`Grand Price Token - Won Price Index ${grandPricesOrder[drawGrandPricesSnapshot.size]}`);
                   getFirestore()
                     .collection("competitions")
                     .doc(competitionFK).onSnapshot(async (competitionDoc) => {
@@ -608,7 +601,7 @@ export const createGroupCompetitiorsGrid =
     "{competitionId}", async (event) => {
       const competitionId = event.data.data()["competitionId"];
       const storeFK = event.data.data()["storeFK"];
-      const townOrInstitution = event.data.data()["townOrInstitution"];
+      const townOrInstitution = event.data.data()["competitionTownOrInstitution"];
 
       getFirestore()
         .collection("competitions")
@@ -641,6 +634,7 @@ export const createGroupCompetitiorsGrid =
 
                   // Make sure competitors are visited randomly.
                   competitorsOrder = shuffle(competitorsOrder);
+                  log(competitorsOrder);
 
                   // const hostGroups = groupsSnapshot.docs;
                   // competitorsOrder = findCompetitorsOrder(groupsSnapshot.docs, townOrInstitution.townOrInstitutionName);
@@ -677,8 +671,8 @@ export const createGroupCompetitorsTokens =
     "{groudCompetitorGridId}", async (event) => {
       const competitionFK =
         event.data.data()["competitionFK"];
-      const competitionSectionName =
-        event.data.data()["competitionSectionName"];
+      const competitionTownOrInstitution =
+        event.data.data()["townOrInstitution"];
 
       const groupCompetitorsGridId =
         event.data.data()["competitorsGridId"];
@@ -687,10 +681,11 @@ export const createGroupCompetitorsTokens =
 
       getFirestore()
         .collection("groups")
-        .where("groupSectionName", "==", competitionSectionName)
+        .where("groupTownOrInstitution.townOrInstitutionNo", "==", competitionTownOrInstitution.townOrInstitutionNo)
         .onSnapshot(
           async (groupsSnapshot) => {
             if (groupsSnapshot.size > 0) {
+
               for (let groupIndex = 0; groupIndex <
                 groupsSnapshot.size; groupIndex++) {
                 const groupDoc =
@@ -698,6 +693,7 @@ export const createGroupCompetitorsTokens =
 
                 // Last Group Wins.
                 if (groupDoc.data().groupCreatorPhoneNumber === competitorsOrder[groupsSnapshot.size - 1]) {
+                  logger.log(`Competitor Token - Group Creator Leader ${competitorsOrder[groupsSnapshot.size - 1]}`);
                   getFirestore()
                     .collection("competitions")
                     .doc(competitionFK).onSnapshot((competitionDoc) => {
@@ -806,8 +802,8 @@ export const maintainCountDownClocks =
                                       */
 
           // Remaining seconds should always start at -300.
-          const max = pickingMultipleInSeconds * 20;
-          let second = -10 * pickingMultipleInSeconds;
+          const max = pickingMultipleInSeconds * 30;
+          let second = -3 * pickingMultipleInSeconds;
 
           reference.set({
             remainingTime: second,
@@ -882,214 +878,93 @@ export const setIsLiveForQualifyingCompetitions = onDocumentUpdated("/read_only/
       });
   });
 
-// Branch : won_price_summary_resources_crud -> create_won_price_summary
 /* eslint max-len: ["off", { "code", 80, "comments": 80 }] */
 export const createWonPriceSummary =
   onDocumentUpdated("/competitions/" +
     "{competitionId}", async (event) => {
-      // onCall(async (data, context) => {
-
-      // const competitionId  = data.competitionId;
 
       const reference = getFirestore()
         .collection("competitions")
         .doc(event.params.competitionId);
-      // .doc(competitionId);
-      reference.onSnapshot((competitionsSnapshot) => {
-        if (competitionsSnapshot.exists) {
-          const isOver = competitionsSnapshot.data().isOver;
-          const isLive = competitionsSnapshot.data().isLive;
+
+      reference.onSnapshot((competitionSnapshot) => {
+        if (competitionSnapshot.exists) {
+          const isOver = competitionSnapshot.data().isOver;
+          const isLive = competitionSnapshot.data().isLive;
 
           if (isOver && isLive) {
             reference.update({ isLive: false });
             const wonPriceSummaryId =
-              competitionsSnapshot.data().competitionId;
+              competitionSnapshot.data().competitionId;
             const storeFK =
-              competitionsSnapshot.data().storeFK;
+              competitionSnapshot.data().storeFK;
+
+            const wonPrice = competitionSnapshot.data()["wonPrice"];
+            const wonGroup = competitionSnapshot.data()["wonGroup"];
+
+            // For Debugging Purposes.
+            const competitorsOrder = competitionSnapshot.data()["competitorsOrder"];
+            const grandPricesOrder = competitionSnapshot.data()["grandPricesOrder"];
+
+            logger.log(`WonPriceSummary - ${wonGroup.groupCreatorPhoneNumber} ${competitorsOrder}`);
+            logger.log(`WonPriceSummary - ${wonPrice.grandPriceIndex} ${grandPricesOrder}`);
 
             const storeReference = getFirestore()
               .collection("stores")
               .doc(storeFK);
 
-            storeReference.onSnapshot((snapshot) => {
+            storeReference.onSnapshot(async (snapshot) => {
               const storeName = snapshot.data().storeName;
               const storeImageURL = snapshot.data().storeImageURL;
               const storeSection = snapshot.data().sectionName;
               const storeArea = snapshot.data().storeArea;
 
-              let groupName;
-              let groupSectionName;
-              let groupSpecificLocation;
-              let groupMembers;
-              let groupCreatorPhoneNumber;
 
-              let grandPriceDescription;
-              let grandPriceImageURL;
+              const wonPriceSummaryReference =
+                getFirestore()
+                  .collection("won_prices_summaries")
+                  .doc(wonPriceSummaryId);
+              const wonPriceSummary = {
+                wonPriceSummaryId:
+                  wonPriceSummaryId,
+                storeFK: storeFK,
+                groupName: wonGroup.groupName,
+                groupTownOrInstitution:
+                  wonGroup.groupTownOrInstitution,
+                groupArea:
+                  wonGroup.groupArea,
+                groupMembers: wonGroup.groupMembers,
+                grandPriceDescription:
+                  wonPrice.description,
+                wonGrandPriceImageURL: wonPrice.imageURL,
+                storeImageURL: storeImageURL,
+                hostName: storeName,
+                storeSection: storeSection,
+                pickUpSpot: storeArea,
+                wonDate: competitionSnapshot.data().dateTime,
+                groupCreatorUsername: wonGroup.groupCreatorUsername,
+                groupCreatorImageURL: wonGroup.groupCreatorImageURL,
+                groupCreatorPhoneNumber: wonGroup.groupCreatorPhoneNumber,
+              };
 
-              let groupCreatorUsername;
-              let groupCreatorImageURL;
+              // Create won price summary.
+              await wonPriceSummaryReference
+                .set(wonPriceSummary);
 
-
-              getFirestore().collection("competitions")
-                .doc(wonPriceSummaryId)
-                .collection("group_competitors_grids")
-                .onSnapshot((groupCompetitorsGridSnapshot) => {
-                  if (groupCompetitorsGridSnapshot.size == 1) {
-                    groupCompetitorsGridSnapshot.forEach(
-                      (groupCompetitorsGridDoc) => {
-                        const groupCompetitorsGridId =
-                          groupCompetitorsGridDoc.data().competitorsGridId;
-
-                        const competitorsList =
-                          groupCompetitorsGridDoc.data().competitorsOrder;
-                        logger.log(`${competitorsList}`);
-                        const groupCreatorLeaderPhoneNumber =
-                          competitorsList[competitorsList.length - 1];
-                        logger.log(`Group Creator Leader ${groupCreatorLeaderPhoneNumber}`);
-                        getFirestore().collection("competitions")
-                          .doc(wonPriceSummaryId)
-                          .collection("group_competitors_grids")
-                          .doc(groupCompetitorsGridId)
-                          .collection("group_competitors_tokens")
-                          .onSnapshot((groupCompetitorsTokensSnapshot) => {
-                            if (groupCompetitorsTokensSnapshot.size > 0) {
-                              groupCompetitorsTokensSnapshot.forEach(
-                                (groupCompetitorTokenDoc) => {
-                                  if (groupCreatorLeaderPhoneNumber ===
-                                    groupCompetitorTokenDoc.data()
-                                      .group.groupCreatorPhoneNumber) {
-                                    const group =
-                                      groupCompetitorTokenDoc.data().group;
-
-                                    groupName =
-                                      group.groupName;
-
-                                    groupSectionName =
-                                      group.groupSectionName;
-
-                                    groupSpecificLocation =
-                                      group.groupSpecificArea;
-
-                                    groupMembers =
-                                      group.groupMembers;
-
-                                    groupCreatorPhoneNumber =
-                                      group.groupCreatorPhoneNumber;
-
-                                    const alcoholicDocReference =
-                                      getFirestore()
-                                        .collection("alcoholics")
-                                        .doc(groupCreatorPhoneNumber);
-
-                                    alcoholicDocReference.onSnapshot(
-                                      (snapshot) => {
-                                        groupCreatorUsername =
-                                          snapshot.data().username;
-                                        groupCreatorImageURL =
-                                          snapshot.data().profileImageURL;
-
-                                        /* finally set the grand price
-description. */
-                                        getFirestore()
-                                          .collection("competitions")
-                                          .doc(wonPriceSummaryId)
-                                          .collection(
-                                            "grand_prices_grids")
-                                          .onSnapshot(
-                                            (grandPricesGridSnapshot) => {
-                                              if (grandPricesGridSnapshot.size == 1) {
-                                                grandPricesGridSnapshot.forEach(
-                                                  (grandPriceGridDoc) => {
-                                                    const grandPricesGridId =
-                                                      grandPriceGridDoc.data()
-                                                        .grandPricesGridId;
-                                                    const grandPricesOrder =
-                                                      grandPriceGridDoc.data()
-                                                        .grandPricesOrder;
-                                                    const wonGrandPriceIndex =
-                                                      grandPricesOrder[grandPricesOrder.length - 1];
-
-                                                    logger.log(`${grandPricesOrder}`);
-                                                    logger.log(`won price index ${wonGrandPriceIndex}`);
-
-                                                    getFirestore()
-                                                      .collection("competitions")
-                                                      .doc(wonPriceSummaryId)
-                                                      .collection("grand_prices_grids")
-                                                      .doc(grandPricesGridId)
-                                                      .collection("grand_prices_tokens")
-                                                      .onSnapshot(
-                                                        (grandPricesTokensSnapshot) => {
-                                                          if (grandPricesTokensSnapshot.size > 0) {
-                                                            grandPricesTokensSnapshot.forEach(
-                                                              async (grandPriceTokenDoc) => {
-                                                                if (wonGrandPriceIndex ==
-                                                                  grandPriceTokenDoc.data().tokenIndex) {
-                                                                  grandPriceDescription =
-                                                                    grandPriceTokenDoc.data().description;
-                                                                  grandPriceImageURL =
-                                                                    grandPriceTokenDoc.data().imageURL;
-                                                                  const wonPriceSummaryReference =
-                                                                    getFirestore()
-                                                                      .collection("won_prices_summaries")
-                                                                      .doc(wonPriceSummaryId);
-                                                                  const wonPriceSummary = {
-                                                                    wonPriceSummaryId:
-                                                                      wonPriceSummaryId,
-                                                                    storeFK: storeFK,
-                                                                    groupName: groupName,
-                                                                    groupSectionName:
-                                                                      groupSectionName,
-                                                                    groupSpecificLocation:
-                                                                      groupSpecificLocation,
-                                                                    groupMembers: groupMembers,
-                                                                    grandPriceDescription:
-                                                                      grandPriceDescription,
-                                                                    wonGrandPriceImageURL: grandPriceImageURL,
-                                                                    storeImageURL: storeImageURL,
-                                                                    storeName: storeName,
-                                                                    storeSection: storeSection,
-                                                                    storeArea: storeArea,
-                                                                    wonDate: competitionsSnapshot.data().dateTime,
-                                                                    groupCreatorUsername: groupCreatorUsername,
-                                                                    groupCreatorImageURL: groupCreatorImageURL,
-                                                                    groupCreatorPhoneNumber: groupCreatorPhoneNumber,
-                                                                  };
-
-                                                                  // Create won price summary.
-                                                                  await wonPriceSummaryReference
-                                                                    .set(wonPriceSummary);
-
-                                                                  // Update corresponding store draw.
-                                                                  /* getFirestore()
-.collection("stores")
-.doc(storeFK)
-.collection("store_draws")
-.doc(wonPriceSummaryId)
-.update({
-storeDrawState:"competition-finished"
-});; */
-                                                                }
-                                                              });
-                                                          }
-                                                        });
-                                                  });
-                                              }
-                                            });
-                                      });
-                                  }
-                                });
-                            }
-                          });
-                      });
-                  }
-                });
+              // Update corresponding store draw.
+              /* getFirestore()
+              .collection("stores")
+              .doc(storeFK)
+              .collection("store_draws")
+              .doc(wonPriceSummaryId)
+              .update({
+              storeDrawState:"competition-finished"
+              });; */
             });
           }
         }
       });
     });
-
 // ##################Production Functions [End]########################
 
 // ########Development Functions [Start]###############
@@ -1139,7 +1014,7 @@ export const createFakeGroups = onRequest(async (req, res) => {
       group2CreatorPhoneNumber = "+27602222222";
       group3Members = ["+27603333333", "+27613333333", "+27623333333", "+27633333333", "+27643333333"];
       group3CreatorPhoneNumber = "+27603333333";
-      group4Members = ["+27604444444", "+27644444444", "+27624444444", "+27634444444", "+27644444444"];
+      group4Members = ["+27604444444", "+27614444444", "+27624444444", "+27634444444", "+27644444444"];
       group4CreatorPhoneNumber = "+27604444444";
 
       group1Area = {
@@ -1359,7 +1234,7 @@ export const createFakeGroups = onRequest(async (req, res) => {
 
   const group2 = {
     groupName: groupName2,
-    groupImageURL: `/${host}/groups_specific_locations/${group2CreatorPhoneNumber}.jpg`,
+    groupImageURL: `/${host}/groups_specific_locations/${group2CreatorPhoneNumber}.jpeg`,
     groupArea: group2Area,
     groupTownOrInstitution: groupTownOrInstitution,
 
@@ -1427,7 +1302,7 @@ export const createFakeDraws = onRequest(async (req, res) => {
   const month = drawDateAndTime.getMonth() + 1;
   const date = drawDateAndTime.getDate();
   const hour = drawDateAndTime.getHours() + 2;
-  const minute = drawDateAndTime.getMinutes() + 3;
+  const minute = drawDateAndTime.getMinutes() + 4;
 
   const storeDrawId =
     `${year}-${month}-${date}@${hour}h${minute}`;
@@ -1488,7 +1363,7 @@ export const createFakeDraws = onRequest(async (req, res) => {
     "numberOfGrandPrices": 5,
     "isOpen": true,
     "storeName": storeName,
-    "storeImageURL": "store_owners/stores_images/+27766915230.jpg",
+    "storeImageURL": `store_owners/stores_images/${storeFK}.jpg`,
     "townOrInstitution": townOrInstitution,
     "joiningFee": 0,
     "storeDrawState": "not-converted-to-competition",
@@ -1501,11 +1376,13 @@ export const createFakeDraws = onRequest(async (req, res) => {
 
 
   let grandPrice;
+  let extension = '.jpeg';
   for (let priceIndex = 0; priceIndex < draw.numberOfGrandPrices; priceIndex++) {
     reference = getFirestore().collection("stores")
       .doc(storeFK).collection("store_draws")
       .doc(storeDrawId).collection("draw_grand_prices")
-      .doc(`${storeDrawId}-${priceIndex}`);
+      //.doc(`${storeDrawId}-${priceIndex}`);
+      .doc(`${priceIndex}`);
 
     let description;
 
@@ -1559,18 +1436,19 @@ export const createFakeDraws = onRequest(async (req, res) => {
           description = "Heineken 24x330ml [Bottles]";
           break;
         case 2:
-          description = "Corona 24x330ml [Bottles]";
+          description = "Corona 12x500ml [Cans]";
           break;
         case 3:
           description = "Hunters Gold 24x330ml [Bottles]";
           break;
         default:
-          description = "Absolute Vodka 750ml";
+          description = "Black Label Vodka 12x750ml [Box]";
       }
     }
 
     // Sydenham
     else {
+
       switch (priceIndex) {
         case 0:
           description = "Castle Lagar 24x360ml";
@@ -1586,13 +1464,17 @@ export const createFakeDraws = onRequest(async (req, res) => {
           break;
         default:
           description = "Savana 24x360ml";
+          extension = '.jpg';
       }
     }
 
+
+
+
     grandPrice = {
       "grandPriceId": reference.id,
-      "storeDrawFK": "+27766915230",
-      "imageURL": `${storeName.toLowerCase()}/grand_prices_images/${reference.id}`,
+      "storeDrawFK": storeDrawId,
+      "imageURL": `${storeName.toLowerCase()}/grand_prices_images/${reference.id}${extension}`,
       "description": description,
       "grandPriceIndex": priceIndex,
 
@@ -1600,6 +1482,8 @@ export const createFakeDraws = onRequest(async (req, res) => {
 
     await reference.set(grandPrice);
   }
+  const storeNameInfoReference = getFirestore().collection("stores_names_info").doc(storeFK);
+  await storeNameInfoReference.update({ latestStoreDrawId: storeDrawId });
   // Send back a message that we"ve successfully written to the db.
   res.json({ result: `Fake Draws Saved.` });
 });

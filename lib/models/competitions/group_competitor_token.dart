@@ -25,7 +25,7 @@ class GroupCompetitorToken {
       groupCompetitorsGridFK: json['groupCompetitorsGridFK'],
       tokenIndex: json['tokenIndex'],
       isPointed: json['isPointed'],
-      group: json['group'],
+      group: Group.fromJson(json['group']),
     );
   }
 }

@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:alco/models/locations/supported_area.dart';
+import 'package:alco/models/locations/supported_town_or_institution.dart';
+
 import '../locations/converter.dart';
 
 import '../locations/section_name.dart';
@@ -12,17 +15,16 @@ class WonPriceSummary implements Comparable<WonPriceSummary> {
 
   String storeFK;
   String storeImageURL;
-  String storeName;
-  SectionName storeSection;
-  String storeArea;
+  String hostName;
+  SupportedTownOrInstitution townOrInstitution;
+  SupportedArea groupArea;
+  String pickUpSpot;
 
   String wonGrandPriceImageURL;
   String groupCreatorPhoneNumber;
   String groupCreatorUsername;
   String groupCreatorImageURL;
   String groupName;
-  SectionName groupSectionName;
-  String groupSpecificLocation;
   List<String> groupMembers;
 
   String grandPriceDescription;
@@ -33,15 +35,14 @@ class WonPriceSummary implements Comparable<WonPriceSummary> {
     required this.wonPriceSummaryId,
     required this.storeFK,
     required this.storeImageURL,
-    required this.storeName,
-    required this.storeSection,
-    required this.storeArea,
+    required this.hostName,
+    required this.groupArea,
+    required this.townOrInstitution,
+    required this.pickUpSpot,
     required this.groupCreatorPhoneNumber,
     required this.groupCreatorUsername,
     required this.groupCreatorImageURL,
     required this.groupName,
-    required this.groupSectionName,
-    required this.groupSpecificLocation,
     required this.groupMembers,
     required this.grandPriceDescription,
     required this.wonGrandPriceImageURL,
@@ -54,15 +55,15 @@ class WonPriceSummary implements Comparable<WonPriceSummary> {
       wonPriceSummaryId: json['wonPriceSummaryId'],
       storeFK: json['storeFK'],
       storeImageURL: json['storeImageURL'],
-      storeName: json['storeName'],
-      storeSection: Converter.toSectionName(json['storeSection']),
-      storeArea: json['storeArea'],
+      hostName: json['hostName'],
+      pickUpSpot: json['pickUpSpot'],
       groupCreatorPhoneNumber: json['groupCreatorPhoneNumber'],
       groupCreatorImageURL: json['groupCreatorImageURL'],
       groupCreatorUsername: json['groupCreatorUsername'],
       groupName: json['groupName'],
-      groupSectionName: Converter.toSectionName(json['groupSectionName']),
-      groupSpecificLocation: json['groupSpecificLocation'],
+      groupArea: SupportedArea.fromJson(json['groupArea']),
+      townOrInstitution:
+          SupportedTownOrInstitution.fromJson(json['groupTownOrInstitution']),
       groupMembers: getGroupMembers(json['groupMembers']),
       grandPriceDescription: json['grandPriceDescription'],
       wonGrandPriceImageURL: json['wonGrandPriceImageURL'],

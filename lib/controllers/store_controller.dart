@@ -140,6 +140,7 @@ class StoreController extends GetxController {
 /*======================Store Name Info [Start]======================== */
   // Branch : store_resources_crud ->  store_resources_crud_data_access
   Stream<DocumentSnapshot> retrieveStoreNameInfo(String storeNameInfoId) {
+    debug.log("retrieveStoreNameInfo invoked...");
     return FirebaseFirestore.instance
         .collection("stores_names_info")
         .doc(storeNameInfoId)

@@ -301,8 +301,13 @@ class CompetitionResultWidget extends StatelessWidget {
   }
 
   Future<ListResult> findGroupMembersImageURLs() async {
+    String hostName = Converter.townOrInstitutionAsString(
+            wonGroup.groupTownOrInstitution.townOrInstitutionName)
+        .toLowerCase();
+    debug.log('Competition Result - ${wonGroup.groupCreatorPhoneNumber}');
     return storageReference
-        .child('group_members/${wonGroup.groupCreatorPhoneNumber}')
+        .child(
+            '$hostName/group_members/${wonGroup.groupCreatorPhoneNumber}/profile_images')
         .listAll();
   }
 
@@ -337,7 +342,6 @@ class CompetitionResultWidget extends StatelessWidget {
             );
           }
         });
-    ;
   }
 
   Widget createGroupMembers(BuildContext context) {
@@ -385,11 +389,75 @@ class CompetitionResultWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String groupHome = Converter.asString(wonGroup.groupArea.sectionName);
+    groupHome = groupHome.substring(0, groupHome.indexOf('-'));
     return SizedBox(
       //height: 550,
       child: Column(
         children: [
+          const SizedBox(
+            height: 5,
+          ),
           // Store Name, Section & Area
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Text(
+                  'Group Name',
+                  style: TextStyle(
+                      fontSize: MyApplication.infoTextFontSize,
+                      color: MyApplication.logoColor1,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Text(
+                  wonGroup.groupName,
+                  style: TextStyle(
+                    color: MyApplication.logoColor2,
+                    fontSize: MyApplication.infoTextFontSize,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // Group Home
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Text(
+                  'Group Home',
+                  style: TextStyle(
+                      fontSize: MyApplication.infoTextFontSize,
+                      fontWeight: FontWeight.bold,
+                      color: MyApplication.logoColor1,
+                      decoration: TextDecoration.none),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    groupHome,
+                    style: TextStyle(
+                        fontSize: MyApplication.infoTextFontSize,
+                        fontWeight: FontWeight.bold,
+                        color: MyApplication.logoColor2,
+                        decoration: TextDecoration.none,
+                        overflow: TextOverflow.ellipsis),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
           Container(
             margin: const EdgeInsets.only(right: 15, left: 15, top: 10),
             child: Column(children: [
@@ -442,15 +510,6 @@ class CompetitionResultWidget extends StatelessWidget {
                                   wonGroup.groupCreatorUsername,
                                   style: TextStyle(
                                     color: MyApplication.logoColor2,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Text(
-                                  wonGroup.groupName,
-                                  style: TextStyle(
-                                    color: MyApplication.attractiveColor1,
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     overflow: TextOverflow.ellipsis,
@@ -531,16 +590,7 @@ class CompetitionResultWidget extends StatelessWidget {
                 }
               }),
           const SizedBox(
-            height: 15,
-          ),
-
-          // Group Name & Won Price
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(children: [
-              // Group Location/Area Details
-              SizedBox(height: 50, child: retrieveGroupInfo(context)),
-            ]),
+            height: 10,
           ),
         ],
       ),

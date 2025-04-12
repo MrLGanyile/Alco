@@ -1,6 +1,6 @@
 import LocationCreation from './location-creation.js';
 import SupportedCity from './supported-city.js';
-import LocationController from './location-controller.js';
+import LocationController from '../../controllers/location-controller.js';
 
 class CitiesCreation extends LocationCreation {
 

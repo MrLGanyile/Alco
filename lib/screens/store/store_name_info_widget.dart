@@ -1,3 +1,5 @@
+import 'package:alco/models/locations/supported_town_or_institution.dart';
+
 import '../../controllers/group_controller.dart';
 import '../competition/won_grand_price_widget.dart';
 import '/controllers/competition_controller.dart';
@@ -20,7 +22,6 @@ import 'dart:developer' as debug;
 
 import '../../models/stores/store_draw_state.dart';
 import '../../models/stores/store_name_info.dart';
-import '../competition/competition_finished_widget.dart';
 import '../competition/group_competitor_widget.dart';
 import '../competition/no_competition_widget.dart';
 import '../competition/wait_widget.dart';
@@ -63,7 +64,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
 
   List<String>? competitorsOrder;
   bool? pickWonGroup;
-  late Stream<List<Group>> groupsStream;
+  // late Stream<List<Group>> groupsStream;
   late List<Group> groups;
   List<GroupCompetitorWidget> groupCompetitorsWidgets = [];
 
@@ -71,6 +72,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
   OnCurrentGroupSet? onCurrentGroupSet;
 
   int currentlyPointedGroupCompetitorIndex = -1;
+  late SupportedTownOrInstitution groupTownOrInstitution;
 
   @override
   void initState() {
@@ -80,7 +82,8 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
         .retrieveStoreNameInfo(widget.storeNameInfo.storeNameInfoId);
     storageReference = FirebaseStorage.instance
         .refFromURL("gs://alcoholic-expressions.appspot.com/");
-    groupsStream = groupController.readGroups(widget.storeNameInfo.sectionName);
+    groupTownOrInstitution = Converter.toSupportedTownOrInstitution(
+        widget.storeNameInfo.sectionName);
   }
 
   void updateIsCurrentlyViewed(bool isCurrentlyViewed) {
@@ -103,9 +106,9 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
         Row(
           children: [
             Expanded(
-              flex: 1,
+              flex: 2,
               child: Text(
-                'Host',
+                'Host Name',
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     color: MyApplication.storesTextColor,
@@ -133,9 +136,9 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
         Row(
           children: [
             Expanded(
-              flex: 1,
+              flex: 2,
               child: Text(
-                'Area',
+                'Pick Up Spot',
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -229,7 +232,6 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 DateTime.now().subtract(const Duration(days: 1));
 
             if (latestStoreDraw.drawDateAndTime.isBefore(latestPast)) {
-              debug.log("last store draw is before now");
               return NoCompetitionWidget(
                   storeId: widget.storeNameInfo.storeNameInfoId,
                   storeName: widget.storeNameInfo.storeName,
@@ -395,38 +397,16 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
 
             // Show Won Price Summary For The Next 5 Minute.
             else /*if (countDownClock.remainingTime <= competitionTotalDuration) */ {
-              if (!competition.isWonCompetitorGroupPicked!) {
-                competitionReference
-                    .update({"isWonCompetitorGroupPicked": true});
-              }
               if (!competition.isOver) {
                 competitionReference.update({"isOver": true});
-
-                // setWonPriceSummary(competition.competitionId!);
               }
 
-              // State Management Glitch Exist Here.
-
-              competitionResultWidget ??= CompetitionResultWidget(
+              return CompetitionResultWidget(
                 wonPrice: competition.wonPrice!,
                 wonGroup: competition.wonGroup!,
                 competitionEndTime: competitionEndTime,
               );
-
-              return competitionResultWidget!;
-              /*return Center(
-                child: Text(
-                  'Show Won Price & Group',
-                  style: TextStyle(color: MyApplication.attractiveColor1),
-                ),
-              );*/
             }
-
-            // Show game over
-            /*
-            else {
-              return CompetitionFinishedWidget(endMoment: competitionEndTime);
-            }*/
           } else if (snapshot.hasError) {
             debug.log('Error fetching count down clock data ${snapshot.error}');
             return const Center(
@@ -469,7 +449,10 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
   Widget displayGroupCompetitors() {
     if (groupCompetitorsWidgets.isEmpty) {
       return StreamBuilder<List<Group>>(
-        stream: groupsStream,
+        // stream: groupsStream,
+        stream: groupController
+            .readGroups(groupTownOrInstitution.townOrInstitutionNo),
+        // stream: groupController.readAllGroups(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             groups = snapshot.data!;
