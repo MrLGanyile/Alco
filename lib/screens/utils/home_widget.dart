@@ -8,6 +8,8 @@ import '../competition/won_price_summary_widget.dart';
 
 import 'dart:developer' as debug;
 
+import 'globals.dart';
+
 // Branch : won_price_summary_resources_crud -> view_won_price_summaries
 class HomeWidget extends StatefulWidget {
   HomeWidget({
@@ -58,13 +60,9 @@ class _HomeWidgetState extends State<HomeWidget> {
             } else if (snapshot.hasError) {
               debug.log(
                   "Error Fetching Won Price Summaries Data *** - ${snapshot.error}");
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             }
           },
         ),

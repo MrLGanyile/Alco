@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 
 bool showProgressBar = false;
 
+Color backgroundResourcesColor = Colors.black;
+
+Widget getCircularProgressBar() => Center(
+        child: CircularProgressIndicator(
+      color: backgroundResourcesColor,
+    ));
+
 class Globals {
   const Globals._();
 

@@ -1,5 +1,6 @@
 import 'dart:developer' as debug;
 
+import '../utils/globals.dart';
 import '/controllers/store_controller.dart';
 import '/screens/store/store_name_info_widget.dart';
 import 'package:flutter/material.dart';
@@ -58,13 +59,9 @@ class StoresWidgetState extends State<StoresWidget> {
               } else if (snapshot.hasError) {
                 debug.log(
                     "Error Fetching All Store Names Info Data - ${snapshot.error}");
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return getCircularProgressBar();
               } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return getCircularProgressBar();
               }
             },
           ),

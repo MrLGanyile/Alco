@@ -1,5 +1,6 @@
 import 'package:alco/controllers/group_controller.dart';
 
+import '../utils/globals.dart';
 import '/controllers/competition_controller.dart';
 
 import '../../models/users/group.dart';
@@ -58,13 +59,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
               );
             } else if (snapshot.hasError) {
               debug.log("Error Fetching Data - ${snapshot.error}");
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             }
           }));
 }

@@ -7,6 +7,8 @@ import '../../models/users/group.dart';
 import 'dart:developer' as debug;
 import 'dart:math';
 
+import '../utils/globals.dart';
+
 // Branch : group_resources_crud ->  create_group_resources_front_end
 class SingleGroupWidget extends StatefulWidget {
   Group competitorsGroup;
@@ -148,7 +150,7 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
       child: Container(
         //margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/8) ,
         decoration: BoxDecoration(
-          color: Colors.orange,
+          color: backgroundResourcesColor,
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
             fit: BoxFit.cover,
@@ -167,11 +169,12 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
             return Padding(
               padding: const EdgeInsets.only(top: 5, right: 5, bottom: 5),
               child: Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.lightBlue,
+                  color: backgroundResourcesColor,
                 ),
                 child: CircleAvatar(
+                  backgroundColor: backgroundResourcesColor,
                   radius: MediaQuery.of(context).size.width / 8,
                   backgroundImage: NetworkImage(snapshot.data as String),
                 ),
@@ -180,13 +183,9 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
           } else if (snapshot.hasError) {
             debug.log(
                 "Error Fetching Group Participant Data - ${snapshot.error}");
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           }
         });
   }
@@ -322,17 +321,9 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
                                       } else if (snapshot.hasError) {
                                         debug.log(
                                             "Error Fetching Group Creator Data - ${snapshot.error}");
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                              color: MyApplication
-                                                  .circularProgressBarColor),
-                                        );
+                                        return getCircularProgressBar();
                                       } else {
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                              color: MyApplication
-                                                  .circularProgressBarColor),
-                                        );
+                                        return getCircularProgressBar();
                                       }
                                     },
                                   ),
@@ -376,17 +367,9 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
                               } else if (snapshot.hasError) {
                                 debug.log(
                                     "Error Fetching Group Image Data - ${snapshot.error}");
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                      color: MyApplication
-                                          .circularProgressBarColor),
-                                );
+                                return getCircularProgressBar();
                               } else {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                      color: MyApplication
-                                          .circularProgressBarColor),
-                                );
+                                return getCircularProgressBar();
                               }
                             },
                           ),
@@ -424,15 +407,9 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
                 } else if (snapshot.hasError) {
                   debug.log(
                       "Error Fetching Group Members Data - ${snapshot.error}");
-                  return Center(
-                    child: CircularProgressIndicator(
-                        color: MyApplication.circularProgressBarColor),
-                  );
+                  return getCircularProgressBar();
                 } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                        color: MyApplication.circularProgressBarColor),
-                  );
+                  return getCircularProgressBar();
                 }
               }),
           const SizedBox(

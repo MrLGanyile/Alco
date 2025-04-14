@@ -77,8 +77,6 @@ class MyApplication extends StatefulWidget {
   static double backArrowTitleFontSize = 14;
   static Color backArrowTitleColor = Colors.pink;
 
-  static Color circularProgressBarColor = Colors.black;
-
   static EdgeInsets storeDataPadding =
       const EdgeInsets.only(left: 20, right: 20, top: 10);
 

@@ -10,6 +10,8 @@ import '../../models/competitions/won_price_summary.dart';
 import 'dart:developer' as debug;
 import 'dart:math';
 
+import '../utils/globals.dart';
+
 // Branch : won_price_summary_resources_crud -> view_won_price_summaries
 class WonPriceSummaryWidget extends StatefulWidget {
   WonPriceSummary wonPriceSummary;
@@ -290,7 +292,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
       child: Container(
         //margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/8) ,
         decoration: BoxDecoration(
-          color: Colors.orange,
+          color: backgroundResourcesColor,
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
             fit: BoxFit.cover,
@@ -327,11 +329,12 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
             return Padding(
               padding: const EdgeInsets.only(top: 5, right: 5, bottom: 5),
               child: Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.lightBlue,
+                  color: backgroundResourcesColor,
                 ),
                 child: CircleAvatar(
+                  backgroundColor: backgroundResourcesColor,
                   radius: MediaQuery.of(context).size.width / 8,
                   backgroundImage: NetworkImage(snapshot.data as String),
                 ),
@@ -339,13 +342,9 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
             );
           } else if (snapshot.hasError) {
             debug.log("Error Fetching Data - ${snapshot.error}");
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           }
         });
     ;
@@ -452,19 +451,17 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
                                       if (snapshot.hasData) {
                                         return CircleAvatar(
                                           radius: 40,
+                                          backgroundColor:
+                                              backgroundResourcesColor,
                                           backgroundImage: NetworkImage(
                                               snapshot.data as String),
                                         );
                                       } else if (snapshot.hasError) {
                                         debug.log(
                                             'Error Fetching Winner Image - ${snapshot.error}');
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
+                                        return getCircularProgressBar();
                                       } else {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
+                                        return getCircularProgressBar();
                                       }
                                     }),
                                 Text(
@@ -503,13 +500,9 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
                                     } else if (snapshot.hasError) {
                                       debug.log(
                                           'Error Fetching Won Price Image - ${snapshot.error}');
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
+                                      return getCircularProgressBar();
                                     } else {
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
+                                      return getCircularProgressBar();
                                     }
                                   }))),
                     ],
@@ -535,13 +528,9 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
                 } else if (snapshot.hasError) {
                   debug.log(
                       "Error Fetching Group Members Data - ${snapshot.error}");
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return getCircularProgressBar();
                 } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return getCircularProgressBar();
                 }
               }),
           const SizedBox(

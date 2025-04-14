@@ -532,7 +532,7 @@ export const createGrandPricesGrid =
 
             const pickingMultipleInSeconds = event.data.data()["pickingMultipleInSeconds"];
             const timeBetweenPricePickingAndGroupPicking = event.data.data()["timeBetweenPricePickingAndGroupPicking"];
-            const groupPickingStartTime = grandPricesGrid.grandPricesOrder.length *
+            const groupPickingStartTime = (grandPricesGrid.grandPricesOrder.length + 1) *
               pickingMultipleInSeconds + timeBetweenPricePickingAndGroupPicking;
 
             await competitionReference.update({ groupPickingStartTime: groupPickingStartTime });

@@ -3,6 +3,7 @@ import 'package:alco/screens/competition/competition_finished_widget.dart';
 
 import '../../controllers/group_controller.dart';
 import '../competition/won_grand_price_widget.dart';
+import '../utils/globals.dart';
 import '/controllers/competition_controller.dart';
 import '/screens/competition/competition_result_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -176,7 +177,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
       child: Container(
         //margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/8) ,
         decoration: BoxDecoration(
-          color: Colors.orange,
+          color: backgroundResourcesColor,
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
               fit: BoxFit.cover, image: NetworkImage(storeImageURL)),
@@ -201,13 +202,9 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                     return retrieveStoreImage(context, snapshot.data as String);
                   } else if (snapshot.hasError) {
                     debug.log('Error Fetching Store Image - ${snapshot.error}');
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return getCircularProgressBar();
                   } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return getCircularProgressBar();
                   }
                 }),
           ),
@@ -280,13 +277,9 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                     } else if (snapshot.hasError) {
                       debug.log(
                           "Error Fetching competition Data - ${snapshot.error}");
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return getCircularProgressBar();
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return getCircularProgressBar();
                     }
                   });
             }
@@ -414,13 +407,9 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             }
           } else if (snapshot.hasError) {
             debug.log('Error fetching count down clock data ${snapshot.error}');
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           }
         }));
   }
@@ -467,13 +456,9 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
           } else if (snapshot.hasError) {
             debug.log(
                 'Error Fetching Group Competitors Data - ${snapshot.error}');
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           }
         },
       );
