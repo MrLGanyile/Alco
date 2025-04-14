@@ -637,6 +637,7 @@ class Converter {
         return 'Sydenham';
       default:
         return 'Howard College UKZN';
+      // return 'Howard';
     }
   }
 

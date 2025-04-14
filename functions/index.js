@@ -337,18 +337,11 @@ const shuffle = (array) => {
   return array;
 };
 
-
-// Branch : competition_resources_crud -> create_competition_resources_back_end
-/* Do not modify application state inside of your transaction functions.
-Doing so will introduce concurrency issues, because transaction functions
-can run multiple times and are not guaranteed to run on the UI thread.
-Instead, pass information you need out of your transaction functions.
-onSchedule("5,25,45 8 * * FRI,SUN", async (event) => {*/
 // onSchedule("*/5 * * * *", async (event) => { */
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/convertStoreDrawsToCompetitions
 export const convertStoreDrawsToCompetitions =
-  // onSchedule("5,15,25,35,45 8 * SUN", async (event) => {
-  onRequest(async (req, res) => {
+  onSchedule("4, 17, 30 , 43, 56 8 * SUN", async (event) => {
+    // onRequest(async (req, res) => {
     try {
       // Consistent timestamp
       const justNow = Timestamp.now().toDate();
@@ -373,8 +366,9 @@ export const convertStoreDrawsToCompetitions =
         )
         // Can Be A Bit Tricky If You Think About It.
         // As a result competitions shouldn't start at o'clock.
+        // Find competitions starting in the next minute.
         .where("drawDateAndTime.minute",
-          "<=", justNow.getMinutes() + 5,
+          "<=", justNow.getMinutes() + 1,
         )
         .where("drawDateAndTime.minute",
           ">=", justNow.getMinutes(),
@@ -416,8 +410,20 @@ as the store draw's.*/
                       .doc(storeDrawId);
 
 
-                    const timeBetweenPricePickingAndGroupPicking = 5;
-                    const displayPeriodAfterWinners = 30;
+                    const timeBetweenPricePickingAndGroupPicking = pickingMultipleInSeconds;
+                    const displayPeriodAfterWinners = pickingMultipleInSeconds * 10;
+
+                    /**
+                   * Single Competition Time Interval [Based On 3 Seconds Multiple]
+                   * First 1 minute - Remaining Time Count Down
+                   * Next 18 seconds - Grand Price Picking
+                   * Next 3 seconds - Won Price Display
+                   * Next 600 seconds Max - Group Picking
+                   * Next 30 Seconds - Competition Result Display
+                   * Last 3 seconds - Game Over
+                   * Total Time = 1 min + 10 min + 30 sec + 18 sec + 3 sec = 11 min 51 seconds
+                   * Gap Between Competitions - 1 minute
+                   */
 
                     const competition = {
                       competitionId: reference.id,
@@ -433,7 +439,7 @@ as the store draw's.*/
                       groupPickingStartTime: -1,
                       pickingMultipleInSeconds: pickingMultipleInSeconds,
                       timeBetweenPricePickingAndGroupPicking: timeBetweenPricePickingAndGroupPicking,
-                      displayPeriodAfterWinners: displayPeriodAfterWinners, // must switch to 5 minute (300)
+                      displayPeriodAfterWinners: displayPeriodAfterWinners,
 
                       grandPricesOrder: [],
                       isWonGrandPricePicked: false,
@@ -461,7 +467,7 @@ as the store draw's.*/
           }
         });
 
-      res.json({ result: `Done Converting Store Draws Into Competitions.` });
+      // res.json({ result: `Done Converting Store Draws Into Competitions.` });
     }
     catch (e) {
       logger.log(e);
@@ -793,17 +799,27 @@ export const maintainCountDownClocks =
 
       reference.onSnapshot(async (snapshot) => {
         if (!snapshot.exists) {
-          // max 300 seconds for picking a won group.
-          // max 60 seconds for picking a won price.
-          /*
-                                      grand prices picking - max 160 seconds
-                                      group picking - no limit (assuming 100 groups) 500 seconds
-                                      competition over display = at least 300 seconds
-                                      */
+          /**
+           * Single Competition Time Interval [Based On 3 Seconds Multiple]
+           * First 1 minute - Remaining Time Count Down
+           * Next 18 seconds - Grand Price Picking
+           * Next 3 seconds - Won Price Display
+           * Next 600 seconds Max - Group Picking
+           * Next 30 Seconds - Competition Result Display
+           * Last 3 seconds - Game Over
+           * Total Time = 1 min + 10 min + 30 sec + 18 sec + 3 sec = 11 min 51 seconds
+           * Gap Between Competitions - 1 minute
+           */
 
-          // Remaining seconds should always start at -300.
-          const max = pickingMultipleInSeconds * 30;
-          let second = -3 * pickingMultipleInSeconds;
+          // Remaining seconds should always start at -60 and stop at 654
+          // 
+          const max =
+            pickingMultipleInSeconds * 6 + // Grand Price Picking
+            pickingMultipleInSeconds * 1 + // Won Price Display
+            pickingMultipleInSeconds * 200 + // Group Picking Max Time
+            pickingMultipleInSeconds * 10 + // Competition Result Display
+            pickingMultipleInSeconds * 1; // Game Over
+          let second = -pickingMultipleInSeconds * 20; // -60
 
           reference.set({
             remainingTime: second,
@@ -1302,7 +1318,7 @@ export const createFakeDraws = onRequest(async (req, res) => {
   const month = drawDateAndTime.getMonth() + 1;
   const date = drawDateAndTime.getDate();
   const hour = drawDateAndTime.getHours() + 2;
-  const minute = drawDateAndTime.getMinutes() + 4;
+  const minute = drawDateAndTime.getMinutes() + 1;
 
   const storeDrawId =
     `${year}-${month}-${date}@${hour}h${minute}`;

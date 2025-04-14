@@ -45,6 +45,13 @@ class GroupCompetitorWidget extends StatelessWidget {
     String hostName = Converter.townOrInstitutionAsString(
             group.groupTownOrInstitution.townOrInstitutionName)
         .toLowerCase();
+    if (hostName.contains('howard college ukzn') &&
+        'howard college ukzn'.contains(hostName)) {
+      hostName = 'ukzn'; // Supposed to be ukzn-howard
+    } else if (hostName.contains('mangosuthu (mut)') &&
+        'mangosuthu (mut)'.contains(hostName)) {
+      hostName = 'mut';
+    }
     return storageReference
         .child(
             '$hostName/group_members/${group.groupCreatorPhoneNumber}/profile_images')
@@ -131,6 +138,9 @@ class GroupCompetitorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      const SizedBox(
+        height: 5,
+      ),
       // Group Image
       FutureBuilder(
           future: retrieveGroupImageURL(),

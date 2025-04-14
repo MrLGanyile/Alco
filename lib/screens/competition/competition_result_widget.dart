@@ -304,7 +304,17 @@ class CompetitionResultWidget extends StatelessWidget {
     String hostName = Converter.townOrInstitutionAsString(
             wonGroup.groupTownOrInstitution.townOrInstitutionName)
         .toLowerCase();
-    debug.log('Competition Result - ${wonGroup.groupCreatorPhoneNumber}');
+
+    if (hostName.contains('howard college ukzn') &&
+        'howard college ukzn'.contains(hostName)) {
+      hostName = 'ukzn'; // Supposed to be ukzn-howard
+    } else if (hostName.contains('mangosuthu (mut)') &&
+        'mangosuthu (mut)'.contains(hostName)) {
+      hostName = 'mut';
+    }
+    debug.log(
+        '$hostName/group_members/${wonGroup.groupCreatorPhoneNumber}/profile_images');
+
     return storageReference
         .child(
             '$hostName/group_members/${wonGroup.groupCreatorPhoneNumber}/profile_images')

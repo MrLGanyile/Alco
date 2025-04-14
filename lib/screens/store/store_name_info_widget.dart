@@ -1,4 +1,5 @@
 import 'package:alco/models/locations/supported_town_or_institution.dart';
+import 'package:alco/screens/competition/competition_finished_widget.dart';
 
 import '../../controllers/group_controller.dart';
 import '../competition/won_grand_price_widget.dart';
@@ -395,8 +396,10 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
               return displayGroupCompetitors();
             }
 
-            // Show Won Price Summary For The Next 5 Minute.
-            else /*if (countDownClock.remainingTime <= competitionTotalDuration) */ {
+            // Show Won Price Summary For The Next Certain Amount Of Minute.
+            else if (countDownClock.remainingTime <=
+                competitionTotalDuration +
+                    competition.displayPeriodAfterWinners!) {
               if (!competition.isOver) {
                 competitionReference.update({"isOver": true});
               }
@@ -406,6 +409,8 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 wonGroup: competition.wonGroup!,
                 competitionEndTime: competitionEndTime,
               );
+            } else {
+              return CompetitionFinishedWidget(endMoment: competitionEndTime);
             }
           } else if (snapshot.hasError) {
             debug.log('Error fetching count down clock data ${snapshot.error}');

@@ -32,6 +32,7 @@ import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
    Mafungwashe, 0766915230
    Msizi Dle 0782578628
    Cebo 0658040676
+   Zee 
 */
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
