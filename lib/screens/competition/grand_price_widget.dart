@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import '../../../controllers/store_controller.dart';
 import "dart:developer" as debug;
 
+import '../utils/globals.dart';
+
 // Branch : competition_resources_crud ->  view_competitions
 class GrandPriceWidget extends StatefulWidget {
   String grandPriceImageURL;
@@ -60,13 +62,9 @@ class GrandPriceWidgetState extends State<GrandPriceWidget> {
           } else if (snapshot.hasError) {
             debug.log(
                 'Error Fetching Draw Grand Price Image - ${snapshot.error}');
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           }
         });
   }

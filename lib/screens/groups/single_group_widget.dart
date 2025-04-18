@@ -250,6 +250,14 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
     String host = Converter.townOrInstitutionAsString(widget
             .competitorsGroup.groupTownOrInstitution.townOrInstitutionName)
         .toLowerCase();
+
+    if (host.contains('howard college ukzn') &&
+        'howard college ukzn'.contains(host)) {
+      host = 'ukzn'; // Supposed to be ukzn-howard
+    } else if (host.contains('mangosuthu (mut)') &&
+        'mangosuthu (mut)'.contains(host)) {
+      host = 'mut';
+    }
     return storageReference
         .child(
             '$host/group_members/${widget.competitorsGroup.groupCreatorPhoneNumber}/profile_images')

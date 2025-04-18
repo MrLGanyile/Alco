@@ -165,10 +165,14 @@ class StoreController extends GetxController {
     Stream<List<StoreNameInfo>> stream = FirebaseFirestore.instance
         .collection('stores_names_info')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) {
-              StoreNameInfo info = StoreNameInfo.fromJson(doc.data());
-              return info;
-            }).toList());
+        .map((snapshot) {
+      List<StoreNameInfo> list = snapshot.docs.map((doc) {
+        StoreNameInfo info = StoreNameInfo.fromJson(doc.data());
+        return info;
+      }).toList();
+      list.shuffle();
+      return list;
+    });
 
     return stream;
   }

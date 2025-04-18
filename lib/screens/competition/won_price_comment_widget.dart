@@ -7,6 +7,8 @@ import '../../controllers/share_dao_functions.dart';
 
 import 'dart:developer' as debug;
 
+import '../utils/globals.dart';
+
 class WonPriceCommentWidget extends StatelessWidget {
   WonPriceComment wonPriceComment;
 
@@ -18,6 +20,7 @@ class WonPriceCommentWidget extends StatelessWidget {
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(left: 10),
+              height: MediaQuery.of(context).size.height,
               child: Column(
                 children: [
                   FutureBuilder(
@@ -32,13 +35,9 @@ class WonPriceCommentWidget extends StatelessWidget {
                           );
                         } else if (snapshot.hasError) {
                           debug.log(snapshot.error.toString());
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
+                          return getCircularProgressBar();
                         } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
+                          return getCircularProgressBar();
                         }
                       })),
                   // Used to have no expanded and no maxlines property.

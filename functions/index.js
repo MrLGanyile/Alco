@@ -340,8 +340,8 @@ const shuffle = (array) => {
 // onSchedule("*/5 * * * *", async (event) => { */
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/convertStoreDrawsToCompetitions
 export const convertStoreDrawsToCompetitions =
-  onSchedule("4, 17, 30 , 43, 56 8 * SUN", async (event) => {
-    // onRequest(async (req, res) => {
+  // onSchedule("4, 17, 30 , 43, 56 8 * SUN", async (event) => {
+  onRequest(async (req, res) => {
     try {
       // Consistent timestamp
       const justNow = Timestamp.now().toDate();
@@ -379,8 +379,8 @@ export const convertStoreDrawsToCompetitions =
               const townOrInstitution = storeDrawDoc.data()["townOrInstitution"];
 
               /* Only initiate the conversion step if there are
-groups belonging in a section which is the same
-as the store draw's.*/
+              groups belonging in a section which is the same
+              as the store draw's.*/
               getFirestore().collection("groups")
                 .where("groupArea.townOrInstitutionFK", "==", townOrInstitution.townOrInstitutionNo)
                 .onSnapshot(async (groupsSnapshot) => {
@@ -467,7 +467,7 @@ as the store draw's.*/
           }
         });
 
-      // res.json({ result: `Done Converting Store Draws Into Competitions.` });
+      res.json({ result: `Done Converting Store Draws Into Competitions.` });
     }
     catch (e) {
       logger.log(e);
@@ -608,6 +608,7 @@ export const createGroupCompetitiorsGrid =
       const competitionId = event.data.data()["competitionId"];
       const storeFK = event.data.data()["storeFK"];
       const townOrInstitution = event.data.data()["competitionTownOrInstitution"];
+      const joiningFee = event.data.data()["joiningFee"];
 
       getFirestore()
         .collection("competitions")
@@ -620,7 +621,6 @@ export const createGroupCompetitiorsGrid =
               .collection("groups")
               .where("groupArea.townOrInstitutionFK", "==", townOrInstitution.townOrInstitutionNo)
               .get().then(async (groupsSnapshot) => {
-                // logger.log('No Of Qualifying Groups', groupsSnapshot.size);
                 if (groupsSnapshot.size > 0) {
                   const reference = getFirestore()
                     .collection("competitions")
@@ -633,6 +633,7 @@ export const createGroupCompetitiorsGrid =
 
                   let competitorsOrder = [];
 
+
                   // Make sure all competitors are visited.
                   groupsSnapshot.docs.forEach((groupDoc) => {
                     competitorsOrder.push(groupDoc.id);
@@ -640,7 +641,15 @@ export const createGroupCompetitiorsGrid =
 
                   // Make sure competitors are visited randomly.
                   competitorsOrder = shuffle(competitorsOrder);
-                  log(competitorsOrder);
+
+                  // No Group Picking Strategy Applied.
+                  if (groupsSnapshot.size > 200 && joiningFee == 0) {
+                    let newCompetitorsList = [];
+                    for (let i = 0; i < 200; i++) {
+                      newCompetitorsList.push(competitorsOrder[i]);
+                    }
+                    competitorsOrder = newCompetitorsList;
+                  }
 
                   // const hostGroups = groupsSnapshot.docs;
                   // competitorsOrder = findCompetitorsOrder(groupsSnapshot.docs, townOrInstitution.townOrInstitutionName);
@@ -1019,8 +1028,6 @@ export const createFakeGroups = onRequest(async (req, res) => {
   let group3Members;
   let group4Members;
 
-  log(`${req.query.hostIndex}`);
-
   switch (parseInt(req.query.hostIndex)) {
     case 0:// Mayville
       host = "mayville";
@@ -1035,25 +1042,25 @@ export const createFakeGroups = onRequest(async (req, res) => {
 
       group1Area = {
         townOrInstitutionFK: "5",
-        areaName: "Cato Manor-Mayville-Durban-Kwa Zulu Natal-South Africa",
+        areaName: "Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "32",
       };
 
       group2Area = {
         townOrInstitutionFK: "5",
-        areaName: "Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa",
+        areaName: "Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "34",
       };
 
       group3Area = {
         townOrInstitutionFK: "5",
-        areaName: "Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa",
+        areaName: "Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "36",
       };
 
       group4Area = {
         townOrInstitutionFK: "5",
-        areaName: "Bonela-Mayville-Durban-Kwa Zulu Natal-South Africa",
+        areaName: "Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "35",
       };
 

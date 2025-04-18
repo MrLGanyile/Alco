@@ -642,6 +642,7 @@ class GroupController extends GetxController {
   Stream<List<Group>> readAllGroups() {
     Stream<List<Group>> stream = firestore
         .collection('groups')
+        //.where("groupTownOrInstitution.townOrInstitutionNo", isEqualTo: "4")
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) {
               Group group = Group.fromJson(doc.data());
