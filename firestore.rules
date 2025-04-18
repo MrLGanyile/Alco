@@ -81,11 +81,11 @@ service cloud.firestore {
       allow create: if request.auth != null &&
 
       // Make sure a user is an alcoholic.
-      (exists(/databases/$(database)/documents/alcoholics/
-      $(request.auth.uid)) ||
-      exists(/databases/$(database)/documents/admins/
-      $(request.auth.uid))
-       ) &&
+      // (exists(/databases/$(database)/documents/alcoholics/
+      // $(request.auth.uid)) ||
+      // exists(/databases/$(database)/documents/admins/
+      // $(request.auth.uid))
+      // ) && 
 
       // Make sure users do not create more than one group.
       exists(/databases/$(database)/documents/groups/
@@ -98,7 +98,7 @@ service cloud.firestore {
       request.resource.data.groupImageURL != '' &&
 
       request.resource.data.groupArea != null &&
-      request.resource.data.groupArea != '' &&
+      request.resource.data.groupTownOrInstitution != null &&
       
       request.resource.data.groupCreatorPhoneNumber != null &&
       request.resource.data.groupCreatorPhoneNumber == request.auth.uid &&
