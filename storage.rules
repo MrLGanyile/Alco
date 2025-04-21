@@ -193,5 +193,6 @@ service firebase.storage {
       allow read;
       allow write;
     }
+
   }
 }

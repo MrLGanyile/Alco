@@ -25,7 +25,7 @@ class SingleMemberTextFieldState extends State<SingleMemberTextField> {
   Widget build(BuildContext context) => TextField(
         keyboardType:
             widget.isForUserName ? TextInputType.name : TextInputType.number,
-        maxLength: 10,
+        maxLength: widget.isForUserName ? 20 : 10,
         style: TextStyle(color: MyApplication.logoColor1),
         cursorColor: MyApplication.logoColor1,
         controller: widget.controller,

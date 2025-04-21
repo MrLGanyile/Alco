@@ -12,7 +12,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../models/users/admin.dart';
 import '../models/users/alcoholic.dart';
-import 'share_dao_functions.dart';
+import 'shared_dao_functions.dart';
 import 'dart:math';
 import 'dart:developer' as debug;
 

@@ -8,6 +8,8 @@ import '../../controllers/store_controller.dart';
 import '../../models/users/group.dart';
 import 'dart:developer' as debug;
 
+import '../utils/globals.dart';
+
 // Branch : competition_resources_crud ->  view_competitions
 class GroupCompetitorWidget extends StatelessWidget {
   Group group;
@@ -32,7 +34,7 @@ class GroupCompetitorWidget extends StatelessWidget {
       child: Container(
         //margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/8) ,
         decoration: BoxDecoration(
-          color: Colors.orange,
+          color: backgroundResourcesColor,
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
               fit: BoxFit.cover, image: NetworkImage(groupImageURL)),
@@ -79,13 +81,9 @@ class GroupCompetitorWidget extends StatelessWidget {
           } else if (snapshot.hasError) {
             debug.log(
                 "Error Fetching Group Members Images Data - ${snapshot.error}");
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           } else {
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.black),
-            );
+            return getCircularProgressBar();
           }
         });
     ;
@@ -150,13 +148,9 @@ class GroupCompetitorWidget extends StatelessWidget {
             } else if (snapshot.hasError) {
               debug.log(
                   'Error Fetching Group Competitor Image Data - ${snapshot.error}');
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             }
           }),
       const SizedBox(
@@ -189,13 +183,9 @@ class GroupCompetitorWidget extends StatelessWidget {
             } else if (snapshot.hasError) {
               debug
                   .log("Error Fetching Group Members Data - ${snapshot.error}");
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             }
           }),
       const SizedBox(

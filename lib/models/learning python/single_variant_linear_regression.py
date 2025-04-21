@@ -5,12 +5,62 @@ plt.use('.deeplearning.mplstyle')
 
 # Problem -: Given a rock's density predict it age.
 '''
+Training Example
 | Density (kg.m^3) | Age (years in thousands) |
 | 300              | 250                      |
 | 250              | 280                      |
 | 500              | 350                      |
 |__________________|__________________________|
 '''
+
+# For x^(0) -> f_wb = w*x[0] + b
+# For x^(1) -> f_wb = w*x[1] + b
+# For x^(2) -> f_wb = w*x[2] + b
+# Model
+def calculate_model_output(w, b, x):
+    m = x.shape  # What does shape do?
+    f_wb = np.zeros(m)
+
+    # For each data point compute it corresponding y-hat value.
+    for i in range(len(x)):
+        f_wb[i] = w*x[i] + b
+
+    return f_wb
+
+# Squared error cost function For Linear Regression With One Variable.
+def compute_cost(x, y, w, b):
+    m = len(x)
+    sum = 0
+
+    for i in range(m):
+        f_wb = w*x[i] + b # y-hat
+        squared_error = (f_wb-y[i])**2
+        sum = sum + squared_error # sum update
+    return sum/2*m # equation output
+
+# Gradient Descent For Linear Regression With One Variable.
+def compute_gradient_descent(x, y, w, b):
+    m = len(x)
+    dj_dw = 0 # Partial derivative of J with respect to w.
+    dj_db = 0 # Partial derivative of J with respect to d.
+
+    for i in range(m):
+        # Calculate prediction for the ith sample.
+        f_wb_i = w*x[i] + b
+        # Calculate partial derivatives for the ith sample.
+        dj_dw_i = (f_wb_i - y[i])*x[i]
+        dj_db_i = (f_wb_i - y[i])
+
+        # Add the ith sample's partial derivatives to the sums.
+        dj_dw = dj_dw + dj_dw_i
+        dj_db = dj_db + dj_db_i
+
+    # Divide both sums by the number of samples.
+    dj_dw = (1/m)*dj_dw
+    dj_db = (1/m)*dj_dw
+
+    return dj_dw, dj_db
+
 # (x^(1), y^(1)) = (300, 250k)
 # (x^(2), y^(2)) = (250, 280k)
 # (x^(3), y^(3)) = (500, 350k)
@@ -70,19 +120,6 @@ w = 20
 b = -150
 print(f"w: {w} b: {b}")
 
-# For x^(0) -> f_wb = w*x[0] + b
-# For x^(1) -> f_wb = w*x[1] + b
-# For x^(2) -> f_wb = w*x[2] + b
-# Because the data set might be large, it is convinient to use a loop to compute these predicted values.
-def calculate_model_output(w, b, x):
-    m = x.shape  # What does shape do?
-    f_wb = np.zeros(m)
-
-    # For each data point compute it corresponding y-hat value.
-    for i in range(len(x)):
-        f_wb[i] = w*x[i] + b
-
-    return f_wb
 
 # Compute our model/hypothesis
 hypothesis = calculate_model_output(w, b, x_train)

@@ -340,7 +340,7 @@ const shuffle = (array) => {
 // onSchedule("*/5 * * * *", async (event) => { */
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/convertStoreDrawsToCompetitions
 export const convertStoreDrawsToCompetitions =
-  // onSchedule("4, 17, 30 , 43, 56 8 * SUN", async (event) => {
+  // onSchedule("4, 17, 30 , 43, 56 17 * FRI", async (event) => {
   onRequest(async (req, res) => {
     try {
       // Consistent timestamp
@@ -954,6 +954,7 @@ export const createWonPriceSummary =
                   wonPriceSummaryId,
                 storeFK: storeFK,
                 groupName: wonGroup.groupName,
+                groupSpecificArea: wonGroup.groupSpecificArea,
                 groupTownOrInstitution:
                   wonGroup.groupTownOrInstitution,
                 groupArea:
@@ -1003,6 +1004,11 @@ export const createFakeGroups = onRequest(async (req, res) => {
   let group3Area;
   let group4Area;
 
+  let specificArea1;
+  let specificArea2;
+  let specificArea3;
+  let specificArea4;
+
   let groupTownOrInstitution;
 
   let groupName1;
@@ -1045,24 +1051,28 @@ export const createFakeGroups = onRequest(async (req, res) => {
         areaName: "Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "32",
       };
+      specificArea1 = 'Emakhontena';
 
       group2Area = {
         townOrInstitutionFK: "5",
         areaName: "Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "34",
       };
+      specificArea2 = 'Stop 8';
 
       group3Area = {
         townOrInstitutionFK: "5",
         areaName: "Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "36",
       };
+      specificArea3 = 'Ko-1 Room';
 
       group4Area = {
         townOrInstitutionFK: "5",
         areaName: "Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "35",
       };
+      specificArea4 = 'Stop Street';
 
       groupTownOrInstitution = {
         cityFK: "1",
@@ -1097,24 +1107,28 @@ export const createFakeGroups = onRequest(async (req, res) => {
         areaName: "DUT-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "29",
       };
+      specificArea1 = 'Res 1';
 
       group2Area = {
         townOrInstitutionFK: "3",
         areaName: "DUT-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "29",
       };
+      specificArea2 = 'Res 2';
 
       group3Area = {
         townOrInstitutionFK: "3",
         areaName: "DUT-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "29",
       };
+      specificArea3 = 'Res 3';
 
       group4Area = {
         townOrInstitutionFK: "3",
         areaName: "DUT-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "29",
       };
+      specificArea4 = 'Res 4';
 
       groupTownOrInstitution = {
         cityFK: "1",
@@ -1149,24 +1163,28 @@ export const createFakeGroups = onRequest(async (req, res) => {
         areaName: "Howard College (UKZN)-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "30",
       };
+      specificArea1 = 'Res 1';
 
       group2Area = {
         townOrInstitutionFK: "4",
         areaName: "Howard College (UKZN)-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "30",
       };
+      specificArea2 = 'Res 2';
 
       group3Area = {
         townOrInstitutionFK: "4",
         areaName: "Howard College (UKZN)-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "30",
       };
+      specificArea3 = 'Res 3';
 
       group4Area = {
         townOrInstitutionFK: "4",
         areaName: "Howard College (UKZN)-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "30",
       };
+      specificArea4 = 'Res 4';
 
       groupTownOrInstitution = {
         cityFK: "1",
@@ -1202,24 +1220,28 @@ export const createFakeGroups = onRequest(async (req, res) => {
         areaName: "Foreman-Sydenham-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "37",
       };
+      specificArea1 = 'Foreman';
 
       group2Area = {
         townOrInstitutionFK: "6",
         areaName: "Kennedy-Sydenham-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "38",
       };
+      specificArea2 = 'Kennedy';
 
       group3Area = {
         townOrInstitutionFK: "6",
         areaName: "Palmet-Sydenham-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "40",
       };
+      specificArea3 = 'Palmet';
 
       group4Area = {
         townOrInstitutionFK: "6",
         areaName: "Sparks-Sydenham-Durban-Kwa Zulu Natal-South Africa",
         areaNo: "41",
       };
+      specificArea4 = 'Sydenham Height';
 
       groupTownOrInstitution = {
         cityFK: "1",
@@ -1244,6 +1266,7 @@ export const createFakeGroups = onRequest(async (req, res) => {
     groupName: groupName1,
     groupImageURL: `/${host}/groups_specific_locations/${group1CreatorPhoneNumber}.jpeg`,
     groupArea: group1Area,
+    groupSpecificArea: specificArea1,
     groupTownOrInstitution: groupTownOrInstitution,
 
     groupCreatorPhoneNumber: group1CreatorPhoneNumber,
@@ -1259,6 +1282,7 @@ export const createFakeGroups = onRequest(async (req, res) => {
     groupName: groupName2,
     groupImageURL: `/${host}/groups_specific_locations/${group2CreatorPhoneNumber}.jpeg`,
     groupArea: group2Area,
+    groupSpecificArea: specificArea2,
     groupTownOrInstitution: groupTownOrInstitution,
 
     groupCreatorPhoneNumber: group2CreatorPhoneNumber,
@@ -1274,6 +1298,7 @@ export const createFakeGroups = onRequest(async (req, res) => {
     groupName: groupName3,
     groupImageURL: `/${host}/groups_specific_locations/${group3CreatorPhoneNumber}.jpeg`,
     groupArea: group3Area,
+    groupSpecificArea: specificArea3,
     groupTownOrInstitution: groupTownOrInstitution,
 
     groupCreatorPhoneNumber: group3CreatorPhoneNumber,
@@ -1289,6 +1314,7 @@ export const createFakeGroups = onRequest(async (req, res) => {
     groupName: groupName4,
     groupImageURL: `/${host}/groups_specific_locations/${group4CreatorPhoneNumber}.jpeg`,
     groupArea: group4Area,
+    groupSpecificArea: specificArea4,
     groupTownOrInstitution: groupTownOrInstitution,
 
     groupCreatorPhoneNumber: group4CreatorPhoneNumber,

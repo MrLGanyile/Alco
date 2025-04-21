@@ -1,6 +1,6 @@
 import 'package:alco/controllers/admin_controller.dart';
 import 'package:alco/controllers/alcoholic_controller.dart';
-import 'package:alco/controllers/share_dao_functions.dart';
+import 'package:alco/controllers/shared_dao_functions.dart';
 import 'package:alco/screens/alcoholics/alcoholic_registration_widget.dart';
 import 'package:alco/screens/utils/login_widget.dart';
 import 'package:cloud_functions/cloud_functions.dart';

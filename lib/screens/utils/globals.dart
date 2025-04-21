@@ -1,5 +1,6 @@
 //import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 bool showProgressBar = false;
 
@@ -9,6 +10,10 @@ Widget getCircularProgressBar() => Center(
         child: CircularProgressIndicator(
       color: backgroundResourcesColor,
     ));
+
+void getSnapbar(title, message) {
+  Get.snackbar(title, message);
+}
 
 class Globals {
   const Globals._();

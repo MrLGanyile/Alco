@@ -11,6 +11,7 @@ class Group implements Comparable<Group> {
   SupportedTownOrInstitution groupTownOrInstitution;
 
   SupportedArea groupArea;
+  String? groupSpecificArea;
 
   String groupCreatorPhoneNumber;
 
@@ -31,6 +32,7 @@ class Group implements Comparable<Group> {
     required this.groupImageURL,
     required this.groupTownOrInstitution,
     required this.groupArea,
+    this.groupSpecificArea, // Add required when new emulator data is inserted
     required this.groupCreatorPhoneNumber,
     required this.groupCreatorImageURL,
     required this.groupCreatorUsername,
@@ -50,6 +52,7 @@ class Group implements Comparable<Group> {
         'groupMembers': groupMembers,
         'isActive': isActive,
         'maxNoOfMembers': maxNoOfMembers,
+        'groupSpecificArea': groupSpecificArea,
       };
 
   factory Group.fromJson(dynamic json) => Group(
@@ -58,6 +61,9 @@ class Group implements Comparable<Group> {
       groupTownOrInstitution:
           SupportedTownOrInstitution.fromJson(json['groupTownOrInstitution']),
       groupArea: SupportedArea.fromJson(json['groupArea']),
+      groupSpecificArea:
+          // ignore: prefer_if_null_operators
+          json['groupSpecificArea'] != null ? json['groupSpecificArea'] : null,
       groupCreatorPhoneNumber: json['groupCreatorPhoneNumber'],
       groupCreatorImageURL: json['groupCreatorImageURL'],
       groupMembers: toListOfStrings(json['groupMembers']),

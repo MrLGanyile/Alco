@@ -18,6 +18,7 @@ class WonPriceSummary implements Comparable<WonPriceSummary> {
   String hostName;
   SupportedTownOrInstitution townOrInstitution;
   SupportedArea groupArea;
+  String? groupSpecificArea;
   String pickUpSpot;
 
   String wonGrandPriceImageURL;
@@ -31,50 +32,54 @@ class WonPriceSummary implements Comparable<WonPriceSummary> {
 
   DateTime wonDate;
 
-  WonPriceSummary({
-    required this.wonPriceSummaryId,
-    required this.storeFK,
-    required this.storeImageURL,
-    required this.hostName,
-    required this.groupArea,
-    required this.townOrInstitution,
-    required this.pickUpSpot,
-    required this.groupCreatorPhoneNumber,
-    required this.groupCreatorUsername,
-    required this.groupCreatorImageURL,
-    required this.groupName,
-    required this.groupMembers,
-    required this.grandPriceDescription,
-    required this.wonGrandPriceImageURL,
-    required this.wonDate,
-  });
+  WonPriceSummary(
+      {required this.wonPriceSummaryId,
+      required this.storeFK,
+      required this.storeImageURL,
+      required this.hostName,
+      required this.groupArea,
+      required this.townOrInstitution,
+      required this.pickUpSpot,
+      required this.groupCreatorPhoneNumber,
+      required this.groupCreatorUsername,
+      required this.groupCreatorImageURL,
+      required this.groupName,
+      required this.groupMembers,
+      required this.grandPriceDescription,
+      required this.wonGrandPriceImageURL,
+      required this.wonDate,
+      this.groupSpecificArea});
 
   factory WonPriceSummary.fromJson(dynamic json) {
     debug.log(json['wonDate'].toString());
     return WonPriceSummary(
-      wonPriceSummaryId: json['wonPriceSummaryId'],
-      storeFK: json['storeFK'],
-      storeImageURL: json['storeImageURL'],
-      hostName: json['hostName'],
-      pickUpSpot: json['pickUpSpot'],
-      groupCreatorPhoneNumber: json['groupCreatorPhoneNumber'],
-      groupCreatorImageURL: json['groupCreatorImageURL'],
-      groupCreatorUsername: json['groupCreatorUsername'],
-      groupName: json['groupName'],
-      groupArea: SupportedArea.fromJson(json['groupArea']),
-      townOrInstitution:
-          SupportedTownOrInstitution.fromJson(json['groupTownOrInstitution']),
-      groupMembers: getGroupMembers(json['groupMembers']),
-      grandPriceDescription: json['grandPriceDescription'],
-      wonGrandPriceImageURL: json['wonGrandPriceImageURL'],
-      wonDate: DateTime(
-        json['wonDate']['year'],
-        json['wonDate']['month'],
-        json['wonDate']['day'],
-        json['wonDate']['hour'],
-        json['wonDate']['minute'],
-      ),
-    );
+        wonPriceSummaryId: json['wonPriceSummaryId'],
+        storeFK: json['storeFK'],
+        storeImageURL: json['storeImageURL'],
+        hostName: json['hostName'],
+        pickUpSpot: json['pickUpSpot'],
+        groupCreatorPhoneNumber: json['groupCreatorPhoneNumber'],
+        groupCreatorImageURL: json['groupCreatorImageURL'],
+        groupCreatorUsername: json['groupCreatorUsername'],
+        groupName: json['groupName'],
+        groupArea: SupportedArea.fromJson(json['groupArea']),
+        townOrInstitution:
+            SupportedTownOrInstitution.fromJson(json['groupTownOrInstitution']),
+        groupMembers: getGroupMembers(json['groupMembers']),
+        grandPriceDescription: json['grandPriceDescription'],
+        wonGrandPriceImageURL: json['wonGrandPriceImageURL'],
+        wonDate: DateTime(
+          json['wonDate']['year'],
+          json['wonDate']['month'],
+          json['wonDate']['day'],
+          json['wonDate']['hour'],
+          json['wonDate']['minute'],
+        ),
+        groupSpecificArea:
+            // ignore: prefer_if_null_operators
+            json['groupSpecificArea'] == null
+                ? null
+                : json['groupSpecificArea']);
   }
 
   @override

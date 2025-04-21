@@ -78,7 +78,7 @@ service cloud.firestore {
     // Note: Has Model Named {Group}
     match /groups/{groupId}{
 
-      allow create: if request.auth != null &&
+      allow create; // : if request.auth != null &&
 
       // Make sure a user is an alcoholic.
       // (exists(/databases/$(database)/documents/alcoholics/
@@ -88,33 +88,34 @@ service cloud.firestore {
       // ) && 
 
       // Make sure users do not create more than one group.
-      exists(/databases/$(database)/documents/groups/
-      $(request.auth.uid)) == false && 
+      //exists(/databases/$(database)/documents/groups/
+      //$(request.auth.uid)) == false && 
 
-      request.resource.data.groupName != null &&
-      request.resource.data.groupName.size() >= 3 &&
+      // request.resource.data.groupName != null &&
+      // request.resource.data.groupName.size() >= 3 &&
 
-      request.resource.data.groupImageURL!= null &&
-      request.resource.data.groupImageURL != '' &&
+      // request.resource.data.groupImageURL!= null &&
+      // request.resource.data.groupImageURL != '' &&
 
-      request.resource.data.groupArea != null &&
-      request.resource.data.groupTownOrInstitution != null &&
+      // request.resource.data.groupArea != null &&
+      // request.resource.data.groupSpecificArea != '' &&
+      // request.resource.data.groupTownOrInstitution != null &&
       
-      request.resource.data.groupCreatorPhoneNumber != null &&
-      request.resource.data.groupCreatorPhoneNumber == request.auth.uid &&
+      // request.resource.data.groupCreatorPhoneNumber != null &&
+      // request.resource.data.groupCreatorPhoneNumber == request.auth.uid &&
 
-      request.resource.data.groupCreatorUsername != null &&
-      request.resource.data.groupCreatorUsername != '' &&
+      // request.resource.data.groupCreatorUsername != null &&
+      // request.resource.data.groupCreatorUsername != '' &&
 
-      request.resource.data.groupCreatorImageURL != null &&
-      request.resource.data.groupCreatorImageURL != '' &&
+      // request.resource.data.groupCreatorImageURL != null &&
+      // request.resource.data.groupCreatorImageURL != '' &&
       
-      request.resource.data.groupMembers != null &&
-      request.resource.data.groupMembers.size() == 5 &&
+      // request.resource.data.groupMembers != null &&
+      // request.resource.data.groupMembers.size() == 5 &&
 
-      request.resource.data.isActive==false &&
+      // request.resource.data.isActive==false &&
       
-      request.resource.data.maxNoOfMembers == 5;
+      // request.resource.data.maxNoOfMembers == 5;
 
       // Anybody can view groups.
       allow read;

@@ -2,7 +2,7 @@ import 'package:alco/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/share_dao_functions.dart';
+import '../../controllers/shared_dao_functions.dart';
 import '../../controllers/group_controller.dart';
 import '../utils/single_member_text_field.dart';
 
@@ -121,7 +121,7 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
     switch (widget.memberIndex) {
       case 1:
         return GetBuilder<GroupController>(builder: (_) {
-          return groupController.member1ImageURL!.isEmpty
+          return groupController.member1ImageURL.isEmpty
               ? const SizedBox.shrink()
               : CircleAvatar(
                   radius: MediaQuery.of(context).size.width / 8,
@@ -131,59 +131,13 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
                         image: DecorationImage(
                             image:
                                 // Get.find<GroupController>().member1ImageURL!
-                                NetworkImage(
-                                    groupController.member1ImageURL!))),
+                                NetworkImage(groupController.member1ImageURL))),
                   ),
                 );
         });
       case 2:
         return GetBuilder<GroupController>(builder: (_) {
-          return groupController.member2ImageURL!.isEmpty
-              ? const SizedBox.shrink()
-              : CircleAvatar(
-                  radius: MediaQuery.of(context).size.width / 8,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                groupController.member2ImageURL!))),
-                  ),
-                );
-        });
-      case 3:
-        return GetBuilder<GroupController>(builder: (_) {
-          return groupController.member3ImageURL!.isEmpty
-              ? const SizedBox.shrink()
-              : CircleAvatar(
-                  radius: MediaQuery.of(context).size.width / 8,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                groupController.member3ImageURL!))),
-                  ),
-                );
-        });
-      case 4:
-        return GetBuilder<GroupController>(builder: (_) {
-          return groupController.member4ImageURL!.isEmpty
-              ? const SizedBox.shrink()
-              : CircleAvatar(
-                  radius: MediaQuery.of(context).size.width / 8,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                groupController.member4ImageURL!))),
-                  ),
-                );
-        });
-      default:
-        return GetBuilder<GroupController>(builder: (_) {
-          return groupController.leaderImageURL!.isEmpty
+          return groupController.member2ImageURL.isEmpty
               ? const SizedBox.shrink()
               : CircleAvatar(
                   radius: MediaQuery.of(context).size.width / 8,
@@ -192,7 +146,52 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
                         shape: BoxShape.circle,
                         image: DecorationImage(
                             image:
-                                NetworkImage(groupController.leaderImageURL!))),
+                                NetworkImage(groupController.member2ImageURL))),
+                  ),
+                );
+        });
+      case 3:
+        return GetBuilder<GroupController>(builder: (_) {
+          return groupController.member3ImageURL.isEmpty
+              ? const SizedBox.shrink()
+              : CircleAvatar(
+                  radius: MediaQuery.of(context).size.width / 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image:
+                                NetworkImage(groupController.member3ImageURL))),
+                  ),
+                );
+        });
+      case 4:
+        return GetBuilder<GroupController>(builder: (_) {
+          return groupController.member4ImageURL.isEmpty
+              ? const SizedBox.shrink()
+              : CircleAvatar(
+                  radius: MediaQuery.of(context).size.width / 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image:
+                                NetworkImage(groupController.member4ImageURL))),
+                  ),
+                );
+        });
+      default:
+        return GetBuilder<GroupController>(builder: (_) {
+          return groupController.leaderImageURL.isEmpty
+              ? const SizedBox.shrink()
+              : CircleAvatar(
+                  radius: MediaQuery.of(context).size.width / 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image:
+                                NetworkImage(groupController.leaderImageURL))),
                   ),
                 );
         });

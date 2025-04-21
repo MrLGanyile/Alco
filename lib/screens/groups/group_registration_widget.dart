@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alco/controllers/shared_dao_functions.dart';
 import 'package:alco/controllers/store_controller.dart';
 import 'package:alco/screens/groups/single_member_form_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -8,14 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/location_controller.dart';
-import '../../controllers/share_dao_functions.dart';
 import '../../controllers/group_controller.dart';
 import '../../main.dart';
 import '../../models/locations/converter.dart';
 import '../../models/locations/supported_area.dart';
 
 import 'dart:developer' as debug;
-import '../utils/verification_screen.dart';
+import '../utils/globals.dart';
+import 'group_verification_widget.dart';
 
 class GroupRegistrationWidget extends StatelessWidget {
   TextEditingController groupNameEditingController = TextEditingController();
@@ -201,9 +202,16 @@ class GroupRegistrationWidget extends StatelessWidget {
             height: 10,
           ),
           // Logo
-          CircleAvatar(
-            backgroundImage: const AssetImage('assets/logo.png'),
-            radius: MediaQuery.of(context).size.width * 0.15,
+          Container(
+            height: 100,
+            width: 100,
+            decoration: const BoxDecoration(
+              image: DecorationImage(image: AssetImage('assets/logo.png')),
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(
+            height: 5,
           ),
           Text(
             'Alco',
@@ -212,18 +220,6 @@ class GroupRegistrationWidget extends StatelessWidget {
                 color: MyApplication.logoColor1,
                 fontWeight: FontWeight.bold),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          // Group Members
-          SingleMemberFormWidget(
-            userNameController: leaderUsernameEditingController,
-            phoneNumberController: leaderPhoneNumberEditingController,
-            memberIndex: 0,
-          ),
-          // Group Name
-          userSpecificLocationOrGroupName(false),
-
           const SizedBox(
             height: 10,
           ),
@@ -285,22 +281,32 @@ class GroupRegistrationWidget extends StatelessWidget {
                     'Howard College (UKZN)-Durban-Kwa Zulu Natal-South Africa',
                     'DUT-Durban-Kwa Zulu Natal-South Africa',
                   ];
+
                   items.sort();
                   return pickAreaName(context);
                 } else if (snapshot.hasError) {
                   debug.log(
                       "Error Fetching Supported Areas Data - ${snapshot.error}");
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return getCircularProgressBar();
                 } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return getCircularProgressBar();
                 }
               },
             );
           }),
+
+          const SizedBox(
+            height: 10,
+          ),
+
+          // Group Members
+          SingleMemberFormWidget(
+            userNameController: leaderUsernameEditingController,
+            phoneNumberController: leaderPhoneNumberEditingController,
+            memberIndex: 0,
+          ),
+          // Group Name
+          userSpecificLocationOrGroupName(false),
 
           const SizedBox(
             height: 10,
@@ -340,7 +346,7 @@ class GroupRegistrationWidget extends StatelessWidget {
             phoneNumberController: phoneNumber4EditingController,
             memberIndex: 4,
           ),
-          signInButton(context),
+          createGroupButton(context),
         ]),
       ),
     );
@@ -366,7 +372,7 @@ class GroupRegistrationWidget extends StatelessWidget {
                 : Container(
                     //margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/8) ,
                     decoration: BoxDecoration(
-                      color: Colors.orange,
+                      color: backgroundResourcesColor,
                       borderRadius: BorderRadius.circular(20),
                       image: DecorationImage(
                         fit: BoxFit.cover,
@@ -414,7 +420,7 @@ class GroupRegistrationWidget extends StatelessWidget {
     );
   }
 
-  Widget signInButton(BuildContext context) => Container(
+  Widget createGroupButton(BuildContext context) => Container(
         width: MediaQuery.of(context).size.width,
         height: 45,
         decoration: BoxDecoration(
@@ -424,116 +430,115 @@ class GroupRegistrationWidget extends StatelessWidget {
             )),
         child: InkWell(
           onTap: () async {
-            if (isValidInputWithoutImages()) {
-              debug.log('isValideInputWithoutImages -> True');
-              final result = await groupController.createGroup();
+            if (groupSpecificAreaEditingController.text.isEmpty) {
+              getSnapbar('Group Registration Error',
+                  'Group Specific Area Not Entered.');
+            } else if (leaderPhoneNumberEditingController.text.isEmpty) {
+              getSnapbar('Group Registration Error',
+                  'Leader Phone Number Not Entered.');
+            } else if (leaderPhoneNumberEditingController.text.length != 10) {
+              getSnapbar(
+                  'Group Registration Error', 'Invalid Leader Phone Number.');
+            } else if (leaderUsernameEditingController.text.isEmpty) {
+              getSnapbar(
+                  'Group Registration Error', 'Leader Username Not Entered.');
+            } else if (leaderUsernameEditingController.text.isEmpty) {
+              getSnapbar(
+                  'Group Registration Error', 'Leader Username Not Entered.');
+            } else if (groupController.leaderImageURL.isEmpty ||
+                groupController.leaderProfileImageFile == null) {
+              getSnapbar('Group Registration Error',
+                  'Leader Profile Image Not Entered.');
+            } else if (phoneNumber1EditingController.text.isEmpty) {
+              getSnapbar('Group Registration Error',
+                  'Member1 Phone Number Not Entered.');
+            } else if (phoneNumber1EditingController.text.length != 10) {
+              getSnapbar(
+                  'Group Registration Error', 'Invalid Member1 Phone Number.');
+            } else if (username1EditingController.text.isEmpty) {
+              getSnapbar(
+                  'Group Registration Error', 'Member1 Username Not Entered.');
+            } else if (groupController.member1ImageURL.isEmpty ||
+                groupController.member1ProfileImageFile == null) {
+              getSnapbar(
+                  'Group Registration Error', 'Member1 Image Not Entered.');
+            } else if (phoneNumber2EditingController.text.isEmpty) {
+              getSnapbar('Group Registration Error',
+                  'Member2 Phone Number Not Entered.');
+            } else if (phoneNumber2EditingController.text.length != 10) {
+              getSnapbar(
+                  'Group Registration Error', 'Invalid Member2 Phone Number.');
+            } else if (username2EditingController.text.isEmpty) {
+              getSnapbar(
+                  'Group Registration Error', 'Member2 Username Not Entered.');
+            } else if (groupController.member2ImageURL.isEmpty ||
+                groupController.member2ProfileImageFile == null) {
+              getSnapbar(
+                  'Group Registration Error', 'Member2 Image Not Entered.');
+            } else if (phoneNumber3EditingController.text.isEmpty) {
+              getSnapbar('Group Registration Error',
+                  'Member3 Phone Number Not Entered.');
+            } else if (phoneNumber3EditingController.text.length != 10) {
+              getSnapbar(
+                  'Group Registration Error', 'Invalid Member3 Phone Number.');
+            } else if (username3EditingController.text.isEmpty) {
+              getSnapbar(
+                  'Group Registration Error', 'Member3 Username Not Entered.');
+            } else if (groupController.member3ImageURL.isEmpty ||
+                groupController.member3ProfileImageFile == null) {
+              getSnapbar(
+                  'Group Registration Error', 'Member3 Image Not Entered.');
+            } else if (groupController.member3ProfileImageFile == null) {
+            } else if (phoneNumber4EditingController.text.isEmpty) {
+              getSnapbar('Group Registration Error',
+                  'Member4 Phone Number Not Entered.');
+            } else if (phoneNumber4EditingController.text.length != 10) {
+              getSnapbar(
+                  'Group Registration Error', 'Invalid Member4 Phone Number.');
+            } else if (username4EditingController.text.isEmpty) {
+              getSnapbar(
+                  'Group Registration Error', 'Member4 Username Not Entered.');
+            } else if (groupController.member4ImageURL.isEmpty ||
+                groupController.member4ProfileImageFile == null) {
+              getSnapbar(
+                  'Group Registration Error', 'Member4 Image Not Entered.');
+            } else {
+              if (isLeaderValidated) {
+                debug.log('About to save a group');
+                final result = await groupController.createGroup();
 
-              // Does not go to the next screen.
-              if (result == GroupSavingStatus.saved) {
-                debug.log('Show dialog box');
+                // Does not go to the next screen.
+                if (result == GroupSavingStatus.saved) {
+                  debug.log('Show dialog box');
+                }
+              } else {
+                final auth = FirebaseAuth.instance;
+
+                await auth.verifyPhoneNumber(
+                  phoneNumber: groupController.leaderPhoneNumber,
+                  verificationCompleted:
+                      (PhoneAuthCredential credential) async {
+                    debug.log(
+                        '1. About To Signed In User From GroupRegistrationScreen...');
+                    // ANDROID ONLY!
+                    // Sign the user in (or link) with the auto-generated credential
+                    await auth.signInWithCredential(credential);
+                  },
+                  verificationFailed: (FirebaseAuthException e) {
+                    if (e.code == 'invalid-phone-number') {
+                      debug.log('The provided phone number is not valid.');
+                    }
+
+                    // Handle other errors
+                  },
+                  codeSent: (String verificationId, int? resendToken) async {
+                    Get.to(() => GroupVerificationWidget(
+                          verificationId: verificationId,
+                        ));
+                  },
+                  codeAutoRetrievalTimeout: (String verificationId) {},
+                );
               }
-            }
-
-            // Create Alcoholic Now
-            if (isValidInputWithoutImages()) {
-              /*
-              final auth = FirebaseAuth.instance;
-              await auth.verifyPhoneNumber(
-                phoneNumber: leaderPhoneNumber,
-                verificationCompleted: (PhoneAuthCredential credential) async {
-                  debug.log('1. About To Signed In User...');
-                  // ANDROID ONLY!
-                  // Sign the user in (or link) with the auto-generated credential
-                  await auth.signInWithCredential(credential);
-
-                  debug.log('1. Successfully Signed In User...');
-
-                  // Save Leader
-                  if (hasLeader) {
-                    groupController.saveAlcoholic(
-                        groupController.leaderProfileImageFile!,
-                        leaderPhoneNumber!,
-                        Converter.toSectionName(dropDowButton.value!),
-                        leaderPhoneNumber!,
-                        leaderUsername!);
-                  }
-
-                  // Save Member 1
-                  if (hasUser1) {
-                    groupController.saveAlcoholic(
-                        groupController.member1ProfileImageFile!,
-                        username1EditingController.text!,
-                        Converter.toSectionName(dropDowButton.value!),
-                        username1EditingController.text!,
-                        user1Username!);
-                  }
-
-                  // Save Member 2
-                  if (hasUser2) {
-                    groupController.saveAlcoholic(
-                        groupController.member2ProfileImageFile!,
-                        username1EditingController.text!,
-                        Converter.toSectionName(dropDowButton.value!),
-                        username2EditingController.text!,
-                        user2Username!);
-                  }
-
-                  // Save Member 3
-                  if (hasUser3) {
-                    groupController.saveAlcoholic(
-                        groupController.member3ProfileImageFile!,
-                        username1EditingController.text!,
-                        Converter.toSectionName(dropDowButton.value!),
-                        username3EditingController.text!,
-                        user3Username!);
-                  }
-
-                  // Save Member 4
-                  if (hasUser4) {
-                    groupController.saveAlcoholic(
-                        groupController.member4ProfileImageFile!,
-                        username4EditingController.text!,
-                        Converter.toSectionName(dropDowButton.value!),
-                        username4EditingController.text!,
-                        user4Username!);
-                  }
-
-                  /*groupController.saveGroup(groupController.groupImageFile!,
-                      groupName!, groupSpecificArea!);*/
-                },
-                verificationFailed: (FirebaseAuthException e) {
-                  if (e.code == 'invalid-phone-number') {
-                    debug.log('The provided phone number is not valid.');
-                  }
-
-                  // Handle other errors
-                },
-                codeSent: (String verificationId, int? resendToken) async {
-                  String generatedPin = '';
-                  for (int digitIndex = 0; digitIndex < 4; digitIndex++) {
-                    generatedPin += Random().nextInt(10).toString();
-                  }
-
-                  debug.log('generated pin $generatedPin');
-
-                  Navigator.of(context).push(CustomPageRoute(
-                      child: VerificationScreen(
-                    phoneNumber: '+27661813561',
-                    correctPin: generatedPin,
-                  )));
-                  // Update the UI - wait for the user to enter the SMS code
-
-                  // Create a PhoneAuthCredential with the code
-                  PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                      verificationId: verificationId, smsCode: '1234');
-
-                  // Sign the user in (or link) with the credential
-                  await auth.signInWithCredential(credential);
-                },
-                codeAutoRetrievalTimeout: (String verificationId) {},
-              );
-            
-              */
             }
           },
           child: const Center(

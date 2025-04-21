@@ -24,6 +24,19 @@ class CompetitionResultWidget extends StatelessWidget {
       required this.competitionEndTime});
 
   Column retrieveGroupDetails(BuildContext context) {
+    String townOrInstitution = Converter.townOrInstitutionAsString(
+        wonGroup.groupTownOrInstitution.townOrInstitutionName);
+
+    String townOrInstitutionLabel;
+
+    if (townOrInstitution.contains('DUT') ||
+        townOrInstitution.contains('UKZN') ||
+        townOrInstitution.contains('MUT')) {
+      townOrInstitutionLabel = 'Group Institution';
+    } else {
+      townOrInstitutionLabel = 'Group Town';
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -60,14 +73,14 @@ class CompetitionResultWidget extends StatelessWidget {
           ],
         ),
 
-        // Group section details
+        // Group Town/Institution Info
         Row(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               flex: 1,
               child: Text(
-                'Group Home',
+                townOrInstitutionLabel,
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -80,7 +93,8 @@ class CompetitionResultWidget extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  Converter.asString(wonGroup.groupArea.sectionName),
+                  Converter.townOrInstitutionAsString(
+                      wonGroup.groupTownOrInstitution.townOrInstitutionName),
                   style: TextStyle(
                       fontSize: MyApplication.infoTextFontSize,
                       fontWeight: FontWeight.bold,
@@ -93,7 +107,7 @@ class CompetitionResultWidget extends StatelessWidget {
           ],
         ),
 
-        // Group area details
+        // Group Area Info
         Row(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -126,46 +140,6 @@ class CompetitionResultWidget extends StatelessWidget {
             ),
           ],
         ),
-      ],
-    );
-  }
-
-  Column retrieveGroupInfo(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Group Home
-        Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Text(
-                'Group Home',
-                style: TextStyle(
-                    fontSize: MyApplication.infoTextFontSize,
-                    fontWeight: FontWeight.bold,
-                    color: MyApplication.logoColor1,
-                    decoration: TextDecoration.none),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  Converter.townOrInstitutionAsString(
-                      wonGroup.groupTownOrInstitution.townOrInstitutionName),
-                  style: TextStyle(
-                      fontSize: MyApplication.infoTextFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: MyApplication.logoColor2,
-                      decoration: TextDecoration.none,
-                      overflow: TextOverflow.ellipsis),
-                ),
-              ),
-            ),
-          ],
-        ),
 
         // Group Location
         Row(
@@ -173,7 +147,7 @@ class CompetitionResultWidget extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Text(
-                'Group Area',
+                'Group Location',
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -186,7 +160,7 @@ class CompetitionResultWidget extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  Converter.asString(wonGroup.groupArea.sectionName),
+                  wonGroup.groupSpecificArea!,
                   style: TextStyle(
                       fontSize: MyApplication.infoTextFontSize,
                       fontWeight: FontWeight.bold,
@@ -262,6 +236,35 @@ class CompetitionResultWidget extends StatelessWidget {
                       color: MyApplication.logoColor2,
                       decoration: TextDecoration.none,
                       overflow: TextOverflow.ellipsis),
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        // Group Name
+        Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Text(
+                'Group Name',
+                style: TextStyle(
+                    fontSize: MyApplication.infoTextFontSize,
+                    color: MyApplication.logoColor1,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.none),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text(
+                wonGroup.groupName,
+                style: TextStyle(
+                  color: MyApplication.logoColor2,
+                  fontSize: MyApplication.infoTextFontSize,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
@@ -399,8 +402,18 @@ class CompetitionResultWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String groupHome = Converter.asString(wonGroup.groupArea.sectionName);
-    groupHome = groupHome.substring(0, groupHome.indexOf('-'));
+    String townOrInstitution = Converter.townOrInstitutionAsString(
+        wonGroup.groupTownOrInstitution.townOrInstitutionName);
+
+    String townOrInstitutionLabel;
+
+    if (townOrInstitution.contains('DUT') ||
+        townOrInstitution.contains('UKZN') ||
+        townOrInstitution.contains('MUT')) {
+      townOrInstitutionLabel = 'Group Institution';
+    } else {
+      townOrInstitutionLabel = 'Group Town';
+    }
     return SizedBox(
       //height: 550,
       child: Column(
@@ -408,41 +421,14 @@ class CompetitionResultWidget extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          // Store Name, Section & Area
+
+          // Group Town/Institution
           Row(
             children: [
               Expanded(
                 flex: 2,
                 child: Text(
-                  'Group Name',
-                  style: TextStyle(
-                      fontSize: MyApplication.infoTextFontSize,
-                      color: MyApplication.logoColor1,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.none),
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Text(
-                  wonGroup.groupName,
-                  style: TextStyle(
-                    color: MyApplication.logoColor2,
-                    fontSize: MyApplication.infoTextFontSize,
-                    fontWeight: FontWeight.bold,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // Group Home
-          Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: Text(
-                  'Group Home',
+                  townOrInstitutionLabel,
                   style: TextStyle(
                       fontSize: MyApplication.infoTextFontSize,
                       fontWeight: FontWeight.bold,
@@ -455,7 +441,7 @@ class CompetitionResultWidget extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    groupHome,
+                    townOrInstitution,
                     style: TextStyle(
                         fontSize: MyApplication.infoTextFontSize,
                         fontWeight: FontWeight.bold,
@@ -467,6 +453,74 @@ class CompetitionResultWidget extends StatelessWidget {
               ),
             ],
           ),
+
+          // Group Area Info
+          Row(
+            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                flex: 2,
+                child: Text(
+                  'Group Area',
+                  style: TextStyle(
+                      fontSize: MyApplication.infoTextFontSize,
+                      color: MyApplication.logoColor1,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.none),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    Converter.asString(wonGroup.groupArea.sectionName),
+                    style: TextStyle(
+                      fontSize: MyApplication.infoTextFontSize,
+                      fontWeight: FontWeight.bold,
+                      color: MyApplication.logoColor2,
+                      decoration: TextDecoration.none,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          // Group Location
+          wonGroup.groupSpecificArea == null
+              ? const SizedBox.shrink()
+              : Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        'Group Location',
+                        style: TextStyle(
+                            fontSize: MyApplication.infoTextFontSize,
+                            fontWeight: FontWeight.bold,
+                            color: MyApplication.logoColor1,
+                            decoration: TextDecoration.none),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          wonGroup.groupSpecificArea!,
+                          style: TextStyle(
+                              fontSize: MyApplication.infoTextFontSize,
+                              fontWeight: FontWeight.bold,
+                              color: MyApplication.logoColor2,
+                              decoration: TextDecoration.none,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
 
           Container(
             margin: const EdgeInsets.only(right: 15, left: 15, top: 10),
@@ -561,7 +615,7 @@ class CompetitionResultWidget extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
-            child: SizedBox(height: 40, child: retrieveWonPriceInfo(context)),
+            child: SizedBox(height: 55, child: retrieveWonPriceInfo(context)),
           ),
 
           // Members Of A Group

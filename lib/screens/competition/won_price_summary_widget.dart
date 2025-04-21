@@ -137,19 +137,18 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
   }
 
   Column retrieveGroupAndPickUpInfo(BuildContext context) {
-    String groupHome =
+    String groupArea =
         Converter.asString(widget.wonPriceSummary.groupArea.sectionName);
-    groupHome = groupHome.substring(0, groupHome.indexOf('-'));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Group Home
+        // Group Area
         Row(
           children: [
             Expanded(
               child: Text(
-                'Group Home',
+                'Group Area',
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -162,7 +161,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  groupHome,
+                  groupArea,
                   style: TextStyle(
                       fontSize: MyApplication.infoTextFontSize,
                       fontWeight: FontWeight.bold,
@@ -174,6 +173,40 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
             ),
           ],
         ),
+
+        // Group Location
+        widget.wonPriceSummary.groupSpecificArea == null
+            ? const SizedBox.shrink()
+            : Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      'Group Location',
+                      style: TextStyle(
+                          fontSize: MyApplication.infoTextFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: MyApplication.logoColor1,
+                          decoration: TextDecoration.none),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        widget.wonPriceSummary.groupSpecificArea!,
+                        style: TextStyle(
+                            fontSize: MyApplication.infoTextFontSize,
+                            fontWeight: FontWeight.bold,
+                            color: MyApplication.logoColor2,
+                            decoration: TextDecoration.none,
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
 
         // Pick Up Spot
         Row(
@@ -425,7 +458,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
                 height: 5,
               ),
               // Group Home & Pick Up Spot
-              SizedBox(height: 40, child: retrieveGroupAndPickUpInfo(context)),
+              SizedBox(height: 55, child: retrieveGroupAndPickUpInfo(context)),
               const SizedBox(
                 height: 5,
               ),

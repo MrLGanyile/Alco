@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:alco/controllers/share_dao_functions.dart';
+import 'package:alco/controllers/shared_dao_functions.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 

@@ -1,6 +1,6 @@
 import 'package:alco/models/locations/supported_town_or_institution.dart';
 
-import '../../controllers/share_dao_functions.dart';
+import '../../controllers/shared_dao_functions.dart';
 import '/controllers/admin_controller.dart';
 import '/models/locations/converter.dart';
 import 'package:get/get.dart';

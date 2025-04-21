@@ -4,7 +4,7 @@ import 'package:alco/models/users/won_price_comment.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/share_dao_functions.dart';
+import '../../controllers/shared_dao_functions.dart';
 import '../../main.dart';
 import '../alcoholics/alcoholic_registration_widget.dart';
 import 'won_price_comment_widget.dart';

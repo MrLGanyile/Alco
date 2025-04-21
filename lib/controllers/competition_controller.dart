@@ -12,7 +12,7 @@ import '../models/users/won_price_comment.dart';
 
 import 'dart:developer' as debug;
 
-import 'share_dao_functions.dart';
+import 'shared_dao_functions.dart';
 
 // Branch : competition_resources_crud ->  competitions_data_access
 class CompetitionController extends GetxController {

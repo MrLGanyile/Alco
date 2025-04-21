@@ -1,4 +1,4 @@
-import 'package:alco/controllers/share_dao_functions.dart';
+import 'package:alco/controllers/shared_dao_functions.dart';
 import 'package:alco/screens/admins/admin_entrance_widget.dart';
 
 import '../store/store_draw_registration_widget.dart';

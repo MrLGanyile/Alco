@@ -3,7 +3,7 @@ import 'package:alco/screens/utils/verification_screen.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/alcoholic_controller.dart';
-import '../../controllers/share_dao_functions.dart';
+import '../../controllers/shared_dao_functions.dart';
 import '/models/locations/supported_area.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_container/easy_container.dart';

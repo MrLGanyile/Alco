@@ -11,7 +11,7 @@ import '../models/locations/converter.dart';
 import '../models/locations/section_name.dart';
 import '../models/locations/supported_area.dart';
 import '../models/users/alcoholic.dart';
-import 'share_dao_functions.dart';
+import 'shared_dao_functions.dart';
 
 enum AlcoholicSavingStatus {
   incompleteData,

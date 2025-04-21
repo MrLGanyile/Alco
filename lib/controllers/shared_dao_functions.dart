@@ -18,17 +18,25 @@ final storage = FirebaseStorage.instance
     .refFromURL("gs://alcoholic-expressions.appspot.com/");
 final auth = FirebaseAuth.instance;
 
+Rx<bool> _isLeaderValidated = Rx(true);
+bool get isLeaderValidated => _isLeaderValidated.value;
+
 // ignore: prefer_final_fields
-Rx<myUser.User?> _currentlyLoggedInUser = Rx(// null
-    Admin(
+Rx<myUser.User?> _currentlyLoggedInUser = Rx(null
+    /*Admin(
         userId: 'msBfpzfdJDyfQkRfyspgosIbUSSN',
         phoneNumber: '+27611111111',
         password: 'qwerty321',
         profileImageURL: 'admins/profile_images/+27611111111.png',
         isFemale: false,
         isSuperiorAdmin: true,
-        key: "000"));
+        key: "000")*/
+    );
 myUser.User? get currentlyLoggedInUser => _currentlyLoggedInUser.value;
+
+void setIsLeaderValidated(bool isLeaderValidated) {
+  _isLeaderValidated = Rx(isLeaderValidated);
+}
 
 // Upload an image into a particular firebase storage bucket.
 Future<String> uploadResource(File resource, String storagePath) async {
@@ -146,7 +154,6 @@ bool containsPlusAndNumbersOnly(String phoneNumber) {
 }
 
 bool isValidPhoneNumber(String phoneNumber) {
-  debug.log(phoneNumber);
   return phoneNumber.isNotEmpty &&
       phoneNumber.length == 12 &&
       containsPlusAndNumbersOnly(phoneNumber) &&

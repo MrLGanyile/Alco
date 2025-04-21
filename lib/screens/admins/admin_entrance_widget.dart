@@ -1,5 +1,5 @@
 import 'package:alco/controllers/admin_controller.dart';
-import 'package:alco/controllers/share_dao_functions.dart';
+import 'package:alco/controllers/shared_dao_functions.dart';
 import 'package:alco/controllers/store_controller.dart';
 import 'package:alco/screens/utils/login_widget.dart';
 import 'package:flutter/material.dart';
@@ -43,12 +43,17 @@ class AdminEntranceWidget extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  CircleAvatar(
-                    backgroundImage: const AssetImage('assets/logo.png'),
-                    radius: MediaQuery.of(context).size.width * 0.15,
+                  Container(
+                    height: 100,
+                    width: 100,
+                    decoration: const BoxDecoration(
+                      image:
+                          DecorationImage(image: AssetImage('assets/logo.png')),
+                      shape: BoxShape.circle,
+                    ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                   Text(
                     'Alco',

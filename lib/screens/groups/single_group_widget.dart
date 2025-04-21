@@ -28,17 +28,30 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
   SingleGroupWidgetState();
 
   Column retrieveGroupDetails(BuildContext context) {
+    String townOrInstitution = Converter.townOrInstitutionAsString(
+        widget.competitorsGroup.groupTownOrInstitution.townOrInstitutionName);
+
+    String townOrInstitutionLabel;
+
+    if (townOrInstitution.contains('DUT') ||
+        townOrInstitution.contains('UKZN') ||
+        townOrInstitution.contains('MUT')) {
+      townOrInstitutionLabel = 'Group Institution';
+    } else {
+      townOrInstitutionLabel = 'Group Town';
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Group section details
+        // Group Town/Institution Info
         Row(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              flex: 1,
+              flex: 2,
               child: Text(
-                'Group Home',
+                townOrInstitutionLabel,
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -47,12 +60,11 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  Converter.townOrInstitutionAsString(widget.competitorsGroup
-                      .groupTownOrInstitution.townOrInstitutionName),
+                  townOrInstitution,
                   style: TextStyle(
                       fontSize: MyApplication.infoTextFontSize,
                       fontWeight: FontWeight.bold,
@@ -65,12 +77,12 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
           ],
         ),
 
-        // Group area details
+        // Group Area Info
         Row(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              flex: 1,
+              flex: 2,
               child: Text(
                 'Group Area',
                 style: TextStyle(
@@ -81,7 +93,7 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -102,6 +114,41 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
             ),
           ],
         ),
+
+        // Group Location Info
+        widget.competitorsGroup.groupSpecificArea == null
+            ? const SizedBox.shrink()
+            : Row(
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Group Location',
+                      style: TextStyle(
+                          fontSize: MyApplication.infoTextFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: MyApplication.storesTextColor,
+                          decoration: TextDecoration.none),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        widget.competitorsGroup.groupSpecificArea!,
+                        style: TextStyle(
+                            fontSize: MyApplication.infoTextFontSize,
+                            fontWeight: FontWeight.bold,
+                            color: MyApplication.storesTextColor,
+                            decoration: TextDecoration.none,
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
       ],
     );
   }
