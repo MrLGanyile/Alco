@@ -11,6 +11,7 @@ class StoreNameInfo implements Comparable<StoreNameInfo> {
   String storeImageURL;
   bool canAddStoreDraw;
   late String latestStoreDrawId;
+  bool isCurrentlyViewed = false;
 
   StoreNameInfo({
     required this.storeNameInfoId,
@@ -30,6 +31,10 @@ class StoreNameInfo implements Comparable<StoreNameInfo> {
       storeImageURL: json['storeImageURL'],
       latestStoreDrawId: json['latestStoreDrawId'],
       canAddStoreDraw: json['canAddStoreDraw']);
+
+  void setIsCurrentlyViewed(bool isCurrentlyViewed) {
+    this.isCurrentlyViewed = isCurrentlyViewed;
+  }
 
   @override
   int compareTo(StoreNameInfo other) {

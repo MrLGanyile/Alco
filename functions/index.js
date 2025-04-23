@@ -13,17 +13,13 @@ import { onCall } from "firebase-functions/v2/https";
 import { onRequest } from "firebase-functions/v2/https";
 
 // The Firebase Admin SDK to access Firestore.
-import { initializeApp } from "firebase-admin/app";
-import { getFirestore, Timestamp } from "firebase-admin/firestore";
+import { initializeApp, applicationDefault } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
-
-import pkg from "firebase-admin";
-const { credential } = pkg;
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
 import { debug, log } from "firebase-functions/logger";
 
 import { onSchedule } from "firebase-functions/v2/scheduler";
-// import { credential } from "firebase-admin";
 
 /* const runtimeOpts = {
   timeoutSeconds: 420,
@@ -34,12 +30,12 @@ const pickingMultipleInSeconds = 3;
 const superiorAdminId = "1HISOAjWZfQZrDr8r1duQaYYfBE3";
 let currentUID = null;
 
-initializeApp();
-/* fetch("../alcoholic-expressions-credentials.json")
-  .then(response => {
-    const serviceAccount = response.json();
-    initializeApp({ credential: credential.cert(serviceAccount) });
-  }); */
+// initializeApp();
+initializeApp({
+  credential: applicationDefault(),
+  // databaseURL: 'https://<DATABASE_NAME>.firebaseio.com'
+});
+
 
 import CountriesCreation from "./models/locations/countries-creation.js";
 import ProvinciesOrStatesCreation from "./models/locations/provinces-or-states-creation.js";
@@ -60,6 +56,8 @@ import AreasCreation from "./models/locations/areas-creation.js";
 export const setCurrentUID = onCall(async (request) => {
   const authToken = request.data.token;
   const userId = request.data.userId;
+
+
 
   try {
     const userAuth = await getAuth()
@@ -997,6 +995,24 @@ export const createWonPriceSummary =
 
 // ========================================Create Groups Data[End]========================================
 
+const listAllUsers = (nextPageToken) => {
+  // List batch of users, 1000 at a time.
+  getAuth()
+    .listUsers(1000, nextPageToken)
+    .then((listUsersResult) => {
+      listUsersResult.users.forEach((userRecord) => {
+        console.log('user', userRecord.toJSON());
+      });
+      if (listUsersResult.pageToken) {
+        // List next batch of users.
+        listAllUsers(listUsersResult.pageToken);
+      }
+    })
+    .catch((error) => {
+      console.log('Error listing users:', error);
+    });
+};
+
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createFakeGroups
 export const createFakeGroups = onRequest(async (req, res) => {
   let group1Area;
@@ -1360,6 +1376,9 @@ export const createFakeDraws = onRequest(async (req, res) => {
   let storeFK;
   let storeName;
   let townOrInstitution;
+
+  // Start listing users from the beginning, 1000 at a time.
+  listAllUsers();
 
   switch (parseInt(req.query.hostIndex)) {
     case 0:

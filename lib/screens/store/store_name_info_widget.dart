@@ -51,8 +51,6 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
   late Stream<DocumentSnapshot> storeNameInfoSteam;
   late Reference storageReference;
 
-  bool isCurrentlyViewed = false;
-
   late CountDownClock countDownClock;
   late DocumentReference competitionReference;
   late Competition competition;
@@ -90,7 +88,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
 
   void updateIsCurrentlyViewed(bool isCurrentlyViewed) {
     setState(() {
-      this.isCurrentlyViewed = isCurrentlyViewed;
+      widget.storeNameInfo.setIsCurrentlyViewed(isCurrentlyViewed);
     });
   }
 
@@ -339,7 +337,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
               );
             }
             // Show grand prices with play icon.
-            else if (!isCurrentlyViewed &&
+            else if (!widget.storeNameInfo.isCurrentlyViewed &&
                 countDownClock.remainingTime < competitionTotalDuration) {
               return WaitWidget(
                 remainingDuration:
@@ -355,7 +353,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             }
 
             // Show and pick grand prices.
-            else if (isCurrentlyViewed &&
+            else if (widget.storeNameInfo.isCurrentlyViewed &&
                 countDownClock.remainingTime < grandPricePickingDuration) {
               return WaitWidget(
                   remainingDuration:
@@ -369,14 +367,14 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             }
 
             // Display won price.
-            else if (isCurrentlyViewed &&
+            else if (widget.storeNameInfo.isCurrentlyViewed &&
                 countDownClock.remainingTime <
                     grandPricePickingDuration +
                         competition.timeBetweenPricePickingAndGroupPicking!) {
               return WonGrandPriceWidget(wonPrice: competition.wonPrice!);
             }
             // Show group picking
-            else if (isCurrentlyViewed &&
+            else if (widget.storeNameInfo.isCurrentlyViewed &&
                 countDownClock.remainingTime <
                     grandPricePickingDuration +
                         competition.timeBetweenPricePickingAndGroupPicking! +
@@ -395,6 +393,10 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                     competition.displayPeriodAfterWinners!) {
               if (!competition.isOver) {
                 competitionReference.update({"isOver": true});
+              }
+
+              if (widget.storeNameInfo.isCurrentlyViewed) {
+                widget.storeNameInfo.setIsCurrentlyViewed(false);
               }
 
               return CompetitionResultWidget(
