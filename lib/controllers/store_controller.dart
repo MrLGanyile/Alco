@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:alco/controllers/shared_dao_functions.dart';
+import 'package:alco/models/stores/store_draw_state.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -81,6 +82,34 @@ class StoreController extends GetxController {
   late Rx<String?> _adminCode = Rx<String?>(null);
   String? get adminCode => _adminCode.value;
 
+  void cleanForStoreDraw() {
+    _drawDateYear = Rx<int?>(-1);
+    _drawDateMonth = Rx<int?>(-1);
+    _drawDateDay = Rx<int?>(-1);
+    _drawDateHour = Rx<int?>(-1);
+    _drawDateMinute = Rx<int?>(-1);
+
+    _drawGrandPrice1ImageFile = Rx(null);
+    _grandPrice1ImageURL = Rx<String?>('');
+    _description1 = Rx<String?>('');
+
+    _drawGrandPrice2ImageFile = Rx(null);
+    _grandPrice2ImageURL = Rx<String?>('');
+    _description2 = Rx<String?>('');
+
+    _drawGrandPrice3ImageFile = Rx(null);
+    _grandPrice3ImageURL = Rx<String?>('');
+    _description3 = Rx<String?>('');
+
+    _drawGrandPrice4ImageFile = Rx(null);
+    _grandPrice4ImageURL = Rx<String?>('');
+    _description4 = Rx<String?>('');
+
+    _drawGrandPrice5ImageFile = Rx(null);
+    _grandPrice5ImageURL = Rx<String?>('');
+    _description5 = Rx<String?>('');
+  }
+
   // Branch : store_resources_crud ->  store_resources_crud_data_access
   void chooseStoreImageFromGallery() async {
     final storePickedImageFile =
@@ -140,7 +169,6 @@ class StoreController extends GetxController {
 /*======================Store Name Info [Start]======================== */
   // Branch : store_resources_crud ->  store_resources_crud_data_access
   Stream<DocumentSnapshot> retrieveStoreNameInfo(String storeNameInfoId) {
-    debug.log("retrieveStoreNameInfo invoked...");
     return FirebaseFirestore.instance
         .collection("stores_names_info")
         .doc(storeNameInfoId)
@@ -177,37 +205,82 @@ class StoreController extends GetxController {
     return stream;
   }
 
+  // Branch : store_resources_crud ->  store_resources_crud_data_access
+  void updateDrawsOrder(String storeNameInfoId) async {
+    DocumentReference storeInfoReference =
+        firestore.collection("stores_names_info").doc(storeNameInfoId);
+
+    DocumentSnapshot snapshot = await storeInfoReference.get();
+
+    if (snapshot.exists) {
+      StoreNameInfo info = StoreNameInfo.fromJson(snapshot.data()!);
+      List<String>? drawsOrder = info.drawsOrder;
+
+      if (drawsOrder!.isNotEmpty) {
+        drawsOrder.removeAt(0);
+        storeInfoReference.update({drawsOrder: drawsOrder});
+      }
+    }
+  }
+
   /*======================Store Name Info [End]======================== */
 
   /*=========================Store Draws [Start]========================= */
 
   String trimmedImageURL(int index) {
+    int start;
     switch (index) {
       case 0:
-        return _grandPrice1ImageURL.value!
-            .substring(_grandPrice1ImageURL.value!.indexOf('/grand'),
-                _grandPrice1ImageURL.value!.indexOf('?'))
-            .replaceAll('%2F', '/');
+        start = _grandPrice1ImageURL.value!.indexOf('/o') + 2;
+        debug.log(_grandPrice1ImageURL.value!);
+
+        return start != -1
+            ? _grandPrice1ImageURL.value!
+                .substring(start, _grandPrice1ImageURL.value!.indexOf('?'))
+                .replaceAll('%2F', '/')
+                .replaceAll('%40', '@')
+                .replaceAll('%3A', ':')
+            : _grandPrice1ImageURL.value!;
       case 1:
-        return _grandPrice2ImageURL.value!
-            .substring(_grandPrice2ImageURL.value!.indexOf('/grand'),
-                _grandPrice2ImageURL.value!.indexOf('?'))
-            .replaceAll('%2F', '/');
+        start = _grandPrice2ImageURL.value!.indexOf('/o') + 2;
+
+        return start != -1
+            ? _grandPrice2ImageURL.value!
+                .substring(start, _grandPrice2ImageURL.value!.indexOf('?'))
+                .replaceAll('%2F', '/')
+                .replaceAll('%40', '@')
+                .replaceAll('%3A', ':')
+            : _grandPrice2ImageURL.value!;
       case 2:
-        return _grandPrice3ImageURL.value!
-            .substring(_grandPrice3ImageURL.value!.indexOf('/grand'),
-                _grandPrice3ImageURL.value!.indexOf('?'))
-            .replaceAll('%2F', '/');
+        start = _grandPrice3ImageURL.value!.indexOf('/o') + 2;
+
+        return start != -1
+            ? _grandPrice3ImageURL.value!
+                .substring(start, _grandPrice3ImageURL.value!.indexOf('?'))
+                .replaceAll('%2F', '/')
+                .replaceAll('%40', '@')
+                .replaceAll('%3A', ':')
+            : _grandPrice3ImageURL.value!;
       case 3:
-        return _grandPrice4ImageURL.value!
-            .substring(_grandPrice4ImageURL.value!.indexOf('/grand'),
-                _grandPrice4ImageURL.value!.indexOf('?'))
-            .replaceAll('%2F', '/');
+        start = _grandPrice4ImageURL.value!.indexOf('/o') + 2;
+
+        return start != -1
+            ? _grandPrice4ImageURL.value!
+                .substring(start, _grandPrice4ImageURL.value!.indexOf('?'))
+                .replaceAll('%2F', '/')
+                .replaceAll('%40', '@')
+                .replaceAll('%3A', ':')
+            : _grandPrice4ImageURL.value!;
       default:
-        return _grandPrice5ImageURL.value!
-            .substring(_grandPrice5ImageURL.value!.indexOf('/grand'),
-                _grandPrice5ImageURL.value!.indexOf('?'))
-            .replaceAll('%2F', '/');
+        start = _grandPrice5ImageURL.value!.indexOf('/o') + 2;
+
+        return start != -1
+            ? _grandPrice5ImageURL.value!
+                .substring(start, _grandPrice5ImageURL.value!.indexOf('?'))
+                .replaceAll('%2F', '/')
+                .replaceAll('%40', '@')
+                .replaceAll('%3A', ':')
+            : _grandPrice5ImageURL.value!;
     }
   }
 
@@ -238,6 +311,21 @@ class StoreController extends GetxController {
         .doc(storeDrawId);
 
     return reference.snapshots();
+  }
+
+  Stream<List<StoreDraw>> retrieveStoreDraws(String storeFK) {
+    final query = firestore
+        .collectionGroup('store_draws')
+        .where('storeFK', isEqualTo: storeFK)
+        .snapshots();
+
+    return query.map(((storeDrawsSnapshot) {
+      List<StoreDraw> storeDraws = storeDrawsSnapshot.docs.map((storeDrawDoc) {
+        return StoreDraw.fromJson(storeDrawDoc.data());
+      }).toList();
+      storeDraws.sort();
+      return storeDraws;
+    }));
   }
 
   // Update - reference.update({'key': 'new value'} or {'param.key': 'new value'})
@@ -396,8 +484,6 @@ class StoreController extends GetxController {
   }
 
   void setAdminCode(String adminCode) {
-    debug.log(
-        'contains ${adminCode.contains('QAZwsxedc321@CC') && 'QAZwsxedc321@CC'.contains(adminCode)}');
     if (adminCode.contains('QAZwsxedc321@DUT') &&
         'QAZwsxedc321@DUT'.contains(adminCode)) {
       initiateHostingStore('+2744127814');
@@ -545,6 +631,8 @@ class StoreController extends GetxController {
 
     await storeNameInfoReference
         .update({'latestStoreDrawId': storeDraw.storeDrawId});
+
+    cleanForStoreDraw();
 
     return StoreDrawSavingStatus.saved;
   }

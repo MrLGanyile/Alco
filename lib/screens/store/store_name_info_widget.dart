@@ -219,8 +219,10 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
       margin: const EdgeInsets.only(bottom: 5),
       child: StreamBuilder<DocumentSnapshot?>(
         stream: storeController.retrieveStoreDraw(
-            widget.storeNameInfo.storeNameInfoId,
-            widget.storeNameInfo.latestStoreDrawId),
+          widget.storeNameInfo.storeNameInfoId,
+          // widget.storeNameInfo.getCommingDrawId(),
+          widget.storeNameInfo.latestStoreDrawId,
+        ), // Use comming draw
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.exists) {
             StoreDraw latestStoreDraw = StoreDraw.fromJson(snapshot.data);
@@ -397,6 +399,12 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
 
               if (widget.storeNameInfo.isCurrentlyViewed) {
                 widget.storeNameInfo.setIsCurrentlyViewed(false);
+              }
+
+              if (widget.storeNameInfo.drawsOrder != null &&
+                  widget.storeNameInfo.drawsOrder!.isNotEmpty) {
+                storeController
+                    .updateDrawsOrder(widget.storeNameInfo.storeNameInfoId);
               }
 
               return CompetitionResultWidget(

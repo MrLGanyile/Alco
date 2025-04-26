@@ -231,6 +231,7 @@ export const createStoreNameInfo = onDocumentCreated("/stores/" +
       storeArea: event.data.data().storeArea,
       canAddStoreDraw: true,
       latestStoreDrawId: "-",
+      drawsOrder: [],
     };
     logger.log(`About To Add A Store Name Info Object With ID
     ${storeNameInfo.storeNameInfoId} To The Database.`);
@@ -1367,7 +1368,8 @@ export const createFakeDraws = onRequest(async (req, res) => {
   const month = drawDateAndTime.getMonth() + 1;
   const date = drawDateAndTime.getDate();
   const hour = drawDateAndTime.getHours() + 2;
-  const minute = drawDateAndTime.getMinutes() + 1;
+  // drawDateAndTime.getMinutes() + 1;
+  const minute = 5
 
   const storeDrawId =
     `${year}-${month}-${date}@${hour}h${minute}`;
@@ -1551,6 +1553,19 @@ export const createFakeDraws = onRequest(async (req, res) => {
     await reference.set(grandPrice);
   }
   const storeNameInfoReference = getFirestore().collection("stores_names_info").doc(storeFK);
+
+  storeNameInfoReference.onSnapshot(async (doc) => {
+    if (doc.exists) {
+      let drawsOrder = doc.data()['drawsOrder'];
+
+      debug.log(`Before Adding A Draw ${drawsOrder}`)
+      drawsOrder.push(storeDrawId);
+      await storeNameInfoReference.update({ drawsOrder: drawsOrder });
+      drawsOrder = doc.data()['drawsOrder'];
+      debug.log(`After Adding A Draw ${drawsOrder}`)
+    }
+  });
+
   await storeNameInfoReference.update({ latestStoreDrawId: storeDrawId });
   // Send back a message that we"ve successfully written to the db.
   res.json({ result: `Fake Draws Saved.` });

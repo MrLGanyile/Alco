@@ -12,16 +12,17 @@ class StoreNameInfo implements Comparable<StoreNameInfo> {
   bool canAddStoreDraw;
   late String latestStoreDrawId;
   bool isCurrentlyViewed = false;
+  List<String>? drawsOrder;
 
-  StoreNameInfo({
-    required this.storeNameInfoId,
-    this.latestStoreDrawId = '-',
-    required this.storeName,
-    required this.sectionName,
-    required this.storeArea,
-    required this.storeImageURL,
-    required this.canAddStoreDraw,
-  });
+  StoreNameInfo(
+      {required this.storeNameInfoId,
+      this.latestStoreDrawId = '-',
+      required this.storeName,
+      required this.sectionName,
+      required this.storeArea,
+      required this.storeImageURL,
+      required this.canAddStoreDraw,
+      this.drawsOrder = const []});
 
   factory StoreNameInfo.fromJson(dynamic json) => StoreNameInfo(
       storeNameInfoId: json['storeNameInfoId'],
@@ -30,6 +31,7 @@ class StoreNameInfo implements Comparable<StoreNameInfo> {
       storeArea: json['storeArea'],
       storeImageURL: json['storeImageURL'],
       latestStoreDrawId: json['latestStoreDrawId'],
+      drawsOrder: convert(json['drawsOrder']),
       canAddStoreDraw: json['canAddStoreDraw']);
 
   void setIsCurrentlyViewed(bool isCurrentlyViewed) {
@@ -39,5 +41,19 @@ class StoreNameInfo implements Comparable<StoreNameInfo> {
   @override
   int compareTo(StoreNameInfo other) {
     return other.storeArea.compareTo(storeArea);
+  }
+
+  String getCommingDrawId() {
+    return drawsOrder!.isNotEmpty ? drawsOrder![0] : latestStoreDrawId;
+  }
+
+  static List<String>? convert(List<dynamic> list) {
+    List<String>? order = [];
+
+    for (dynamic item in list) {
+      order.add(item);
+    }
+    order.sort();
+    return order;
   }
 }
