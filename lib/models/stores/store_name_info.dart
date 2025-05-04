@@ -1,5 +1,5 @@
 import '../locations/converter.dart';
-
+import 'dart:developer' as debug;
 import '../locations/section_name.dart';
 
 // Branch : store_resources_crud ->  create_store_resources_store_front_end
@@ -44,7 +44,8 @@ class StoreNameInfo implements Comparable<StoreNameInfo> {
   }
 
   String getCommingDrawId() {
-    return drawsOrder!.isNotEmpty ? drawsOrder![0] : latestStoreDrawId;
+    debug.log(drawsOrder!.toString());
+    return drawsOrder!.isNotEmpty ? drawsOrder![0] : "-";
   }
 
   static List<String>? convert(List<dynamic> list) {

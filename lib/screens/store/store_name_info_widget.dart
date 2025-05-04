@@ -220,31 +220,33 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
       child: StreamBuilder<DocumentSnapshot?>(
         stream: storeController.retrieveStoreDraw(
           widget.storeNameInfo.storeNameInfoId,
-          // widget.storeNameInfo.getCommingDrawId(),
-          widget.storeNameInfo.latestStoreDrawId,
+          widget.storeNameInfo.getCommingDrawId(),
+          // widget.storeNameInfo.latestStoreDrawId,
         ), // Use comming draw
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.exists) {
-            StoreDraw latestStoreDraw = StoreDraw.fromJson(snapshot.data);
+            StoreDraw nextStoreDraw = StoreDraw.fromJson(snapshot.data);
+            debug.log('next ${nextStoreDraw.storeDrawId}');
             DateTime latestPast =
                 DateTime.now().subtract(const Duration(days: 1));
 
-            if (latestStoreDraw.drawDateAndTime.isBefore(latestPast)) {
+            if (nextStoreDraw.drawDateAndTime.isBefore(latestPast)) {
+              // debug.log('Bug - 1');
               return NoCompetitionWidget(
                   storeId: widget.storeNameInfo.storeNameInfoId,
                   storeName: widget.storeNameInfo.storeName,
                   storeImageURL: widget.storeNameInfo.storeImageURL,
                   sectionName: widget.storeNameInfo.sectionName);
-            } else if (latestStoreDraw.storeDrawState ==
+            } else if (nextStoreDraw.storeDrawState ==
                 StoreDrawState.notConvertedToCompetition) {
               // The corresponding readonly document do not exist yet.
               return WaitWidget(
-                storeDraw: latestStoreDraw,
+                storeDraw: nextStoreDraw,
               );
             } else {
               return StreamBuilder<DocumentSnapshot>(
                   stream: competitionController
-                      .findCompetition(latestStoreDraw.storeDrawId!),
+                      .findCompetition(nextStoreDraw.storeDrawId!),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       competition = Competition.fromJson(snapshot.data);
@@ -260,11 +262,11 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                           competition.timeBetweenPricePickingAndGroupPicking! +
                           groupPickingDuration;
 
-                      int day = latestStoreDraw.drawDateAndTime.day;
-                      int month = latestStoreDraw.drawDateAndTime.month;
-                      int year = latestStoreDraw.drawDateAndTime.year;
-                      int hour = latestStoreDraw.drawDateAndTime.hour;
-                      int minute = latestStoreDraw.drawDateAndTime.minute;
+                      int day = nextStoreDraw.drawDateAndTime.day;
+                      int month = nextStoreDraw.drawDateAndTime.month;
+                      int year = nextStoreDraw.drawDateAndTime.year;
+                      int hour = nextStoreDraw.drawDateAndTime.hour;
+                      int minute = nextStoreDraw.drawDateAndTime.minute;
 
                       String collectionId = "$day-$month-$year-$hour-$minute";
 
@@ -272,7 +274,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
 
                       return readFromcountDownClock(
                         collectionId,
-                        latestStoreDraw,
+                        nextStoreDraw,
                       );
                     } else if (snapshot.hasError) {
                       debug.log(
@@ -292,6 +294,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 storeImageURL: widget.storeNameInfo.storeImageURL,
                 sectionName: widget.storeNameInfo.sectionName);
           } else {
+            // debug.log('Bug - 2');
             return NoCompetitionWidget(
                 storeId: widget.storeNameInfo.storeNameInfoId,
                 storeName: widget.storeNameInfo.storeName,
@@ -305,7 +308,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
 
   StreamBuilder<DocumentSnapshot> readFromcountDownClock(
     String coundDownClockId,
-    StoreDraw latestStoreDraw,
+    StoreDraw nextStoreDraw,
   ) {
     return StreamBuilder<DocumentSnapshot>(
         stream: competitionController.retrieveCountDownClock(coundDownClockId),
@@ -325,10 +328,11 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             DateTime competitionEndTime = competition.dateTime
                 .add(Duration(seconds: competitionTotalDuration));
 
+            // pickingMultipleInSeconds * 20 // Remaining seconds
             if (countDownClock.remainingTime < 0) {
               // Show remaining time before competition starts.
               return WaitWidget(
-                storeDraw: latestStoreDraw,
+                storeDraw: nextStoreDraw,
                 remainingDuration:
                     Duration(seconds: countDownClock.remainingTime * -1),
                 pickWonPrice: false,
@@ -338,13 +342,14 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 onCurrentlyViewedUpdate: updateIsCurrentlyViewed,
               );
             }
+            // pickingMultipleInSeconds * x => Varies
             // Show grand prices with play icon.
             else if (!widget.storeNameInfo.isCurrentlyViewed &&
                 countDownClock.remainingTime < competitionTotalDuration) {
               return WaitWidget(
                 remainingDuration:
                     Duration(seconds: countDownClock.remainingTime),
-                storeDraw: latestStoreDraw,
+                storeDraw: nextStoreDraw,
                 pickWonPrice: false,
                 showPlayIcon: true,
                 showAlarm: false,
@@ -353,14 +358,14 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 onCurrentlyViewedUpdate: updateIsCurrentlyViewed,
               );
             }
-
+            // pickingMultipleInSeconds * 6 // Grand Price Picking
             // Show and pick grand prices.
             else if (widget.storeNameInfo.isCurrentlyViewed &&
                 countDownClock.remainingTime < grandPricePickingDuration) {
               return WaitWidget(
                   remainingDuration:
                       Duration(seconds: countDownClock.remainingTime),
-                  storeDraw: latestStoreDraw,
+                  storeDraw: nextStoreDraw,
                   pickWonPrice: true,
                   showAlarm: false,
                   grandPricesOrder: competition.grandPricesOrder,
@@ -368,6 +373,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                       competition.pickingMultipleInSeconds);
             }
 
+            // pickingMultipleInSeconds * 1 // Won Price Display
             // Display won price.
             else if (widget.storeNameInfo.isCurrentlyViewed &&
                 countDownClock.remainingTime <
@@ -375,6 +381,8 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                         competition.timeBetweenPricePickingAndGroupPicking!) {
               return WonGrandPriceWidget(wonPrice: competition.wonPrice!);
             }
+            // pickingMultipleInSeconds * 200 // Group Picking Max Time or
+            // pickingMultipleInSeconds * competitorsOrder.length // Group Picking Max Time
             // Show group picking
             else if (widget.storeNameInfo.isCurrentlyViewed &&
                 countDownClock.remainingTime <
@@ -388,7 +396,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                   competition.pickingMultipleInSeconds;
               return displayGroupCompetitors();
             }
-
+            //  pickingMultipleInSeconds * 30 // Competition Result Display
             // Show Won Price Summary For The Next Certain Amount Of Minute.
             else if (countDownClock.remainingTime <=
                 competitionTotalDuration +
@@ -401,18 +409,23 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 widget.storeNameInfo.setIsCurrentlyViewed(false);
               }
 
-              if (widget.storeNameInfo.drawsOrder != null &&
-                  widget.storeNameInfo.drawsOrder!.isNotEmpty) {
-                storeController
-                    .updateDrawsOrder(widget.storeNameInfo.storeNameInfoId);
-              }
-
               return CompetitionResultWidget(
                 wonPrice: competition.wonPrice!,
                 wonGroup: competition.wonGroup!,
                 competitionEndTime: competitionEndTime,
               );
-            } else {
+            }
+            // pickingMultipleInSeconds * 12 // Game Over
+            else {
+              if (widget.storeNameInfo.drawsOrder != null &&
+                  widget.storeNameInfo.drawsOrder!.isNotEmpty &&
+                  countDownClock.remainingTime ==
+                      competitionTotalDuration +
+                          competition.displayPeriodAfterWinners! +
+                          9) {
+                storeController
+                    .updateDrawsOrder(widget.storeNameInfo.storeNameInfoId);
+              }
               return CompetitionFinishedWidget(endMoment: competitionEndTime);
             }
           } else if (snapshot.hasError) {

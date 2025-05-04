@@ -265,6 +265,14 @@ class StoreDrawRegistrationWidgetState
         storeController.description5!.isNotEmpty;
   }
 
+  void cleanForStoreDraw() {
+    description1EditingController.clear();
+    description2EditingController.clear();
+    description3EditingController.clear();
+    description4EditingController.clear();
+    description5EditingController.clear();
+  }
+
   Widget createDrawButton() => Container(
         width: MediaQuery.of(context).size.width,
         height: 60,
@@ -285,7 +293,10 @@ class StoreDrawRegistrationWidgetState
 
               // Does not go to the next screen.
               if (result == StoreDrawSavingStatus.saved) {
+                storeController.cleanForStoreDraw();
+                cleanForStoreDraw();
                 storeController.setAdminCode('');
+
                 Get.to(() => StartScreen());
               } else if (result == StoreDrawSavingStatus.incomplete) {
                 Get.snackbar('Error', 'Incomplete Draw Info');

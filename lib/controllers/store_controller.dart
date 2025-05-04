@@ -108,6 +108,8 @@ class StoreController extends GetxController {
     _drawGrandPrice5ImageFile = Rx(null);
     _grandPrice5ImageURL = Rx<String?>('');
     _description5 = Rx<String?>('');
+
+    update();
   }
 
   // Branch : store_resources_crud ->  store_resources_crud_data_access
@@ -207,20 +209,17 @@ class StoreController extends GetxController {
 
   // Branch : store_resources_crud ->  store_resources_crud_data_access
   void updateDrawsOrder(String storeNameInfoId) async {
-    DocumentReference storeInfoReference =
+    DocumentReference storeNameInfoReference =
         firestore.collection("stores_names_info").doc(storeNameInfoId);
 
-    DocumentSnapshot snapshot = await storeInfoReference.get();
-
-    if (snapshot.exists) {
-      StoreNameInfo info = StoreNameInfo.fromJson(snapshot.data()!);
-      List<String>? drawsOrder = info.drawsOrder;
-
-      if (drawsOrder!.isNotEmpty) {
-        drawsOrder.removeAt(0);
-        storeInfoReference.update({drawsOrder: drawsOrder});
-      }
-    }
+    storeNameInfoReference.get().then((storeNameInfoDoc) async {
+      StoreNameInfo info = StoreNameInfo.fromJson(storeNameInfoDoc.data());
+      debug.log('Before Deletion Size ${info.drawsOrder!.length}');
+      info.drawsOrder!.removeAt(0);
+      await storeNameInfoReference.update({'drawsOrder': info.drawsOrder!});
+      debug.log('After Deletion Size ${info.drawsOrder!.length}');
+      debug.log('updated draws order list...');
+    });
   }
 
   /*======================Store Name Info [End]======================== */
@@ -596,7 +595,7 @@ class StoreController extends GetxController {
     }
 
     String storeDrawId =
-        '${_drawDateDay.value}-${_drawDateMonth.value}-${_drawDateYear.value}@${_drawDateHour.value}h${_drawDateMinute.value}';
+        '${_drawDateYear.value}-${_drawDateMonth.value}-${_drawDateDay.value}@${_drawDateHour.value}h${_drawDateMinute.value}@${hostingStore!.storeOwnerPhoneNumber}';
     DocumentReference reference = firestore
         .collection('stores')
         .doc(hostingStore!.storeOwnerPhoneNumber)
@@ -629,10 +628,15 @@ class StoreController extends GetxController {
     DocumentReference storeNameInfoReference =
         firestore.collection("/stores_names_info/").doc(storeDraw.storeFK);
 
+    storeNameInfoReference.get().then((storeNameInfoDoc) async {
+      StoreNameInfo info = StoreNameInfo.fromJson(storeNameInfoDoc.data());
+      info.drawsOrder!.add(storeDrawId);
+      await storeNameInfoReference.update({'drawsOrder': info.drawsOrder!});
+      debug.log('added to draws order list...');
+    });
+
     await storeNameInfoReference
         .update({'latestStoreDrawId': storeDraw.storeDrawId});
-
-    cleanForStoreDraw();
 
     return StoreDrawSavingStatus.saved;
   }
