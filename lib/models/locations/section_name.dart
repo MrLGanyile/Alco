@@ -37,11 +37,17 @@ enum SectionName {
   masxhaMayvilleDurbanKwaZuluNatalSouthAfrica,
   bonelaMayvilleDurbanKwaZuluNatalSouthAfrica,
   nsimbiniMayvilleDurbanKwaZuluNatalSouthAfrica,
+  galwayMayvilleDurbanKwaZuluNatalSouthAfrica,
 
   foremanSydenhamDurbanKwaZuluNatalSouthAfrica,
   kennedySydenhamDurbanKwaZuluNatalSouthAfrica,
   palmetSydenhamDurbanKwaZuluNatalSouthAfrica,
   burnwoodSydenhamDurbanKwaZuluNatalSouthAfrica,
   sydenhamHeightSydenhamDurbanKwaZuluNatalSouthAfrica,
-  spencerSydenhamDurbanKwaZuluNatalSouthAfrica,
+  threeRandSydenhamDurbanKwaZuluNatalSouthAfrica,
+
+  glenwoodDurbanKwaZuluNatalSouthAfrica,
+  bereaDurbanKwaZuluNatalSouthAfrica,
+  southBeachDurbanKwaZuluNatalSouthAfrica,
+  masgraveDurbanKwaZuluNatalSouthAfrica,
 }

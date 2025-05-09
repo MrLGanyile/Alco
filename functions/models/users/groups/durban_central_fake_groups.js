@@ -1,70 +1,71 @@
 import { getFirestore } from "firebase-admin/firestore";
-class HowardFakeGroups {
 
+class DurbanCentralFakeGroups {
     constructor() {
 
     }
 
-    async towerGroups() {
+    async durbanCentralGroups() {
+        const host = "durban central";
+        const group1Members = ["+27600000000", "+27600000001", "+27600000002", "+27600000003", "+27600000004"];
+        const group1CreatorPhoneNumber = "+27600000000";
+        const group2Members = ["+27610000000", "+27610000001", "+27610000002", "+27610000003", "+27610000004"];
+        const group2CreatorPhoneNumber = "+27610000000";
+        const group3Members = ["+27620000000", "+27620000001", "+27620000002", "+27620000003", "+27620000004"];
+        const group3CreatorPhoneNumber = "+27620000000";
+        const group4Members = ["+27630000000", "+27630000001", "+27630000002", "+27630000003", "+27630000004"];
+        const group4CreatorPhoneNumber = "+27630000000";
 
-        const host = "ukzn";
-        const group1Members = ["+27801111111", "+27811111111", "+27821111111", "+27831111111", "+27841111111"];
-        const group1CreatorPhoneNumber = "+27801111111";
-        const group2Members = ["+27802222222", "+27812222222", "+27822222222", "+27832222222", "+27842222222"];
-        const group2CreatorPhoneNumber = "+27802222222";
-        const group3Members = ["+27803333333", "+27813333333", "+27823333333", "+27833333333", "+27843333333"];
-        const group3CreatorPhoneNumber = "+27803333333";
-        const group4Members = ["+27804444444", "+27844444444", "+27824444444", "+27834444444", "+27844444444"];
-        const group4CreatorPhoneNumber = "+27804444444";
         const group1Area = {
-            townOrInstitutionFK: "4",
-            areaName: "Howard College (UKZN)-Durban-Kwa Zulu Natal-South Africa",
-            areaNo: "30",
+            townOrInstitutionFK: "7",
+            areaName: "Berea-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "44",
         };
-        const specificArea1 = 'Tower A-Block';
+        const specificArea1 = 'Regency @DutRes';
 
         const group2Area = {
-            townOrInstitutionFK: "4",
-            areaName: "Howard College (UKZN)-Durban-Kwa Zulu Natal-South Africa",
-            areaNo: "30",
+            townOrInstitutionFK: "7",
+            areaName: "Berea-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "44",
         };
-        const specificArea2 = 'Tower B-Block';
+        const specificArea2 = 'Cuban @UkznRes';
 
         const group3Area = {
-            townOrInstitutionFK: "4",
-            areaName: "Howard College (UKZN)-Durban-Kwa Zulu Natal-South Africa",
-            areaNo: "30",
+            townOrInstitutionFK: "7",
+            areaName: "Glenwood-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "43",
         };
-        const specificArea3 = 'Tower C-Block';
+        const specificArea3 = 'Lyndely @UkznRes';
 
         const group4Area = {
-            townOrInstitutionFK: "4",
-            areaName: "Howard College (UKZN)-Durban-Kwa Zulu Natal-South Africa",
-            areaNo: "30",
+            townOrInstitutionFK: "7",
+            areaName: "Masgrave-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "46",
         };
-        const specificArea4 = 'Tower D-Block';
+        const specificArea4 = 'Floredene @MutRes';
 
         const groupTownOrInstitution = {
             cityFK: "1",
-            townOrInstitutionName: "Howard College UKZN",
-            townOrInstitutionNo: "4",
+            townOrInstitutionName: "Durban Central",
+            townOrInstitutionNo: "7",
         };
 
-        const groupName1 = "Angels";
-        const group1CreatorUsername = "Monica";
+        const groupName1 = "Ass Kickers";
+        const group1CreatorUsername = "Roney";
 
-        const groupName2 = "Night Riders";
-        const group2CreatorUsername = "Cat";
+        const groupName2 = "Nice Guys";
+        const group2CreatorUsername = "Menzi";
 
-        const groupName3 = "Engineers";
-        const group3CreatorUsername = "Sam";
+        const groupName3 = "High Rollers";
+        const group3CreatorUsername = "Sne";
 
-        const groupName4 = "Rangers";
-        const group4CreatorUsername = "Jimmy";
+        const groupName4 = "The Queens";
+        const group4CreatorUsername = "Zinhle";
+
 
         const group1 = {
             groupName: groupName1,
-            groupImageURL: `/${host}/groups_specific_locations/${group1CreatorPhoneNumber}.jpeg`,
+            groupImageURL: `/${host}/groups_specific_locations/${group1CreatorPhoneNumber}.jpg`,
             groupArea: group1Area,
             groupSpecificArea: specificArea1,
             groupTownOrInstitution: groupTownOrInstitution,
@@ -80,7 +81,7 @@ class HowardFakeGroups {
 
         const group2 = {
             groupName: groupName2,
-            groupImageURL: `/${host}/groups_specific_locations/${group2CreatorPhoneNumber}.jpeg`,
+            groupImageURL: `/${host}/groups_specific_locations/${group2CreatorPhoneNumber}.jpg`,
             groupArea: group2Area,
             groupSpecificArea: specificArea2,
             groupTownOrInstitution: groupTownOrInstitution,
@@ -96,7 +97,7 @@ class HowardFakeGroups {
 
         const group3 = {
             groupName: groupName3,
-            groupImageURL: `/${host}/groups_specific_locations/${group3CreatorPhoneNumber}.jpeg`,
+            groupImageURL: `/${host}/groups_specific_locations/${group3CreatorPhoneNumber}.jpg`,
             groupArea: group3Area,
             groupSpecificArea: specificArea3,
             groupTownOrInstitution: groupTownOrInstitution,
@@ -112,7 +113,7 @@ class HowardFakeGroups {
 
         const group4 = {
             groupName: groupName4,
-            groupImageURL: `/${host}/groups_specific_locations/${group4CreatorPhoneNumber}.jpeg`,
+            groupImageURL: `/${host}/groups_specific_locations/${group4CreatorPhoneNumber}.jpg`,
             groupArea: group4Area,
             groupSpecificArea: specificArea4,
             groupTownOrInstitution: groupTownOrInstitution,
@@ -140,7 +141,6 @@ class HowardFakeGroups {
         await groupReference.set(group4);
 
     }
-
 }
 
-export default HowardFakeGroups
+export default DurbanCentralFakeGroups

@@ -21,6 +21,8 @@ class TownsOrInstitutionsCreation extends LocationCreation {
         await this.locationController.createSupportedTownsOrInstitution(mayville.toJson());
         const sydenham = new SupportedTownOrInstitution("1", "Sydenham", "6");
         await this.locationController.createSupportedTownsOrInstitution(sydenham.toJson());
+        const durbanCentral = new SupportedTownOrInstitution("1", "Durban Central", "7");
+        await this.locationController.createSupportedTownsOrInstitution(durbanCentral.toJson());
 
     }
 }

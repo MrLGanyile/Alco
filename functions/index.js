@@ -47,11 +47,13 @@ import MayvilleFakeGroups from "./models/users/groups/mayville_fake_groups.js";
 import SydenhamFakeGroups from "./models/users/groups/sydenham_fake_groups.js";
 import HowardFakeGroups from "./models/users/groups/howard_fake_groups.js";
 import DUTFakeGroups from "./models/users/groups/dut_fake_groups.js";
+import DurbanCentralFakeGroups from "./models/users/groups/durban_central_fake_groups.js";
 
 const mayvilleFakeGroups = new MayvilleFakeGroups();
 const sydenhamFakeGroups = new SydenhamFakeGroups();
 const howardFakeGroups = new HowardFakeGroups();
 const dutFakeGroups = new DUTFakeGroups();
+const durbanCentralFakeGroups = new DurbanCentralFakeGroups();
 
 
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createSupportedLocations/
@@ -206,6 +208,32 @@ export const saveStoreAndAdmins = onRequest(async (req, res) => {
     storeImageURL: "store_owners/stores_images/+27651482118.jpg", // Majali
     sectionName: "Sydenham-Durban-Kwa Zulu Natal-South Africa",
     storeArea: "Sparks (Mobile)",
+  };
+
+  storeReference = getFirestore().collection("stores")
+    .doc(store.storeOwnerPhoneNumber);
+
+  await storeReference.set(store);
+
+  store = {
+    storeOwnerPhoneNumber: "+27661813561",
+    storeName: "Glenwood",
+    storeImageURL: "store_owners/stores_images/+27661813561.jpg",// Nkuxa 2
+    sectionName: "Durban Central-Durban-Kwa Zulu Natal-South Africa",
+    storeArea: "Devenport (Mobile)",
+  };
+
+  storeReference = getFirestore().collection("stores")
+    .doc(store.storeOwnerPhoneNumber);
+
+  await storeReference.set(store);
+
+  store = {
+    storeOwnerPhoneNumber: "+27782578628",
+    storeName: "Berea",
+    storeImageURL: "store_owners/stores_images/+27782578628.jpg",// Dle
+    sectionName: "Durban Central-Durban-Kwa Zulu Natal-South Africa",
+    storeArea: "Berea Center (Mobile)",
   };
 
   storeReference = getFirestore().collection("stores")
@@ -1152,6 +1180,7 @@ const listAllUsers = async (nextPageToken) => {
 
 // Marketing Strategy 1-1 : Use Specific Area Residence To Find Contributors.
 // Marketing Strategy 1-2 : Use Kids Gift To Find Contributors.
+// Marketing Strategy 1-2 : Approach Stores
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createFakeGroups
 export const createFakeGroups = onRequest(async (req, res) => {
 
@@ -1159,30 +1188,34 @@ export const createFakeGroups = onRequest(async (req, res) => {
     case 0:// Mayville
 
       await mayvilleFakeGroups.catoCrestGroups();  // Marketing Strategy 1-2
-      await mayvilleFakeGroups.richviewKoOrangeGroups(); // Marketing Strategy 1-1
-      await mayvilleFakeGroups.richviewKoGreenGroups();  // Marketing Strategy 1-1
-      await mayvilleFakeGroups.richviewEmathininiGroups(); // Marketing Strategy 1-1
+      // await mayvilleFakeGroups.richviewKoOrangeGroups(); // Marketing Strategy 1-1
+      // await mayvilleFakeGroups.richviewKoGreenGroups();  // Marketing Strategy 1-1
+      // await mayvilleFakeGroups.richviewEmathininiGroups(); // Marketing Strategy 1-1
 
-      await mayvilleFakeGroups.nsimbini1Groups();  // Marketing Strategy 1-1
-      await mayvilleFakeGroups.nsimbini2Groups();  // Marketing Strategy 1-1
-      await mayvilleFakeGroups.nsimbini3Groups();  // Marketing Strategy 1-1
+      // await mayvilleFakeGroups.nsimbini1Groups();  // Marketing Strategy 1-1
+      // await mayvilleFakeGroups.nsimbini2Groups();  // Marketing Strategy 1-1
+      // await mayvilleFakeGroups.nsimbini3Groups();  // Marketing Strategy 1-1
 
-      await mayvilleFakeGroups.masxhaGroups();  // Marketing Strategy 1-1
+      // await mayvilleFakeGroups.masxhaGroups();  // Marketing Strategy 1-1
 
       // Send back a message that we"ve successfully written to the db.
       res.json({ result: `All Mayville Fake Groups Are Saved.` });
       break;
     case 1:// DUT
 
-      await dutFakeGroups.dut1Groups();
-      break;
+      await dutFakeGroups.dutBereaGroups(); // Marketing Strategy 1-1
+      await dutFakeGroups.dutSydenhamGroups(); // Marketing Strategy 1-1
+      await dutFakeGroups.dutMixedGroups(); // Marketing Strategy 1-1
+
+      // Send back a message that we"ve successfully written to the db.
+      res.json({ result: `All DUT Fake Groups Are Saved.` });
     case 2:// UKZN
       await howardFakeGroups.towerGroups();  // Marketing Strategy 1-1
 
       // Send back a message that we"ve successfully written to the db.
       res.json({ result: `All   Howard Fake Groups Are Saved.` });
       break;
-    default:// Sydenham
+    case 3:// Sydenham
 
       await sydenhamFakeGroups.foreman1Groups(); // Marketing Strategy 1-1
       await sydenhamFakeGroups.foreman2Groups(); // Marketing Strategy 1-1
@@ -1191,8 +1224,16 @@ export const createFakeGroups = onRequest(async (req, res) => {
       await sydenhamFakeGroups.kennedyGroups();  // Marketing Strategy 1-1
       await sydenhamFakeGroups.palmetGroups();  // Marketing Strategy 1-1
 
+      await sydenhamFakeGroups.sydenhamHeightGroups(); // Marketing Strategy 1-1
+      await sydenhamFakeGroups.threeRandGroups(); // Marketing Strategy 1-1
       // Send back a message that we"ve successfully written to the db.
       res.json({ result: `All Sydenham Fake Groups Are Saved.` });
+      break;
+    default:
+      await durbanCentralFakeGroups.durbanCentralGroups();  // Marketing Strategy 2
+
+      // Send back a message that we"ve successfully written to the db.
+      res.json({ result: `All Durban Central Fake Groups Are Saved.` });
   }
 });
 

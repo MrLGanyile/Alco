@@ -144,17 +144,36 @@ class Converter {
         sectionName ==
             SectionName.bonelaMayvilleDurbanKwaZuluNatalSouthAfrica ||
         sectionName ==
+            SectionName.galwayMayvilleDurbanKwaZuluNatalSouthAfrica ||
+        sectionName ==
             SectionName.nsimbiniMayvilleDurbanKwaZuluNatalSouthAfrica) {
       return SupportedTownOrInstitution(
         cityFK: "1",
         townOrInstitutionName: TownOrInstitution.mayville,
         townOrInstitutionNo: "5",
       );
-    } else {
+    } else if (sectionName ==
+            SectionName.sydenhamHeightSydenhamDurbanKwaZuluNatalSouthAfrica ||
+        sectionName ==
+            SectionName.burnwoodSydenhamDurbanKwaZuluNatalSouthAfrica ||
+        sectionName ==
+            SectionName.kennedySydenhamDurbanKwaZuluNatalSouthAfrica ||
+        sectionName ==
+            SectionName.foremanSydenhamDurbanKwaZuluNatalSouthAfrica ||
+        sectionName ==
+            SectionName.threeRandSydenhamDurbanKwaZuluNatalSouthAfrica ||
+        sectionName ==
+            SectionName.palmetSydenhamDurbanKwaZuluNatalSouthAfrica) {
       return SupportedTownOrInstitution(
         cityFK: "1",
         townOrInstitutionName: TownOrInstitution.sydenham,
         townOrInstitutionNo: "6",
+      );
+    } else {
+      return SupportedTownOrInstitution(
+        cityFK: "1",
+        townOrInstitutionName: TownOrInstitution.durbanCentral,
+        townOrInstitutionNo: "7",
       );
     }
   }
@@ -375,6 +394,12 @@ class Converter {
           sectionName: sectionName,
           areaNo: "36",
         );
+      case SectionName.galwayMayvilleDurbanKwaZuluNatalSouthAfrica:
+        return SupportedArea(
+          townOrInstitutionFK: "5",
+          sectionName: sectionName,
+          areaNo: "47",
+        );
       // ===================Sydenham=========================
       case SectionName.foremanSydenhamDurbanKwaZuluNatalSouthAfrica:
         return SupportedArea(
@@ -406,11 +431,36 @@ class Converter {
           sectionName: sectionName,
           areaNo: "41",
         );
-      case SectionName.spencerSydenhamDurbanKwaZuluNatalSouthAfrica:
+      case SectionName.threeRandSydenhamDurbanKwaZuluNatalSouthAfrica:
         return SupportedArea(
           townOrInstitutionFK: "6",
           sectionName: sectionName,
           areaNo: "42",
+        );
+      // ===================Durban Central=========================
+      case SectionName.glenwoodDurbanKwaZuluNatalSouthAfrica:
+        return SupportedArea(
+          townOrInstitutionFK: "7",
+          sectionName: sectionName,
+          areaNo: "43",
+        );
+      case SectionName.bereaDurbanKwaZuluNatalSouthAfrica:
+        return SupportedArea(
+          townOrInstitutionFK: "7",
+          sectionName: sectionName,
+          areaNo: "44",
+        );
+      case SectionName.southBeachDurbanKwaZuluNatalSouthAfrica:
+        return SupportedArea(
+          townOrInstitutionFK: "7",
+          sectionName: sectionName,
+          areaNo: "45",
+        );
+      case SectionName.masgraveDurbanKwaZuluNatalSouthAfrica:
+        return SupportedArea(
+          townOrInstitutionFK: "7",
+          sectionName: sectionName,
+          areaNo: "46",
         );
       default:
         return SupportedArea(
@@ -501,6 +551,8 @@ class Converter {
         return SectionName.bonelaMayvilleDurbanKwaZuluNatalSouthAfrica;
       case 'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa':
         return SectionName.nsimbiniMayvilleDurbanKwaZuluNatalSouthAfrica;
+      case 'Galway-Mayville-Durban-Kwa Zulu Natal-South Africa':
+        return SectionName.galwayMayvilleDurbanKwaZuluNatalSouthAfrica;
 
       // ===================Sydenham=========================
       case 'Foreman-Sydenham-Durban-Kwa Zulu Natal-South Africa':
@@ -518,8 +570,18 @@ class Converter {
       case 'Sydenham Height-Sydenham-Durban-Kwa Zulu Natal-South Africa':
         return SectionName.sydenhamHeightSydenhamDurbanKwaZuluNatalSouthAfrica;
 
-      case 'Spencer-Sydenham-Durban-Kwa Zulu Natal-South Africa':
-        return SectionName.spencerSydenhamDurbanKwaZuluNatalSouthAfrica;
+      case '3 Rand-Sydenham-Durban-Kwa Zulu Natal-South Africa':
+        return SectionName.threeRandSydenhamDurbanKwaZuluNatalSouthAfrica;
+
+      // ===================Durban Central=========================
+      case 'Glenwood-Durban-Kwa Zulu Natal-South Africa':
+        return SectionName.glenwoodDurbanKwaZuluNatalSouthAfrica;
+      case 'Berea-Durban-Kwa Zulu Natal-South Africa':
+        return SectionName.bereaDurbanKwaZuluNatalSouthAfrica;
+      case 'South Beach-Durban-Kwa Zulu Natal-South Africa':
+        return SectionName.southBeachDurbanKwaZuluNatalSouthAfrica;
+      case 'Masgrave-Durban-Kwa Zulu Natal-South Africa':
+        return SectionName.masgraveDurbanKwaZuluNatalSouthAfrica;
 
       default:
         return SectionName.catoCrestMayvilleDurbanKwaZuluNatalSouthAfrica;
@@ -604,6 +666,8 @@ class Converter {
         return 'Bonela-Mayville-Durban-Kwa Zulu Natal-South Africa';
       case SectionName.nsimbiniMayvilleDurbanKwaZuluNatalSouthAfrica:
         return 'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa';
+      case SectionName.galwayMayvilleDurbanKwaZuluNatalSouthAfrica:
+        return 'Galway-Mayville-Durban-Kwa Zulu Natal-South Africa';
 
       // ===================Sydenham=========================
       case SectionName.foremanSydenhamDurbanKwaZuluNatalSouthAfrica:
@@ -616,8 +680,18 @@ class Converter {
         return 'Palmet-Sydenham-Durban-Kwa Zulu Natal-South Africa';
       case SectionName.sydenhamHeightSydenhamDurbanKwaZuluNatalSouthAfrica:
         return 'Sydenham Height-Sydenham-Durban-Kwa Zulu Natal-South Africa';
-      case SectionName.spencerSydenhamDurbanKwaZuluNatalSouthAfrica:
-        return 'Spencer-Sydenham-Durban-Kwa Zulu Natal-South Africa';
+      case SectionName.threeRandSydenhamDurbanKwaZuluNatalSouthAfrica:
+        return '3 Rand-Sydenham-Durban-Kwa Zulu Natal-South Africa';
+
+      // ===================Sydenham=========================
+      case SectionName.glenwoodDurbanKwaZuluNatalSouthAfrica:
+        return 'Glenwood-Durban-Kwa Zulu Natal-South Africa';
+      case SectionName.bereaDurbanKwaZuluNatalSouthAfrica:
+        return 'Berea-Durban-Kwa Zulu Natal-South Africa';
+      case SectionName.southBeachDurbanKwaZuluNatalSouthAfrica:
+        return 'South Beach-Durban-Kwa Zulu Natal-South Africa';
+      case SectionName.masgraveDurbanKwaZuluNatalSouthAfrica:
+        return 'Masgrave-Durban-Kwa Zulu Natal-South Africa';
       default:
         return 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa';
     }
@@ -635,6 +709,8 @@ class Converter {
         return 'Mayville';
       case TownOrInstitution.sydenham:
         return 'Sydenham';
+      case TownOrInstitution.durbanCentral:
+        return 'Durban Central';
       default:
         return 'Howard College UKZN';
       // return 'Howard';
@@ -653,6 +729,8 @@ class Converter {
         return TownOrInstitution.mayville;
       case 'Sydenham':
         return TownOrInstitution.sydenham;
+      case 'Durban Central':
+        return TownOrInstitution.durbanCentral;
       default:
         return TownOrInstitution.howardUKZN;
     }

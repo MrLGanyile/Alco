@@ -153,10 +153,25 @@ class AreasCreation extends LocationCreation {
         const sydenhamHeight = new SupportedArea("6",
             "Sydenham Height-Sydenham-Durban-Kwa Zulu Natal-South Africa", "41");
         await this.locationController.createSupportedArea(sydenhamHeight.toJson());
-        const spencer = new SupportedArea("6",
-            "Spencer-Sydenham-Durban-Kwa Zulu Natal-South Africa", "42");
-        await this.locationController.createSupportedArea(spencer.toJson());
+        const threeRand = new SupportedArea("6",
+            "3 Rand-Sydenham-Durban-Kwa Zulu Natal-South Africa", "42");
+        await this.locationController.createSupportedArea(threeRand.toJson());
 
+    };
+
+    async createDurbanCentralSupportedAreas() {
+        const glenwood = new SupportedArea("7",
+            "Glenwood-Durban-Kwa Zulu Natal-South Africa", "43");
+        await this.locationController.createSupportedArea(glenwood.toJson());
+        const berea = new SupportedArea("7",
+            "Berea-Durban-Kwa Zulu Natal-South Africa", "44");
+        await this.locationController.createSupportedArea(berea.toJson());
+        const southBeach = new SupportedArea("7",
+            "South Beach-Durban-Kwa Zulu Natal-South Africa", "45");
+        await this.locationController.createSupportedArea(southBeach.toJson());
+        const masgrave = new SupportedArea("7",
+            "Masgrave-Durban-Kwa Zulu Natal-South Africa", "46");
+        await this.locationController.createSupportedArea(masgrave.toJson());
     };
 
     async createSupportedAreas() {
@@ -166,6 +181,7 @@ class AreasCreation extends LocationCreation {
         await this.createHowardSupportedAreas();
         await this.createMayvilleSupportedAreas();
         await this.createSydenhamSupportedAreas();
+        await this.createDurbanCentralSupportedAreas();
     };
 
 }
