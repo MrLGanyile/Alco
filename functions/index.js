@@ -206,7 +206,7 @@ export const saveStoreAndAdmins = onRequest(async (req, res) => {
     storeOwnerPhoneNumber: "+27651482118",
     storeName: "Sydenham",
     storeImageURL: "store_owners/stores_images/+27651482118.jpg", // Majali
-    sectionName: "Sydenham-Durban-Kwa Zulu Natal-South Africa",
+    sectionName: "Sydenham Height-Sydenham-Durban-Kwa Zulu Natal-South Africa",
     storeArea: "Sparks (Mobile)",
   };
 
@@ -217,9 +217,9 @@ export const saveStoreAndAdmins = onRequest(async (req, res) => {
 
   store = {
     storeOwnerPhoneNumber: "+27661813561",
-    storeName: "Glenwood",
+    storeName: "Durban Central",
     storeImageURL: "store_owners/stores_images/+27661813561.jpg",// Nkuxa 2
-    sectionName: "Durban Central-Durban-Kwa Zulu Natal-South Africa",
+    sectionName: "Glenwood-Durban Central-Durban-Kwa Zulu Natal-South Africa",
     storeArea: "Devenport (Mobile)",
   };
 
@@ -230,9 +230,9 @@ export const saveStoreAndAdmins = onRequest(async (req, res) => {
 
   store = {
     storeOwnerPhoneNumber: "+27782578628",
-    storeName: "Berea",
+    storeName: "Durban Central",
     storeImageURL: "store_owners/stores_images/+27782578628.jpg",// Dle
-    sectionName: "Durban Central-Durban-Kwa Zulu Natal-South Africa",
+    sectionName: "Berea-Durban Central-Durban-Kwa Zulu Natal-South Africa",
     storeArea: "Berea Center (Mobile)",
   };
 
@@ -400,7 +400,8 @@ export const convertStoreDrawsToCompetitions =
         )
         .where("drawDateAndTime.hour",
           "==", justNow.getHours() + 2, // GTM
-        )/*
+        )
+        /*
         // Can Be A Bit Tricky If You Think About It.
         // As a result competitions shouldn't start at o'clock.
         // Find competitions starting in the next minute.
@@ -411,9 +412,10 @@ export const convertStoreDrawsToCompetitions =
           ">=", justNow.getMinutes(),
         )*/
         .onSnapshot(async (storeDrawsSnapshot) => {
-          log(`number ${storeDrawsSnapshot.size}`);
-          if (storeDrawsSnapshot.size) {
+          log(`* Number Of Draws ${storeDrawsSnapshot.size}`);
+          if (storeDrawsSnapshot.size > 0) {
             storeDrawsSnapshot.forEach(async (storeDrawDoc) => {
+
               const townOrInstitution = storeDrawDoc.data()["townOrInstitution"];
 
               /* Only initiate the conversion step if there are
@@ -422,7 +424,9 @@ export const convertStoreDrawsToCompetitions =
               getFirestore().collection("groups")
                 .where("groupArea.townOrInstitutionFK", "==", townOrInstitution.townOrInstitutionNo)
                 .onSnapshot(async (groupsSnapshot) => {
+                  log(`* NO OF GROUPS ${groupsSnapshot.size}`);
                   if (groupsSnapshot.size > 0) {
+
                     const storeDrawId = storeDrawDoc.data()["storeDrawId"];
 
                     const storeDraw = {
@@ -439,6 +443,8 @@ export const convertStoreDrawsToCompetitions =
                       storeName: storeDrawDoc.data()["storeName"],
                       storeImageURL:
                         storeDrawDoc.data()["storeImageURL"],
+                      grandPriceToWinIndex:
+                        storeDrawDoc.data()["grandPriceToWinIndex"],
                       townOrInstitution: townOrInstitution,
                     };
 
@@ -485,7 +491,7 @@ export const convertStoreDrawsToCompetitions =
                       competitionState: "on-count-down",
                       wonPrice: null,
                       wonGroup: null,
-
+                      grandPriceToWinIndex: storeDraw.grandPriceToWinIndex,
                     };
 
                     await reference.set(competition);
@@ -518,7 +524,7 @@ export const createGrandPricesGrid =
       const competitionId = event.data.data()["competitionId"];
       const numberOfGrandPrices = event.data.data()["numberOfGrandPrices"];
       const storeFK = event.data.data()["storeFK"];
-
+      const grandPriceToWinIndex = event.data.data()["grandPriceToWinIndex"];
 
       getFirestore()
         .collection("competitions")
@@ -548,7 +554,14 @@ export const createGrandPricesGrid =
             grandPricesOrder = shuffle(grandPricesOrder);
 
             // Price To Win Index
-            grandPricesOrder.push(Math.floor(Math.random() * numberOfGrandPrices));
+            // grandPricesOrder.push(Math.floor(Math.random() * numberOfGrandPrices));
+            if (grandPriceToWinIndex != -1) {
+              grandPricesOrder.push(grandPriceToWinIndex);
+            }
+            else {
+              grandPricesOrder.push(Math.floor(Math.random() * numberOfGrandPrices));
+            }
+
 
             const grandPricesGrid = {
               grandPricesGridId: reference.id,
@@ -824,7 +837,8 @@ export const createCompetitions =
         )
         .where("drawDateAndTime.hour",
           "==", justNow.getHours() + 2, // GTM
-        ) /*
+        )
+        /*
         // Can Be A Bit Tricky If You Think About It.
         // As a result competitions shouldn't start at o'clock.
         // Find competitions starting in the next minute.
@@ -836,8 +850,8 @@ export const createCompetitions =
         ) */
         .onSnapshot(async (storeDrawsSnapshot) => {
 
-          if (storeDrawsSnapshot.size) {
-            log(`No of draws ${storeDrawsSnapshot.size}`);
+          if (storeDrawsSnapshot.size > 0) {
+            // log(`# No of draws ${storeDrawsSnapshot.size}`);
 
             storeDrawsSnapshot.docs.map(async (storeDrawDoc) => {
               const batch = getFirestore().batch();
@@ -849,7 +863,9 @@ export const createCompetitions =
               getFirestore().collection("groups")
                 .where("groupArea.townOrInstitutionFK", "==", townOrInstitution.townOrInstitutionNo)
                 .onSnapshot(async (groupsSnapshot) => {
+                  // log(`# No of groups ${groupsSnapshot.size}`);
                   if (groupsSnapshot.size > 0) {
+
                     const storeDrawId = storeDrawDoc.data()["storeDrawId"];
 
                     const storeDraw = {
@@ -866,12 +882,15 @@ export const createCompetitions =
                       storeName: storeDrawDoc.data()["storeName"],
                       storeImageURL:
                         storeDrawDoc.data()["storeImageURL"],
+                      grandPriceToWinIndex:
+                        storeDrawDoc.data()["grandPriceToWinIndex"],
                       townOrInstitution: townOrInstitution,
                     };
 
                     const reference = getFirestore()
-                      .collection("competitions").doc();
-                    //.doc(storeDrawId);
+                      .collection("competitions")
+                      // .doc();
+                      .doc(storeDrawId);
 
 
                     const timeBetweenPricePickingAndGroupPicking = pickingMultipleInSeconds;
@@ -912,7 +931,7 @@ export const createCompetitions =
                       competitionState: "on-count-down",
                       wonPrice: null,
                       wonGroup: null,
-
+                      grandPriceToWinIndex: storeDraw.grandPriceToWinIndex,
                     };
 
                     batch.create(reference, competition);
@@ -1204,11 +1223,12 @@ export const createFakeGroups = onRequest(async (req, res) => {
     case 1:// DUT
 
       await dutFakeGroups.dutBereaGroups(); // Marketing Strategy 1-1
-      await dutFakeGroups.dutSydenhamGroups(); // Marketing Strategy 1-1
-      await dutFakeGroups.dutMixedGroups(); // Marketing Strategy 1-1
+      // await dutFakeGroups.dutSydenhamGroups(); // Marketing Strategy 1-1
+      // await dutFakeGroups.dutMixedGroups(); // Marketing Strategy 1-1
 
       // Send back a message that we"ve successfully written to the db.
       res.json({ result: `All DUT Fake Groups Are Saved.` });
+      break;
     case 2:// UKZN
       await howardFakeGroups.towerGroups();  // Marketing Strategy 1-1
 
@@ -1218,14 +1238,14 @@ export const createFakeGroups = onRequest(async (req, res) => {
     case 3:// Sydenham
 
       await sydenhamFakeGroups.foreman1Groups(); // Marketing Strategy 1-1
-      await sydenhamFakeGroups.foreman2Groups(); // Marketing Strategy 1-1
+      // await sydenhamFakeGroups.foreman2Groups(); // Marketing Strategy 1-1
 
-      await sydenhamFakeGroups.burnwoodGroups(); // Marketing Strategy 1-1
-      await sydenhamFakeGroups.kennedyGroups();  // Marketing Strategy 1-1
-      await sydenhamFakeGroups.palmetGroups();  // Marketing Strategy 1-1
+      // await sydenhamFakeGroups.burnwoodGroups(); // Marketing Strategy 1-1
+      // await sydenhamFakeGroups.kennedyGroups();  // Marketing Strategy 1-1
+      // await sydenhamFakeGroups.palmetGroups();  // Marketing Strategy 1-1
 
-      await sydenhamFakeGroups.sydenhamHeightGroups(); // Marketing Strategy 1-1
-      await sydenhamFakeGroups.threeRandGroups(); // Marketing Strategy 1-1
+      /// await sydenhamFakeGroups.sydenhamHeightGroups(); // Marketing Strategy 1-1
+      // await sydenhamFakeGroups.threeRandGroups(); // Marketing Strategy 1-1
       // Send back a message that we"ve successfully written to the db.
       res.json({ result: `All Sydenham Fake Groups Are Saved.` });
       break;
@@ -1254,7 +1274,7 @@ export const createFakeDraws = onRequest(async (req, res) => {
   let townOrInstitution;
 
   // Start listing users from the beginning, 1000 at a time.
-  listAllUsers();
+  // listAllUsers();
 
   switch (parseInt(req.query.hostIndex)) {
     case 0:
@@ -1284,13 +1304,29 @@ export const createFakeDraws = onRequest(async (req, res) => {
         townOrInstitutionNo: "4",
       };
       break;
-    default:
+    case 3:
       storeFK = "+27651482118";
       storeName = "Sydenham";
       townOrInstitution = {
         cityFK: "1",
         townOrInstitutionName: "Sydenham",
         townOrInstitutionNo: "6",
+      };
+    case 4:
+      storeFK = "+27661813561";
+      storeName = "Durban Central";
+      townOrInstitution = {
+        cityFK: "1",
+        townOrInstitutionName: "Durban Central",
+        townOrInstitutionNo: "7",
+      };
+    default:
+      storeFK = "+27782578628";
+      storeName = "Durban Central";
+      townOrInstitution = {
+        cityFK: "1",
+        townOrInstitutionName: "Durban Central",
+        townOrInstitutionNo: "7",
       };
   }
 
@@ -1395,7 +1431,7 @@ export const createFakeDraws = onRequest(async (req, res) => {
     }
 
     // Sydenham
-    else {
+    else if (parseInt(req.query.hostIndex) == 3) {
 
       switch (priceIndex) {
         case 0:
@@ -1416,6 +1452,46 @@ export const createFakeDraws = onRequest(async (req, res) => {
       }
     }
 
+    // Dubran Central [Glenwood]
+    else if (parseInt(req.query.hostIndex) == 4) {
+      switch (priceIndex) {
+        case 0:
+          description = "Hunters Gold 24x330ml [Bottles]";
+          break;
+        case 1:
+          description = "Absolute 750ml";
+          break;
+        case 2:
+          description = "Extreme 24x330ml";
+          break;
+        case 3:
+          description = "Absolute 750ml";
+          break;
+        default:
+          description = "Carling Black Label 24x330ml";
+      }
+    }
+
+    // Durban Central [Berea]
+    else {
+      switch (priceIndex) {
+        case 0:
+          description = "Savana Lemon 24x360ml";
+          break;
+        case 1:
+          description = "Black Label Vodka 12x750ml [Box]";
+          break;
+        case 2:
+          description = "Savana 24x360ml";
+          break;
+        case 3:
+          description = "Hunters Gold 24x330ml [Bottles]";
+          break;
+        default:
+          description = "Black Label Vodka 12x750ml [Box]";
+      }
+    }
+
 
 
 
@@ -1432,6 +1508,7 @@ export const createFakeDraws = onRequest(async (req, res) => {
   }
   const storeNameInfoReference = getFirestore().collection("stores_names_info").doc(storeFK);
 
+  /*
   storeNameInfoReference.onSnapshot(async (doc) => {
     if (doc.exists) {
       let drawsOrder = doc.data()['drawsOrder'];
@@ -1440,7 +1517,7 @@ export const createFakeDraws = onRequest(async (req, res) => {
       await storeNameInfoReference.update({ drawsOrder: drawsOrder });
       drawsOrder = doc.data()['drawsOrder'];
     }
-  });
+  });*/
 
   await storeNameInfoReference.update({ latestStoreDrawId: storeDrawId });
   // Send back a message that we"ve successfully written to the db.

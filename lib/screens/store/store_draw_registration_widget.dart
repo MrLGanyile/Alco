@@ -1,6 +1,7 @@
 import 'package:alco/controllers/store_controller.dart';
 import 'package:alco/screens/store/draw_grand_price_creation_widget.dart';
 import 'package:alco/screens/utils/start_screen.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -31,6 +32,8 @@ class StoreDrawRegistrationWidgetState
   TextEditingController description4EditingController = TextEditingController();
 
   TextEditingController description5EditingController = TextEditingController();
+
+  late DropdownButton2<String> dropDowButton;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -235,6 +238,10 @@ class StoreDrawRegistrationWidgetState
               const SizedBox(
                 height: 10,
               ),
+              pickGrandPriceToWinIndex(context),
+              const SizedBox(
+                height: 10,
+              ),
               createDrawButton(),
             ],
           ),
@@ -298,8 +305,10 @@ class StoreDrawRegistrationWidgetState
                 storeController.setAdminCode('');
 
                 Get.to(() => StartScreen());
+                return;
               } else if (result == StoreDrawSavingStatus.incomplete) {
                 Get.snackbar('Error', 'Incomplete Draw Info');
+                return;
               } else if (result == StoreDrawSavingStatus.loginRequired) {
                 Get.snackbar('Error', 'Not Authorized To Create Draw.');
                 return;
@@ -348,4 +357,91 @@ class StoreDrawRegistrationWidgetState
           ),
         ),
       );
+
+  Widget pickGrandPriceToWinIndex(BuildContext context) {
+    dropDowButton = DropdownButton2<String>(
+      isExpanded: true,
+      hint: Row(
+        children: [
+          Icon(
+            Icons.location_city,
+            size: 22,
+            color: MyApplication.logoColor1,
+          ),
+          const SizedBox(
+            width: 4,
+          ),
+          Expanded(
+            child: Text(
+              'Pick Grand Price Index',
+              style: TextStyle(
+                fontSize: 14,
+                color: MyApplication.logoColor2,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+      items: ['-1', '0', '1', '2', '3', '4']
+          .map((String item) => DropdownMenuItem<String>(
+                value: item,
+                child: Text(
+                  item,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: MyApplication.logoColor2,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ))
+          .toList(),
+      value: storeController.grandPriceToWinIndex.toString(),
+      onChanged: (String? value) {
+        storeController.setGrandPriceToWinIndex(int.parse(value!));
+      },
+      buttonStyleData: ButtonStyleData(
+        height: 60,
+        width: MediaQuery.of(context).size.width * 0.90,
+        padding: const EdgeInsets.only(left: 14, right: 14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            color: MyApplication.logoColor2,
+          ),
+          color: MyApplication.scaffoldColor,
+        ),
+        elevation: 0,
+      ),
+      iconStyleData: IconStyleData(
+        icon: const Icon(
+          Icons.arrow_forward_ios_outlined,
+        ),
+        iconSize: 14,
+        iconEnabledColor: MyApplication.logoColor2,
+        iconDisabledColor: Colors.grey,
+      ),
+      dropdownStyleData: DropdownStyleData(
+        maxHeight: 200,
+        width: MediaQuery.of(context).size.width * 0.95,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: Colors.black,
+        ),
+        offset: const Offset(10, 0),
+        scrollbarTheme: ScrollbarThemeData(
+          radius: const Radius.circular(40),
+          thickness: MaterialStateProperty.all<double>(6),
+          thumbVisibility: MaterialStateProperty.all<bool>(true),
+        ),
+      ),
+      menuItemStyleData: const MenuItemStyleData(
+        height: 40,
+        padding: EdgeInsets.only(left: 14, right: 14),
+      ),
+    );
+
+    return DropdownButtonHideUnderline(child: dropDowButton);
+  }
 }

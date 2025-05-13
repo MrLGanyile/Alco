@@ -45,6 +45,7 @@ class StoreNameInfo implements Comparable<StoreNameInfo> {
 
   String getCommingDrawId() {
     debug.log(drawsOrder!.toString());
+    debug.log('Comming Draw Exist...');
     return drawsOrder!.isNotEmpty ? drawsOrder![0] : "-";
   }
 

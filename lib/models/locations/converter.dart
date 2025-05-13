@@ -438,25 +438,25 @@ class Converter {
           areaNo: "42",
         );
       // ===================Durban Central=========================
-      case SectionName.glenwoodDurbanKwaZuluNatalSouthAfrica:
+      case SectionName.glenwoodDurbanCentralDurbanKwaZuluNatalSouthAfrica:
         return SupportedArea(
           townOrInstitutionFK: "7",
           sectionName: sectionName,
           areaNo: "43",
         );
-      case SectionName.bereaDurbanKwaZuluNatalSouthAfrica:
+      case SectionName.bereaDurbanCentralDurbanKwaZuluNatalSouthAfrica:
         return SupportedArea(
           townOrInstitutionFK: "7",
           sectionName: sectionName,
           areaNo: "44",
         );
-      case SectionName.southBeachDurbanKwaZuluNatalSouthAfrica:
+      case SectionName.southBeachDurbanCentralDurbanKwaZuluNatalSouthAfrica:
         return SupportedArea(
           townOrInstitutionFK: "7",
           sectionName: sectionName,
           areaNo: "45",
         );
-      case SectionName.masgraveDurbanKwaZuluNatalSouthAfrica:
+      case SectionName.masgraveDurbanCentralDurbanKwaZuluNatalSouthAfrica:
         return SupportedArea(
           townOrInstitutionFK: "7",
           sectionName: sectionName,
@@ -574,14 +574,14 @@ class Converter {
         return SectionName.threeRandSydenhamDurbanKwaZuluNatalSouthAfrica;
 
       // ===================Durban Central=========================
-      case 'Glenwood-Durban-Kwa Zulu Natal-South Africa':
-        return SectionName.glenwoodDurbanKwaZuluNatalSouthAfrica;
-      case 'Berea-Durban-Kwa Zulu Natal-South Africa':
-        return SectionName.bereaDurbanKwaZuluNatalSouthAfrica;
-      case 'South Beach-Durban-Kwa Zulu Natal-South Africa':
-        return SectionName.southBeachDurbanKwaZuluNatalSouthAfrica;
-      case 'Masgrave-Durban-Kwa Zulu Natal-South Africa':
-        return SectionName.masgraveDurbanKwaZuluNatalSouthAfrica;
+      case 'Glenwood-Durban Central-Durban-Kwa Zulu Natal-South Africa':
+        return SectionName.glenwoodDurbanCentralDurbanKwaZuluNatalSouthAfrica;
+      case 'Berea-Durban Central-Durban-Kwa Zulu Natal-South Africa':
+        return SectionName.bereaDurbanCentralDurbanKwaZuluNatalSouthAfrica;
+      case 'South Beach-Durban Central-Durban-Kwa Zulu Natal-South Africa':
+        return SectionName.southBeachDurbanCentralDurbanKwaZuluNatalSouthAfrica;
+      case 'Masgrave-Durban Central-Durban-Kwa Zulu Natal-South Africa':
+        return SectionName.masgraveDurbanCentralDurbanKwaZuluNatalSouthAfrica;
 
       default:
         return SectionName.catoCrestMayvilleDurbanKwaZuluNatalSouthAfrica;
@@ -684,14 +684,14 @@ class Converter {
         return '3 Rand-Sydenham-Durban-Kwa Zulu Natal-South Africa';
 
       // ===================Sydenham=========================
-      case SectionName.glenwoodDurbanKwaZuluNatalSouthAfrica:
-        return 'Glenwood-Durban-Kwa Zulu Natal-South Africa';
-      case SectionName.bereaDurbanKwaZuluNatalSouthAfrica:
-        return 'Berea-Durban-Kwa Zulu Natal-South Africa';
-      case SectionName.southBeachDurbanKwaZuluNatalSouthAfrica:
-        return 'South Beach-Durban-Kwa Zulu Natal-South Africa';
-      case SectionName.masgraveDurbanKwaZuluNatalSouthAfrica:
-        return 'Masgrave-Durban-Kwa Zulu Natal-South Africa';
+      case SectionName.glenwoodDurbanCentralDurbanKwaZuluNatalSouthAfrica:
+        return 'Glenwood-Durban Central-Durban-Kwa Zulu Natal-South Africa';
+      case SectionName.bereaDurbanCentralDurbanKwaZuluNatalSouthAfrica:
+        return 'Berea-Durban Central-Durban-Kwa Zulu Natal-South Africa';
+      case SectionName.southBeachDurbanCentralDurbanKwaZuluNatalSouthAfrica:
+        return 'South Beach-Durban Central-Durban-Kwa Zulu Natal-South Africa';
+      case SectionName.masgraveDurbanCentralDurbanKwaZuluNatalSouthAfrica:
+        return 'Masgrave-Durban Central-Durban-Kwa Zulu Natal-South Africa';
       default:
         return 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa';
     }

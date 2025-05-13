@@ -221,7 +221,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
         stream: storeController.retrieveStoreDraw(
           widget.storeNameInfo.storeNameInfoId,
           widget.storeNameInfo.getCommingDrawId(),
-          // widget.storeNameInfo.latestStoreDrawId,
+          //widget.storeNameInfo.latestStoreDrawId,
         ), // Use comming draw
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.exists) {
@@ -231,7 +231,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 DateTime.now().subtract(const Duration(days: 1));
 
             if (nextStoreDraw.drawDateAndTime.isBefore(latestPast)) {
-              // debug.log('Bug - 1');
+              debug.log('Bug - 1');
               return NoCompetitionWidget(
                   storeId: widget.storeNameInfo.storeNameInfoId,
                   storeName: widget.storeNameInfo.storeName,
@@ -281,6 +281,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                           "Error Fetching competition Data - ${snapshot.error}");
                       return getCircularProgressBar();
                     } else {
+                      debug.log('Competition Fetching Error----');
                       return getCircularProgressBar();
                     }
                   });
@@ -294,7 +295,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 storeImageURL: widget.storeNameInfo.storeImageURL,
                 sectionName: widget.storeNameInfo.sectionName);
           } else {
-            // debug.log('Bug - 2');
+            debug.log('Bug - 2');
             return NoCompetitionWidget(
                 storeId: widget.storeNameInfo.storeNameInfoId,
                 storeName: widget.storeNameInfo.storeName,
@@ -432,6 +433,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             debug.log('Error fetching count down clock data ${snapshot.error}');
             return getCircularProgressBar();
           } else {
+            debug.log('Count Down Error----');
             return getCircularProgressBar();
           }
         }));

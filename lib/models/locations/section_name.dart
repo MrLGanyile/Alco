@@ -46,8 +46,8 @@ enum SectionName {
   sydenhamHeightSydenhamDurbanKwaZuluNatalSouthAfrica,
   threeRandSydenhamDurbanKwaZuluNatalSouthAfrica,
 
-  glenwoodDurbanKwaZuluNatalSouthAfrica,
-  bereaDurbanKwaZuluNatalSouthAfrica,
-  southBeachDurbanKwaZuluNatalSouthAfrica,
-  masgraveDurbanKwaZuluNatalSouthAfrica,
+  glenwoodDurbanCentralDurbanKwaZuluNatalSouthAfrica,
+  bereaDurbanCentralDurbanKwaZuluNatalSouthAfrica,
+  southBeachDurbanCentralDurbanKwaZuluNatalSouthAfrica,
+  masgraveDurbanCentralDurbanKwaZuluNatalSouthAfrica,
 }

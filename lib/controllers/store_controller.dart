@@ -79,10 +79,14 @@ class StoreController extends GetxController {
   late Rx<String?> _description5 = Rx<String?>('');
   String? get description5 => _description5.value;
 
+  late Rx<int?> _grandPriceToWinIndex = Rx<int?>(-1);
+  int? get grandPriceToWinIndex => _grandPriceToWinIndex.value;
+
   late Rx<String?> _adminCode = Rx<String?>(null);
   String? get adminCode => _adminCode.value;
 
   void cleanForStoreDraw() {
+    _hostingStore = Rx<Store?>(null);
     _drawDateYear = Rx<int?>(-1);
     _drawDateMonth = Rx<int?>(-1);
     _drawDateDay = Rx<int?>(-1);
@@ -108,6 +112,8 @@ class StoreController extends GetxController {
     _drawGrandPrice5ImageFile = Rx(null);
     _grandPrice5ImageURL = Rx<String?>('');
     _description5 = Rx<String?>('');
+
+    _grandPriceToWinIndex = Rx<int?>(-1);
 
     update();
   }
@@ -162,7 +168,8 @@ class StoreController extends GetxController {
     DocumentSnapshot snapshot = await storeReference.get();
 
     if (snapshot.exists) {
-      _hostingStore = Rx<Store?>(Store.fromJson(snapshot.data()!));
+      Store store = Store.fromJson(snapshot.data()!);
+      _hostingStore = Rx<Store?>(store);
     }
   }
 
@@ -479,7 +486,9 @@ class StoreController extends GetxController {
         (_adminCode.value!.compareTo('QAZwsxedc321@DUT') == 0 ||
             _adminCode.value!.compareTo('QAZwsxedc321@UKZN') == 0 ||
             _adminCode.value!.compareTo('QAZwsxedc321@CC') == 0 ||
-            _adminCode.value!.compareTo('QAZwsxedc321@SYD') == 0);
+            _adminCode.value!.compareTo('QAZwsxedc321@SYD') == 0 ||
+            _adminCode.value!.compareTo('QAZwsxedc321@DBNG') == 0 ||
+            _adminCode.value!.compareTo('QAZwsxedc321@DBNB') == 0);
   }
 
   void setAdminCode(String adminCode) {
@@ -495,9 +504,13 @@ class StoreController extends GetxController {
     } else if (adminCode.contains('QAZwsxedc321@SYD') &&
         'QAZwsxedc321@SYD'.contains(adminCode)) {
       initiateHostingStore('+27651482118');
-    } else if (adminCode.isEmpty) {
-      Get.snackbar('Warning', 'Hosting Store Not Initialized.');
-    } else {
+    } else if (adminCode.contains('QAZwsxedc321@DBNG') &&
+        'QAZwsxedc321@DBNG'.contains(adminCode)) {
+      initiateHostingStore('+27661813561');
+    } else if (adminCode.contains('QAZwsxedc321@DBNB') &&
+        'QAZwsxedc321@DBNB'.contains(adminCode)) {
+      initiateHostingStore('+27782578628');
+    } else if (adminCode.isNotEmpty) {
       Get.snackbar('Error', 'Incorrect Admin Code.');
     }
 
@@ -553,11 +566,18 @@ class StoreController extends GetxController {
     update();
   }
 
+  void setGrandPriceToWinIndex(int index) {
+    _grandPriceToWinIndex = Rx(index);
+    update();
+  }
+
   Future<StoreDrawSavingStatus> createStoreDraw() async {
     if (_adminCode.value!.compareTo('QAZwsxedc321@DUT') != 0 &&
         _adminCode.value!.compareTo('QAZwsxedc321@CC') != 0 &&
         _adminCode.value!.compareTo('QAZwsxedc321@SYD') != 0 &&
-        _adminCode.value!.compareTo('QAZwsxedc321@UKZN') != 0) {
+        _adminCode.value!.compareTo('QAZwsxedc321@UKZN') != 0 &&
+        _adminCode.value!.compareTo('QAZwsxedc321@DBNG') != 0 &&
+        _adminCode.value!.compareTo('QAZwsxedc321@DBNB') != 0) {
       return StoreDrawSavingStatus.loginRequired;
     } else if (!hasDate()) {
       Get.snackbar('Error', 'Date Info Missing.');
@@ -612,6 +632,7 @@ class StoreController extends GetxController {
             storeController.drawDateHour!,
             storeController.drawDateMinute!),
         numberOfGrandPrices: 5,
+        grandPriceToWinIndex: _grandPriceToWinIndex.value!,
         storeName: storeController.hostingStore!.storeName,
         storeImageURL: storeController.hostingStore!.storeImageURL,
         townOrInstitution: Converter.toSupportedTownOrInstitution(

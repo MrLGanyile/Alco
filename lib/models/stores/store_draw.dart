@@ -20,23 +20,24 @@ class StoreDraw implements Comparable<StoreDraw> {
   StoreDrawState? storeDrawState;
 
   int joiningFee;
+  int grandPriceToWinIndex;
 
   // Contains A Sub Collection Of Draw Grand Prices
   // Contains A Sub Collection Of Draw Competitors
   // 'timestamp': DateTime.now().millisecondsSinceEpoch,
 
-  StoreDraw({
-    this.storeDrawId = '',
-    required this.storeFK,
-    required this.drawDateAndTime,
-    this.isOpen = true,
-    required this.numberOfGrandPrices,
-    required this.storeName,
-    required this.storeImageURL,
-    required this.townOrInstitution,
-    this.storeDrawState = StoreDrawState.notConvertedToCompetition,
-    this.joiningFee = 0,
-  });
+  StoreDraw(
+      {this.storeDrawId = '',
+      required this.storeFK,
+      required this.drawDateAndTime,
+      this.isOpen = true,
+      required this.numberOfGrandPrices,
+      required this.storeName,
+      required this.storeImageURL,
+      required this.townOrInstitution,
+      this.storeDrawState = StoreDrawState.notConvertedToCompetition,
+      this.joiningFee = 0,
+      required this.grandPriceToWinIndex});
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {};
@@ -56,7 +57,8 @@ class StoreDraw implements Comparable<StoreDraw> {
       'storeImageURL': storeImageURL,
       'townOrInstitution': townOrInstitution.toJson(),
       'joiningFee': joiningFee,
-      'storeDrawState': Converter.fromStoreDrawStateToString(storeDrawState!)
+      'storeDrawState': Converter.fromStoreDrawStateToString(storeDrawState!),
+      'grandPriceToWinIndex': grandPriceToWinIndex
     });
     return map;
   }
@@ -75,6 +77,7 @@ class StoreDraw implements Comparable<StoreDraw> {
       isOpen: json['isOpen'],
       storeName: json['storeName'],
       storeImageURL: json['storeImageURL'],
+      grandPriceToWinIndex: json['grandPriceToWinIndex'],
       townOrInstitution:
           SupportedTownOrInstitution.fromJson(json['townOrInstitution']),
       storeDrawState: Converter.toStoreDrawState(json['storeDrawState']));

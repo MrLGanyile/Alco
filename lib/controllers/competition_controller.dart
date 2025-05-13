@@ -50,18 +50,6 @@ class CompetitionController extends GetxController {
   }
 
   // Branch : competition_resources_crud ->  competitions_data_access
-  // To Delete - Branches competitions_crud -> view_currently_playing_competition
-  Future<Competition?> findFutureCompetition(String competitionId) async {
-    DocumentReference reference = FirebaseFirestore.instance
-        .collection('competitions')
-        .doc(competitionId);
-
-    reference.snapshots().map((referenceDoc) {
-      return Competition.fromJson(referenceDoc.data());
-    });
-
-    return null;
-  }
 
   // Branch : competition_resources_crud ->  competitions_data_access
   Stream<DocumentSnapshot<Object?>> retrieveCountDownClock(
