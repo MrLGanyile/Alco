@@ -401,7 +401,7 @@ export const convertStoreDrawsToCompetitions =
         .where("drawDateAndTime.hour",
           "==", justNow.getHours() + 2, // GTM
         )
-        /*
+
         // Can Be A Bit Tricky If You Think About It.
         // As a result competitions shouldn't start at o'clock.
         // Find competitions starting in the next minute.
@@ -410,7 +410,7 @@ export const convertStoreDrawsToCompetitions =
         )
         .where("drawDateAndTime.minute",
           ">=", justNow.getMinutes(),
-        )*/
+        )
         .onSnapshot(async (storeDrawsSnapshot) => {
           log(`* Number Of Draws ${storeDrawsSnapshot.size}`);
           if (storeDrawsSnapshot.size > 0) {
@@ -838,20 +838,20 @@ export const createCompetitions =
         .where("drawDateAndTime.hour",
           "==", justNow.getHours() + 2, // GTM
         )
-        /*
+
         // Can Be A Bit Tricky If You Think About It.
         // As a result competitions shouldn't start at o'clock.
         // Find competitions starting in the next minute.
         .where("drawDateAndTime.minute",
           "<=", justNow.getMinutes() + 1,
-        ) 
+        )
         .where("drawDateAndTime.minute",
           ">=", justNow.getMinutes(),
-        ) */
+        )
         .onSnapshot(async (storeDrawsSnapshot) => {
 
           if (storeDrawsSnapshot.size > 0) {
-            // log(`# No of draws ${storeDrawsSnapshot.size}`);
+            log(`# No of draws ${storeDrawsSnapshot.size}`);
 
             storeDrawsSnapshot.docs.map(async (storeDrawDoc) => {
               const batch = getFirestore().batch();
@@ -965,10 +965,7 @@ export const maintainCountDownClocks =
       const hour = event.data.data().dateTime["hour"];
       const minute = event.data.data().dateTime["minute"];
 
-
-
-
-      const countDownId = `${year}-${month}-${day}-@${hour}h${minute}`;
+      const countDownId = `${year}-${month}-${day}@${hour}h${minute}`;
 
       const reference = getFirestore().collection("count_down_clocks")
         .doc(countDownId);
@@ -1230,7 +1227,7 @@ export const createFakeGroups = onRequest(async (req, res) => {
       res.json({ result: `All DUT Fake Groups Are Saved.` });
       break;
     case 2:// UKZN
-      await howardFakeGroups.towerGroups();  // Marketing Strategy 1-1
+      await howardFakeGroups.onCompusGroups();  // Marketing Strategy 1-1
 
       // Send back a message that we"ve successfully written to the db.
       res.json({ result: `All   Howard Fake Groups Are Saved.` });

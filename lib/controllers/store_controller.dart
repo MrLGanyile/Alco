@@ -221,11 +221,10 @@ class StoreController extends GetxController {
 
     storeNameInfoReference.get().then((storeNameInfoDoc) async {
       StoreNameInfo info = StoreNameInfo.fromJson(storeNameInfoDoc.data());
-      debug.log('Before Deletion Size ${info.drawsOrder!.length}');
+      debug.log('Before Deletion ${info.drawsOrder!}');
       info.drawsOrder!.removeAt(0);
       await storeNameInfoReference.update({'drawsOrder': info.drawsOrder!});
-      debug.log('After Deletion Size ${info.drawsOrder!.length}');
-      debug.log('updated draws order list...');
+      debug.log('After Deletion ${info.drawsOrder!}');
     });
   }
 

@@ -18,31 +18,31 @@ class DurbanCentralFakeGroups {
 
         const group1Area = {
             townOrInstitutionFK: "7",
-            areaName: "Berea-Durban-Kwa Zulu Natal-South Africa",
+            areaName: "Berea-Durban Central-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "44",
         };
-        const specificArea1 = 'Regency @DutRes';
+        const specificArea1 = 'Regency';
 
         const group2Area = {
             townOrInstitutionFK: "7",
-            areaName: "Berea-Durban-Kwa Zulu Natal-South Africa",
+            areaName: "Berea-Durban Central-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "44",
         };
-        const specificArea2 = 'Cuban @UkznRes';
+        const specificArea2 = 'Cuban';
 
         const group3Area = {
             townOrInstitutionFK: "7",
-            areaName: "Glenwood-Durban-Kwa Zulu Natal-South Africa",
+            areaName: "Glenwood-Durban Central-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "43",
         };
-        const specificArea3 = 'Lyndely @UkznRes';
+        const specificArea3 = 'Lyndely';
 
         const group4Area = {
             townOrInstitutionFK: "7",
-            areaName: "Masgrave-Durban-Kwa Zulu Natal-South Africa",
+            areaName: "Masgrave-Durban Central-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "46",
         };
-        const specificArea4 = 'Floredene @MutRes';
+        const specificArea4 = 'Floredene';
 
         const groupTownOrInstitution = {
             cityFK: "1",

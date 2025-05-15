@@ -231,7 +231,6 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 DateTime.now().subtract(const Duration(days: 1));
 
             if (nextStoreDraw.drawDateAndTime.isBefore(latestPast)) {
-              debug.log('Bug - 1');
               return NoCompetitionWidget(
                   storeId: widget.storeNameInfo.storeNameInfoId,
                   storeName: widget.storeNameInfo.storeName,
@@ -268,7 +267,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                       int hour = nextStoreDraw.drawDateAndTime.hour;
                       int minute = nextStoreDraw.drawDateAndTime.minute;
 
-                      String collectionId = "$day-$month-$year-$hour-$minute";
+                      String collectionId = "$year-$month-$day@${hour}h$minute";
 
                       competitionReference = snapshot.data!.reference;
 
@@ -281,7 +280,6 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                           "Error Fetching competition Data - ${snapshot.error}");
                       return getCircularProgressBar();
                     } else {
-                      debug.log('Competition Fetching Error----');
                       return getCircularProgressBar();
                     }
                   });
@@ -295,7 +293,6 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 storeImageURL: widget.storeNameInfo.storeImageURL,
                 sectionName: widget.storeNameInfo.sectionName);
           } else {
-            debug.log('Bug - 2');
             return NoCompetitionWidget(
                 storeId: widget.storeNameInfo.storeNameInfoId,
                 storeName: widget.storeNameInfo.storeName,
@@ -433,7 +430,6 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             debug.log('Error fetching count down clock data ${snapshot.error}');
             return getCircularProgressBar();
           } else {
-            debug.log('Count Down Error----');
             return getCircularProgressBar();
           }
         }));
