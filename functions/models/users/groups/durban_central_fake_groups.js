@@ -5,6 +5,7 @@ class DurbanCentralFakeGroups {
 
     }
 
+    // Images exist on emulator [Real Areas & Fake Members]
     async durbanCentralGroups() {
         const host = "durban central";
         const group1Members = ["+27600000000", "+27600000001", "+27600000002", "+27600000003", "+27600000004"];

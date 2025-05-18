@@ -8,8 +8,14 @@ import 'package:image_picker/image_picker.dart';
 
 import 'dart:developer' as debug;
 
+import 'admin_controller.dart';
+import 'alcoholic_controller.dart';
+
 class PostController extends GetxController {
   static PostController postController = Get.find();
+  AdminController adminController = AdminController.adminController;
+  AlcoholicController alcoholicController =
+      AlcoholicController.alcoholicController;
 
   Rx<DateTime?> _dateCreated = Rx(null);
   DateTime? get dateCreated => _dateCreated.value;
@@ -136,7 +142,7 @@ class PostController extends GetxController {
   }
 
   void chooseWhereWereYouImageFromGallery() async {
-    if (currentlyLoggedInUser == null) {
+    if (getCurrentlyLoggenInUser() == null) {
       Get.snackbar('Error', 'Error Login Required');
     } else {
       debug.log('Pick Where Were You Image From Gallery');
@@ -147,7 +153,7 @@ class PostController extends GetxController {
         _whereWereYouImage = Rx<File?>(File(pickedImageFile.path));
         _whereWereYouImageURL = Rx<String>(await uploadResource(
             _whereWereYouImage.value!,
-            '/past_posts/where_were_you/images/${currentlyLoggedInUser!.phoneNumber}'));
+            '/past_posts/where_were_you/images/${getCurrentlyLoggenInUser()!.phoneNumber}'));
         Get.snackbar('Image Status', 'Image File Successfully Captured.');
         update();
       } else {
@@ -157,7 +163,7 @@ class PostController extends GetxController {
   }
 
   void pickWhereWereYouVideo(ImageSource imageSource) async {
-    if (currentlyLoggedInUser == null) {
+    if (getCurrentlyLoggenInUser() == null) {
       Get.snackbar('Error', 'Error Login Required');
     }
 
@@ -168,7 +174,7 @@ class PostController extends GetxController {
       _whereWereYouVideo = Rx<File?>(file);
       _whereWereYouVideoURL = Rx<String>(await uploadResource(
           _whereWereYouVideo.value!,
-          '/past_posts/where_were_you/videos/${currentlyLoggedInUser!.phoneNumber}'));
+          '/past_posts/where_were_you/videos/${getCurrentlyLoggenInUser()!.phoneNumber}'));
 
       Get.snackbar('Video Status', 'Video File Successfully Picked.');
       update();
@@ -224,7 +230,7 @@ class PostController extends GetxController {
   }
 
   void chooseWhoWereYouWithImageFromGallery() async {
-    if (currentlyLoggedInUser == null) {
+    if (getCurrentlyLoggenInUser() == null) {
       Get.snackbar('Error', 'Error Login Required');
     } else {
       debug.log('Pick Who Were You With Image From Gallery');
@@ -235,7 +241,7 @@ class PostController extends GetxController {
         _whoWereYouWithImage = Rx<File?>(File(pickedImageFile.path));
         _whoWereYouWithImageURL = Rx<String>(await uploadResource(
             _whoWereYouWithImage.value!,
-            '/past_posts/who_were_you_with/images/${currentlyLoggedInUser!.phoneNumber}'));
+            '/past_posts/who_were_you_with/images/${getCurrentlyLoggenInUser()!.phoneNumber}'));
         Get.snackbar('Image Status', 'Image File Successfully Captured.');
         update();
       } else {
@@ -245,7 +251,7 @@ class PostController extends GetxController {
   }
 
   void pickWhoWereYouWithVideo(ImageSource imageSource) async {
-    if (currentlyLoggedInUser == null) {
+    if (getCurrentlyLoggenInUser() == null) {
       Get.snackbar('Error', 'Error Login Required');
     }
 
@@ -256,7 +262,7 @@ class PostController extends GetxController {
       _whoWereYouWithVideo = Rx<File?>(file);
       _whoWereYouWithVideoURL = Rx<String>(await uploadResource(
           _whereWereYouVideo.value!,
-          '/past_posts/who_were_you_with/videos/${currentlyLoggedInUser!.phoneNumber}'));
+          '/past_posts/who_were_you_with/videos/${getCurrentlyLoggenInUser()!.phoneNumber}'));
       Get.snackbar('Video Status', 'Video File Successfully Picked.');
       update();
     } else {
@@ -296,7 +302,7 @@ class PostController extends GetxController {
   }
 
   void pickWhatHappenedVideo(ImageSource imageSource) async {
-    if (currentlyLoggedInUser == null) {
+    if (getCurrentlyLoggenInUser() == null) {
       Get.snackbar('Error', 'Error Login Required');
     }
 
@@ -307,7 +313,7 @@ class PostController extends GetxController {
       _whatHappenedVideo = Rx<File?>(file);
       _whatHappenedVideoURL = Rx<String>(await uploadResource(
           _whereWereYouVideo.value!,
-          '/past_posts/what_happened/videos/${currentlyLoggedInUser!.phoneNumber}'));
+          '/past_posts/what_happened/videos/${getCurrentlyLoggenInUser()!.phoneNumber}'));
       Get.snackbar('Video Status', 'Video File Successfully Picked.');
       update();
     } else {

@@ -6,6 +6,7 @@ class MayvilleFakeGroups {
 
     }
 
+    // Images exist on emulator [Real Areas & Fake Members]
     async catoCrestGroups() {
 
         const host = "mayville";
@@ -142,141 +143,7 @@ class MayvilleFakeGroups {
         await groupReference.set(group4);
     }
 
-    async masxhaGroups() {
-        const host = "mayville";
-        const group1Members = ["+27812993395", "+27812993394", "+27812993393", "+27812993392", "+27812993391"];
-        const group1CreatorPhoneNumber = "+27812993395";
-        const group2Members = ["+27822993395", "+27822993394", "+27822993393", "+27822993392", "+27822993391"];
-        const group2CreatorPhoneNumber = "+27822993395";
-        const group3Members = ["+27832993395", "+27832993394", "+27832993393", "+27832993392", "+27832993391"];
-        const group3CreatorPhoneNumber = "+27832993395";
-        const group4Members = ["+27842993395", "+27842993394", "+27842993393", "+27842993392", "+27842993391"];
-        const group4CreatorPhoneNumber = "+27842993395";
-
-        const group1Area = {
-            townOrInstitutionFK: "5",
-            areaName: "Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa",
-            areaNo: "34",
-        };
-        const specificArea1 = 'E-Paki';
-
-        const group2Area = {
-            townOrInstitutionFK: "5",
-            areaName: "Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa",
-            areaNo: "34",
-        };
-        const specificArea2 = 'E-Groundin';
-
-        const group3Area = {
-            townOrInstitutionFK: "5",
-            areaName: "Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa",
-            areaNo: "34",
-        };
-        const specificArea3 = '__________';
-
-        const group4Area = {
-            townOrInstitutionFK: "5",
-            areaName: "Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa",
-            areaNo: "34",
-        };
-        const specificArea4 = '__________';
-
-        const groupTownOrInstitution = {
-            cityFK: "1",
-            townOrInstitutionName: "Mayville",
-            townOrInstitutionNo: "5",
-        };
-
-        const groupName1 = "Ezophawu";
-        const group1CreatorUsername = "Zee";
-
-        const groupName2 = "Rich Gang";
-        const group2CreatorUsername = "Buke";
-
-        const groupName3 = "Superiors";
-        const group3CreatorUsername = "Thobani";
-
-        const groupName4 = "Opelepele";
-        const group4CreatorUsername = "Syanda";
-
-        const group1 = {
-            groupName: groupName1,
-            groupImageURL: `/${host}/groups_specific_locations/${group1CreatorPhoneNumber}.jpg`,
-            groupArea: group1Area,
-            groupSpecificArea: specificArea1,
-            groupTownOrInstitution: groupTownOrInstitution,
-
-            groupCreatorPhoneNumber: group1CreatorPhoneNumber,
-            groupCreatorImageURL: `/${host}/group_members/${group1CreatorPhoneNumber}/profile_images/${group1CreatorPhoneNumber}.jpg`,
-            groupCreatorUsername: group1CreatorUsername,
-            isActive: true,
-            maxNoOfMembers: 5, // 5
-
-            groupMembers: group1Members,
-        };
-
-        const group2 = {
-            groupName: groupName2,
-            groupImageURL: `/${host}/groups_specific_locations/${group2CreatorPhoneNumber}.jpg`,
-            groupArea: group2Area,
-            groupSpecificArea: specificArea2,
-            groupTownOrInstitution: groupTownOrInstitution,
-
-            groupCreatorPhoneNumber: group2CreatorPhoneNumber,
-            groupCreatorImageURL: `/${host}/group_members/${group2CreatorPhoneNumber}/profile_images/${group2CreatorPhoneNumber}.jpg`,
-            groupCreatorUsername: group2CreatorUsername,
-            isActive: true,
-            maxNoOfMembers: 5, // 5
-
-            groupMembers: group2Members,
-        };
-
-        const group3 = {
-            groupName: groupName3,
-            groupImageURL: `/${host}/groups_specific_locations/${group3CreatorPhoneNumber}.jpg`,
-            groupArea: group3Area,
-            groupSpecificArea: specificArea3,
-            groupTownOrInstitution: groupTownOrInstitution,
-
-            groupCreatorPhoneNumber: group3CreatorPhoneNumber,
-            groupCreatorImageURL: `/${host}/group_members/${group3CreatorPhoneNumber}/profile_images/${group3CreatorPhoneNumber}.jpg`,
-            groupCreatorUsername: group3CreatorUsername,
-            isActive: true,
-            maxNoOfMembers: 5, // 5
-
-            groupMembers: group3Members,
-        };
-
-        const group4 = {
-            groupName: groupName4,
-            groupImageURL: `/${host}/groups_specific_locations/${group4CreatorPhoneNumber}.jpg`,
-            groupArea: group4Area,
-            groupSpecificArea: specificArea4,
-            groupTownOrInstitution: groupTownOrInstitution,
-
-            groupCreatorPhoneNumber: group4CreatorPhoneNumber,
-            groupCreatorImageURL: `/${host}/group_members/${group4CreatorPhoneNumber}/profile_images/${group4CreatorPhoneNumber}.jpg`,
-            groupCreatorUsername: group4CreatorUsername,
-            isActive: true,
-            maxNoOfMembers: 5, // 5
-
-            groupMembers: group4Members,
-        };
-
-        let groupReference;
-        groupReference = getFirestore().collection("groups").doc(group1.groupCreatorPhoneNumber);
-        await groupReference.set(group1);
-
-        groupReference = getFirestore().collection("groups").doc(group2.groupCreatorPhoneNumber);
-        await groupReference.set(group2);
-
-        groupReference = getFirestore().collection("groups").doc(group3.groupCreatorPhoneNumber);
-        await groupReference.set(group3);
-
-        groupReference = getFirestore().collection("groups").doc(group4.groupCreatorPhoneNumber);
-        await groupReference.set(group4);
-    }
-
+    // Images exist on emulator [Real Areas & Fake Members]
     async richviewKoGreenGroups() {
 
         const host = "mayville";
@@ -413,7 +280,8 @@ class MayvilleFakeGroups {
         await groupReference.set(group4);
     }
 
-    async richviewKoOrangeGroups() {
+    // Images exist on emulator [Real Areas & Fake Members]
+    async richviewKoPeachGroups() {
 
         const host = "mayville";
         const group1Members = ["+27624738493", "+27624738494", "+27624738495", "+27624738496", "+27624738497"];
@@ -430,28 +298,28 @@ class MayvilleFakeGroups {
             areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "33",
         };
-        const specificArea1 = '_____[Ko Orange]';
+        const specificArea1 = 'Eringini Ko-Peach';
 
         const group2Area = {
             townOrInstitutionFK: "5",
             areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "33",
         };
-        const specificArea2 = '_____[Ko Orange]';
+        const specificArea2 = 'Russell Mngomezulu ST';
 
         const group3Area = {
             townOrInstitutionFK: "5",
             areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "33",
         };
-        const specificArea3 = '_____[Ko Orange]';
+        const specificArea3 = 'Bothi Dladla Way';
 
         const group4Area = {
             townOrInstitutionFK: "5",
             areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "33",
         };
-        const specificArea4 = '_____[Ko Orange]';
+        const specificArea4 = 'Emaflethini';
 
         const groupTownOrInstitution = {
             cityFK: "1",
@@ -549,6 +417,172 @@ class MayvilleFakeGroups {
         await groupReference.set(group4);
     }
 
+    // Images exist on emulator [Real Areas & Fake Members]
+    async richviewKoYellowGroups() {
+
+        const host = "mayville";
+        const group1Members = ["+27724738493", "+27724738494", "+27724738495", "+27724738496", "+27724738497"];
+        const group1CreatorPhoneNumber = "+27724738493";
+        const group2Members = ["+27734738493", "+27734738494", "+27734738495", "+27734738496", "+27734738497"];
+        const group2CreatorPhoneNumber = "+27734738493";
+        const group3Members = ["+27744738493", "+27744738494", "+27744738495", "+27744738496", "+27744738497"];
+        const group3CreatorPhoneNumber = "+27744738493";
+        const group4Members = ["+27714738493", "+27714738492", "+27718395831", "+27718395830", "+27718395839"];
+        const group4CreatorPhoneNumber = "+27714738493";
+        const group5Members = ["+27764738493", "+27764738492", "+27764738491", "+27764738490", "+27764738499"];
+        const group5CreatorPhoneNumber = "+27764738493";
+
+        const group1Area = {
+            townOrInstitutionFK: "5",
+            areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "33",
+        };
+        const specificArea1 = 'Embalenhle Road';
+
+        const group2Area = {
+            townOrInstitutionFK: "5",
+            areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "33",
+        };
+        const specificArea2 = 'Hot Corner Car Wash';
+
+        const group3Area = {
+            townOrInstitutionFK: "5",
+            areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "33",
+        };
+        const specificArea3 = 'Izwelabasha St';
+
+        const group4Area = {
+            townOrInstitutionFK: "5",
+            areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "33",
+        };
+        const specificArea4 = 'Embalenhle Road';
+
+        const group5Area = {
+            townOrInstitutionFK: "5",
+            areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "33",
+        };
+        const specificArea5 = 'Izwelabasha St';
+
+        const groupTownOrInstitution = {
+            cityFK: "1",
+            townOrInstitutionName: "Mayville",
+            townOrInstitutionNo: "5",
+        };
+
+        const groupName1 = "Lions";
+        const group1CreatorUsername = "James";
+
+        const groupName2 = "Otsotsi";
+        const group2CreatorUsername = "Thula";
+
+        const groupName3 = "Zebras";
+        const group3CreatorUsername = "Lindo";
+
+        const groupName4 = "Ezomjolo";
+        const group4CreatorUsername = "Sane";
+
+        const groupName5 = "Africans";
+        const group5CreatorUsername = "James";
+
+        const group1 = {
+            groupName: groupName1,
+            groupImageURL: `/${host}/groups_specific_locations/${group1CreatorPhoneNumber}.jpg`,
+            groupArea: group1Area,
+            groupSpecificArea: specificArea1,
+            groupTownOrInstitution: groupTownOrInstitution,
+
+            groupCreatorPhoneNumber: group1CreatorPhoneNumber,
+            groupCreatorImageURL: `/${host}/group_members/${group1CreatorPhoneNumber}/profile_images/${group1CreatorPhoneNumber}.jpg`,
+            groupCreatorUsername: group1CreatorUsername,
+            isActive: true,
+            maxNoOfMembers: 5, // 5
+
+            groupMembers: group1Members,
+        };
+
+        const group2 = {
+            groupName: groupName2,
+            groupImageURL: `/${host}/groups_specific_locations/${group2CreatorPhoneNumber}.jpg`,
+            groupArea: group2Area,
+            groupSpecificArea: specificArea2,
+            groupTownOrInstitution: groupTownOrInstitution,
+
+            groupCreatorPhoneNumber: group2CreatorPhoneNumber,
+            groupCreatorImageURL: `/${host}/group_members/${group2CreatorPhoneNumber}/profile_images/${group2CreatorPhoneNumber}.jpg`,
+            groupCreatorUsername: group2CreatorUsername,
+            isActive: true,
+            maxNoOfMembers: 5, // 5
+
+            groupMembers: group2Members,
+        };
+
+        const group3 = {
+            groupName: groupName3,
+            groupImageURL: `/${host}/groups_specific_locations/${group3CreatorPhoneNumber}.jpg`,
+            groupArea: group3Area,
+            groupSpecificArea: specificArea3,
+            groupTownOrInstitution: groupTownOrInstitution,
+
+            groupCreatorPhoneNumber: group3CreatorPhoneNumber,
+            groupCreatorImageURL: `/${host}/group_members/${group3CreatorPhoneNumber}/profile_images/${group3CreatorPhoneNumber}.jpg`,
+            groupCreatorUsername: group3CreatorUsername,
+            isActive: true,
+            maxNoOfMembers: 5, // 5
+
+            groupMembers: group3Members,
+        };
+
+        const group4 = {
+            groupName: groupName4,
+            groupImageURL: `/${host}/groups_specific_locations/${group4CreatorPhoneNumber}.jpg`,
+            groupArea: group4Area,
+            groupSpecificArea: specificArea4,
+            groupTownOrInstitution: groupTownOrInstitution,
+
+            groupCreatorPhoneNumber: group4CreatorPhoneNumber,
+            groupCreatorImageURL: `/${host}/group_members/${group4CreatorPhoneNumber}/profile_images/${group4CreatorPhoneNumber}.jpg`,
+            groupCreatorUsername: group4CreatorUsername,
+            isActive: true,
+            maxNoOfMembers: 5, // 5
+
+            groupMembers: group4Members,
+        };
+
+        const group5 = {
+            groupName: groupName4,
+            groupImageURL: `/${host}/groups_specific_locations/${group5CreatorPhoneNumber}.jpg`,
+            groupArea: group5Area,
+            groupSpecificArea: specificArea5,
+            groupTownOrInstitution: groupTownOrInstitution,
+
+            groupCreatorPhoneNumber: group5CreatorPhoneNumber,
+            groupCreatorImageURL: `/${host}/group_members/${group5CreatorPhoneNumber}/profile_images/${group5CreatorPhoneNumber}.jpg`,
+            groupCreatorUsername: group5CreatorUsername,
+            isActive: true,
+            maxNoOfMembers: 5, // 5
+
+            groupMembers: group5Members,
+        };
+
+        let groupReference;
+        groupReference = getFirestore().collection("groups").doc(group1.groupCreatorPhoneNumber);
+        await groupReference.set(group1);
+
+        groupReference = getFirestore().collection("groups").doc(group2.groupCreatorPhoneNumber);
+        await groupReference.set(group2);
+
+        groupReference = getFirestore().collection("groups").doc(group3.groupCreatorPhoneNumber);
+        await groupReference.set(group3);
+
+        groupReference = getFirestore().collection("groups").doc(group4.groupCreatorPhoneNumber);
+        await groupReference.set(group4);
+    }
+
+    // Images exist on emulator [Real Areas & Fake Members]
     async richviewEmathininiGroups() {
 
         const host = "mayville";
@@ -560,34 +594,43 @@ class MayvilleFakeGroups {
         const group3CreatorPhoneNumber = "+27824857938";
         const group4Members = ["+27814857938", "+27814857937", "+27814857936", "+27814857935", "+27814857934"];
         const group4CreatorPhoneNumber = "+27814857938";
+        const group5Members = ["+27864857938", "+27864857937", "+27864857936", "+27864857935", "+27864857934"];
+        const group5CreatorPhoneNumber = "+27864857938";
 
         const group1Area = {
             townOrInstitutionFK: "5",
             areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "33",
         };
-        const specificArea1 = '_____[Emathinini]';
+        const specificArea1 = 'Emathinini E-Ringini';
 
         const group2Area = {
             townOrInstitutionFK: "5",
             areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "33",
         };
-        const specificArea2 = '_____[Emathinini]';
+        const specificArea2 = 'Emathinini Ka-K';
 
         const group3Area = {
             townOrInstitutionFK: "5",
             areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "33",
         };
-        const specificArea3 = '_____[Emathinini]';
+        const specificArea3 = 'Emathinini E-Passage Lesibili';
 
         const group4Area = {
             townOrInstitutionFK: "5",
             areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
             areaNo: "33",
         };
-        const specificArea4 = '_____[Emathinini]';
+        const specificArea4 = 'Emathinini Ka-A';
+
+        const group5Area = {
+            townOrInstitutionFK: "5",
+            areaName: "Richview-Mayville-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "33",
+        };
+        const specificArea5 = 'Emathinini Empompini';
 
         const groupTownOrInstitution = {
             cityFK: "1",
@@ -606,6 +649,163 @@ class MayvilleFakeGroups {
 
         const groupName4 = "Ezobumnandi";
         const group4CreatorUsername = "Mpilo";
+
+        const groupName5 = "Fellows";
+        const group5CreatorUsername = "Zamani";
+
+        const group1 = {
+            groupName: groupName1,
+            groupImageURL: `/${host}/groups_specific_locations/${group1CreatorPhoneNumber}.jpg`,
+            groupArea: group1Area,
+            groupSpecificArea: specificArea1,
+            groupTownOrInstitution: groupTownOrInstitution,
+
+            groupCreatorPhoneNumber: group1CreatorPhoneNumber,
+            groupCreatorImageURL: `/${host}/group_members/${group1CreatorPhoneNumber}/profile_images/${group1CreatorPhoneNumber}.jpg`,
+            groupCreatorUsername: group1CreatorUsername,
+            isActive: true,
+            maxNoOfMembers: 5, // 5
+
+            groupMembers: group1Members,
+        };
+
+        const group2 = {
+            groupName: groupName2,
+            groupImageURL: `/${host}/groups_specific_locations/${group2CreatorPhoneNumber}.jpg`,
+            groupArea: group2Area,
+            groupSpecificArea: specificArea2,
+            groupTownOrInstitution: groupTownOrInstitution,
+
+            groupCreatorPhoneNumber: group2CreatorPhoneNumber,
+            groupCreatorImageURL: `/${host}/group_members/${group2CreatorPhoneNumber}/profile_images/${group2CreatorPhoneNumber}.jpg`,
+            groupCreatorUsername: group2CreatorUsername,
+            isActive: true,
+            maxNoOfMembers: 5, // 5
+
+            groupMembers: group2Members,
+        };
+
+        const group3 = {
+            groupName: groupName3,
+            groupImageURL: `/${host}/groups_specific_locations/${group3CreatorPhoneNumber}.jpg`,
+            groupArea: group3Area,
+            groupSpecificArea: specificArea3,
+            groupTownOrInstitution: groupTownOrInstitution,
+
+            groupCreatorPhoneNumber: group3CreatorPhoneNumber,
+            groupCreatorImageURL: `/${host}/group_members/${group3CreatorPhoneNumber}/profile_images/${group3CreatorPhoneNumber}.jpg`,
+            groupCreatorUsername: group3CreatorUsername,
+            isActive: true,
+            maxNoOfMembers: 5, // 5
+
+            groupMembers: group3Members,
+        };
+
+        const group4 = {
+            groupName: groupName4,
+            groupImageURL: `/${host}/groups_specific_locations/${group4CreatorPhoneNumber}.jpg`,
+            groupArea: group4Area,
+            groupSpecificArea: specificArea4,
+            groupTownOrInstitution: groupTownOrInstitution,
+
+            groupCreatorPhoneNumber: group4CreatorPhoneNumber,
+            groupCreatorImageURL: `/${host}/group_members/${group4CreatorPhoneNumber}/profile_images/${group4CreatorPhoneNumber}.jpg`,
+            groupCreatorUsername: group4CreatorUsername,
+            isActive: true,
+            maxNoOfMembers: 5, // 5
+
+            groupMembers: group4Members,
+        };
+
+        const group5 = {
+            groupName: groupName5,
+            groupImageURL: `/${host}/groups_specific_locations/${group5CreatorPhoneNumber}.jpg`,
+            groupArea: group4Area,
+            groupSpecificArea: specificArea5,
+            groupTownOrInstitution: groupTownOrInstitution,
+
+            groupCreatorPhoneNumber: group5CreatorPhoneNumber,
+            groupCreatorImageURL: `/${host}/group_members/${group5CreatorPhoneNumber}/profile_images/${group5CreatorPhoneNumber}.jpg`,
+            groupCreatorUsername: group5CreatorUsername,
+            isActive: true,
+            maxNoOfMembers: 5, // 5
+
+            groupMembers: group5Members,
+        };
+
+        let groupReference;
+        groupReference = getFirestore().collection("groups").doc(group1.groupCreatorPhoneNumber);
+        await groupReference.set(group1);
+
+        groupReference = getFirestore().collection("groups").doc(group2.groupCreatorPhoneNumber);
+        await groupReference.set(group2);
+
+        groupReference = getFirestore().collection("groups").doc(group3.groupCreatorPhoneNumber);
+        await groupReference.set(group3);
+
+        groupReference = getFirestore().collection("groups").doc(group4.groupCreatorPhoneNumber);
+        await groupReference.set(group4);
+
+        groupReference = getFirestore().collection("groups").doc(group5.groupCreatorPhoneNumber);
+        await groupReference.set(group5);
+    }
+
+    async masxhaGroups() {
+        const host = "mayville";
+        const group1Members = ["+27812993395", "+27812993394", "+27812993393", "+27812993392", "+27812993391"];
+        const group1CreatorPhoneNumber = "+27812993395";
+        const group2Members = ["+27822993395", "+27822993394", "+27822993393", "+27822993392", "+27822993391"];
+        const group2CreatorPhoneNumber = "+27822993395";
+        const group3Members = ["+27832993395", "+27832993394", "+27832993393", "+27832993392", "+27832993391"];
+        const group3CreatorPhoneNumber = "+27832993395";
+        const group4Members = ["+27842993395", "+27842993394", "+27842993393", "+27842993392", "+27842993391"];
+        const group4CreatorPhoneNumber = "+27842993395";
+
+        const group1Area = {
+            townOrInstitutionFK: "5",
+            areaName: "Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "34",
+        };
+        const specificArea1 = 'E-Paki';
+
+        const group2Area = {
+            townOrInstitutionFK: "5",
+            areaName: "Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "34",
+        };
+        const specificArea2 = 'E-Groundin';
+
+        const group3Area = {
+            townOrInstitutionFK: "5",
+            areaName: "Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "34",
+        };
+        const specificArea3 = '__________';
+
+        const group4Area = {
+            townOrInstitutionFK: "5",
+            areaName: "Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa",
+            areaNo: "34",
+        };
+        const specificArea4 = '__________';
+
+        const groupTownOrInstitution = {
+            cityFK: "1",
+            townOrInstitutionName: "Mayville",
+            townOrInstitutionNo: "5",
+        };
+
+        const groupName1 = "Ezophawu";
+        const group1CreatorUsername = "Zee";
+
+        const groupName2 = "Rich Gang";
+        const group2CreatorUsername = "Buke";
+
+        const groupName3 = "Superiors";
+        const group3CreatorUsername = "Thobani";
+
+        const groupName4 = "Opelepele";
+        const group4CreatorUsername = "Syanda";
 
         const group1 = {
             groupName: groupName1,

@@ -27,7 +27,7 @@ class AdminRegistrationWidget extends StatelessWidget {
   }) : super(key: key);
 
   GroupController groupController = GroupController.instance;
-  AdminController adminController = AdminController.instance;
+  AdminController adminController = AdminController.adminController;
   LocationController locationController = LocationController.locationController;
 
   late List<String> items;
@@ -358,8 +358,8 @@ class AdminRegistrationWidget extends StatelessWidget {
                                     debug.log(
                                         '1. Successfully Signed In User From AdminRegistrationScreen...');
                                     Future<AdminSavingStatus>
-                                        adminSavingStatus =
-                                        adminController.saveAdmin();
+                                        adminSavingStatus = adminController
+                                            .saveAdmin(auth.currentUser!.uid);
 
                                     adminSavingStatus.then((value) {
                                       if (value ==

@@ -11,7 +11,7 @@ import 'admin_screens_widget.dart';
 class AdminEntranceWidget extends StatelessWidget {
   TextEditingController adminCodeEditingController = TextEditingController();
   StoreController storeController = StoreController.storeController;
-  AdminController adminController = AdminController.instance;
+  AdminController adminController = AdminController.adminController;
 
   AdminEntranceWidget({Key? key}) : super(key: key);
 

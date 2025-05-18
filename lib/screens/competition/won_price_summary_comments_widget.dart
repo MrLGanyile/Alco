@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/shared_dao_functions.dart';
+import '../../controllers/alcoholic_controller.dart';
 import '../../main.dart';
 import '../alcoholics/alcoholic_registration_widget.dart';
 import 'won_price_comment_widget.dart';
@@ -15,6 +16,8 @@ class WonPriceSummaryCommentsWidgets extends StatelessWidget {
   String wonPriceSummaryFK;
   final CompetitionController competitionController =
       CompetitionController.competitionController;
+  final AlcoholicController alcoholicController =
+      AlcoholicController.alcoholicController;
   final GroupController groupController = GroupController.instance;
   late List<WonPriceComment> comments;
 
@@ -38,9 +41,10 @@ class WonPriceSummaryCommentsWidgets extends StatelessWidget {
           child: Icon(Icons.send, color: MyApplication.logoColor1),
           onTap: () {
             // Save Comment
-            if (currentlyLoggedInUser == null) {
+            if (alcoholicController.currentlyLoggedInAlcoholic == null) {
               Get.to(() => AlcoholicRegistrationWidget());
             } else {
+              debug.log('About to save a comment');
               competitionController.saveWonPriceComment(
                   wonPriceSummaryFK, controller.text);
               controller.clear();

@@ -14,6 +14,7 @@ import 'controllers/alcoholic_controller.dart';
 import 'controllers/competition_controller.dart';
 import 'controllers/location_controller.dart';
 
+import 'controllers/shared_dao_functions.dart';
 import 'controllers/store_controller.dart';
 import 'controllers/group_controller.dart';
 
@@ -156,7 +157,8 @@ class _MyApplicationState extends State<MyApplication> {
   Widget build(BuildContext context) {
     CompetitionController competitionController =
         CompetitionController.competitionController;
-    // competitionController.saveFakeWonPriceComments();
+
+    competitionController.saveFakeWonPriceComments();
     return FirebasePhoneAuthProvider(
         child: GetMaterialApp(
       debugShowCheckedModeBanner: false,

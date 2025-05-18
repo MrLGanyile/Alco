@@ -30,6 +30,24 @@ class AlcoholicController extends GetxController {
       .refFromURL("gs://alcoholic-expressions.appspot.com/");
 
   // ignore: prefer_final_fields
+  Rx<Alcoholic?> _currentlyLoggedInAlcoholic = Rx(//null
+      Alcoholic(
+          userId: 'xHylOxUqu7JZJLTaLsqzmK0pNSX0',
+          phoneNumber: '+27612345678',
+          profileImageURL:
+              'mayville/alcoholics/profile_images/+27612345678.jpg',
+          area: SupportedArea.fromJson({
+            "townOrInstitutionFK": "5",
+            "areaName":
+                "Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa",
+            "areaNo": "31",
+          }),
+          username: 'Sakhile',
+          password: "12abc12"));
+  Alcoholic? get currentlyLoggedInAlcoholic =>
+      _currentlyLoggedInAlcoholic.value;
+
+  // ignore: prefer_final_fields
   late Rx<String?> _newAlcoholicPhoneNumber = Rx('');
   String? get newAlcoholicPhoneNumber => _newAlcoholicPhoneNumber.value;
 
@@ -59,6 +77,31 @@ class AlcoholicController extends GetxController {
 
   void setNewAlcoholicPassword(String password) {
     _newAlcoholicPassword = Rx(password);
+  }
+
+  void loginAlcoholic(String uid) async {
+    DocumentReference reference = firestore.collection('alcoholics').doc(uid);
+
+    reference.get().then((alcoholicDoc) {
+      if (alcoholicDoc.exists) {
+        Alcoholic alcoholic = Alcoholic.fromJson(alcoholicDoc.data());
+        _currentlyLoggedInAlcoholic = Rx(alcoholic);
+        auth.authStateChanges();
+        debug.log('${alcoholicDoc.id}[${alcoholic.phoneNumber}] has logged in');
+      }
+    });
+  }
+
+  void loginUserUsingObject(Alcoholic alcoholic) {
+    _currentlyLoggedInAlcoholic = Rx(alcoholic);
+    auth.authStateChanges();
+  }
+
+  void logoutAlcoholic() {
+    if (_currentlyLoggedInAlcoholic.value != null) {
+      _currentlyLoggedInAlcoholic = Rx(null);
+      auth.signOut();
+    }
   }
 
   void captureAlcoholicProfileImageWithCamera(
@@ -165,27 +208,28 @@ class AlcoholicController extends GetxController {
     update();
   }
 
-  Future<AlcoholicSavingStatus> saveAlcoholic() async {
+  Future<AlcoholicSavingStatus> saveAlcoholic(String uid) async {
     if (newAlcoholicProfileImageFile != null &&
         _newAlcoholicImageURL.value != null &&
         _newAlcoholicPhoneNumber.value != null &&
         _newAlcoholicUsername.value != null) {
       try {
-        DocumentReference reference = firestore
-            .collection('alcoholics')
-            .doc(_newAlcoholicPhoneNumber.value);
+        DocumentReference reference =
+            firestore.collection('alcoholics').doc(uid);
 
         Alcoholic alcoholic = Alcoholic(
+            userId: reference.id,
             password: _newAlcoholicPassword.value,
-            phoneNumber: reference.id,
+            phoneNumber: _newAlcoholicPhoneNumber.value,
             profileImageURL: trimmedImageURL(),
             username: _newAlcoholicUsername.value!,
             area: _newAlcoholicArea.value);
 
         await firestore
             .collection('alcoholics')
-            .doc(alcoholic.phoneNumber)
+            .doc(alcoholic.userId!)
             .set(alcoholic.toJson());
+        loginUserUsingObject(alcoholic);
         showProgressBar = false;
         return AlcoholicSavingStatus.saved;
       } catch (error) {

@@ -37,7 +37,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController otpController = TextEditingController();
   GroupController groupController = GroupController.instance;
-  AdminController adminController = AdminController.instance;
+  AdminController adminController = AdminController.adminController;
   AlcoholicController alcoholicController =
       AlcoholicController.alcoholicController;
 
@@ -53,7 +53,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           verificationId: widget.verificationId, smsCode: otpController.text);
       final auth = FirebaseAuth.instance;
       await auth.signInWithCredential(credential);
-      /*
+
       auth.currentUser!.getIdToken(true).then((token) async {
         // Send token to backend
         HttpsCallable callableFuntion =
@@ -74,7 +74,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
         if (hasSignedIn) {
           if (widget.forAdmin) {
             Future<AdminSavingStatus> adminSavingStatus =
-                adminController.saveAdmin();
+                adminController.saveAdmin(auth.currentUser!.uid);
             debug.log('Admin Saving TRIED');
 
             adminSavingStatus.then((value) {
@@ -127,6 +127,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               } else {
                 debug.log(
                     '2. Successfully Saved User From VerificationScreen...');
+
                 Get.snackbar(
                     // backgroundColor: snackBarBackgroundColor,
                     // duration: snackBarDuration,
@@ -134,15 +135,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     // borderColor: snackBarBorderColor,
                     'Admin Saved',
                     'Registration Succeeded.');
-                loginUser(widget.phoneNumber, widget.forAdmin);
                 Get.to(AdminScreensWidget());
               }
             });
           } else {
-            Future<AlcoholicSavingStatus> adminSavingStatus =
-                alcoholicController.saveAlcoholic();
+            Future<AlcoholicSavingStatus> alcoholSavingStatus =
+                alcoholicController.saveAlcoholic(auth.currentUser!.uid);
 
-            adminSavingStatus.then((value) {
+            alcoholSavingStatus.then((value) {
               showProgressBar = false;
               if (value == AlcoholicSavingStatus.unathourized) {
                 debug.log(
@@ -203,7 +203,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
           }
         }
       }).catchError((onError) {});
-      */
     } catch (error) {
       Get.snackbar(
           // backgroundColor: snackBarBackgroundColor,

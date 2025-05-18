@@ -95,9 +95,9 @@ service firebase.storage {
     }
     // Branch : group_resources_crud ->  group_resources_crud_storage_security
     // Done Unit Testing, Except For The Update Operation.
-    match /alcoholics/profile_images/{profileImage} {
+    match /{host}/alcoholics/profile_images/{profileImage} {
 
-      allow create: if true; //request.auth != null && 
+      allow create: if request.auth != null;// && 
 
       // Make sure authenticated user's uid is the same as the document id of this image.
       //request.auth.uid == profileImage &&

@@ -152,7 +152,6 @@ class LoginWidget extends StatelessWidget {
                   debug.log('Credentials Are Correct...');
                   final auth = FirebaseAuth.instance;
 
-                  loginUser(phoneNumber, forAdmin);
                   await auth.verifyPhoneNumber(
                     phoneNumber: phoneNumber,
                     verificationCompleted:
@@ -162,7 +161,6 @@ class LoginWidget extends StatelessWidget {
                       // ANDROID ONLY!
                       // Sign the user in (or link) with the auto-generated credential
                       await auth.signInWithCredential(credential);
-                      loginUser(phoneNumber, forAdmin);
                     },
                     verificationFailed: (FirebaseAuthException e) {
                       if (e.code == 'invalid-phone-number') {

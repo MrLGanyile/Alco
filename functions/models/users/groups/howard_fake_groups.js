@@ -5,6 +5,7 @@ class HowardFakeGroups {
 
     }
 
+    // Images exist on emulator [Real Areas & Fake Members]
     async onCompusGroups() {
 
         const host = "ukzn";

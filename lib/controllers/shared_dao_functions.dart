@@ -11,6 +11,9 @@ import 'package:get/get.dart';
 
 import 'dart:developer' as debug;
 
+import 'admin_controller.dart';
+import 'alcoholic_controller.dart';
+
 bool showProgressBar = false;
 final firestore = FirebaseFirestore.instance;
 final functions = FirebaseFunctions.instance;
@@ -21,21 +24,20 @@ final auth = FirebaseAuth.instance;
 Rx<bool> _isLeaderValidated = Rx(true);
 bool get isLeaderValidated => _isLeaderValidated.value;
 
-// ignore: prefer_final_fields
-Rx<myUser.User?> _currentlyLoggedInUser = Rx(null
-    /*Admin(
-        userId: 'msBfpzfdJDyfQkRfyspgosIbUSSN',
-        phoneNumber: '+27611111111',
-        password: 'qwerty321',
-        profileImageURL: 'admins/profile_images/+27611111111.png',
-        isFemale: false,
-        isSuperiorAdmin: true,
-        key: "000")*/
-    );
-myUser.User? get currentlyLoggedInUser => _currentlyLoggedInUser.value;
+AdminController adminController = AdminController.adminController;
+AlcoholicController alcoholicController =
+    AlcoholicController.alcoholicController;
 
 void setIsLeaderValidated(bool isLeaderValidated) {
   _isLeaderValidated = Rx(isLeaderValidated);
+}
+
+myUser.User? getCurrentlyLoggenInUser() {
+  if (adminController.currentlyLoggedInAdmin != null) {
+    return adminController.currentlyLoggedInAdmin;
+  }
+
+  return alcoholicController.currentlyLoggedInAlcoholic;
 }
 
 // Upload an image into a particular firebase storage bucket.
@@ -77,59 +79,8 @@ Future<AggregateQuerySnapshot> isCredentialsCorrect(
   return result;
 }
 
-void loginUser(String phoneNumber, bool forAdmin) {
-  CollectionReference reference;
-  if (forAdmin) {
-    reference = firestore.collection('admins');
-
-    reference.snapshots().map((adminsSnapshot) {
-      adminsSnapshot.docs.map((adminDoc) {
-        if (adminDoc.exists) {
-          Map<String, dynamic>? map = adminDoc.data() as Map<String, dynamic>?;
-          bool result = map!['phoneNumber'].toString().contains(phoneNumber) &&
-              phoneNumber.contains(map['phoneNumber'].toString());
-          if (result) {
-            Admin admin = Admin.fromJson(map);
-            _currentlyLoggedInUser = Rx(admin);
-          }
-        }
-      });
-    });
-  } else {
-    reference = firestore.collection('alcoholics');
-
-    reference.snapshots().map((alcoholicsSnapshot) {
-      alcoholicsSnapshot.docs.map((alcoholicDoc) {
-        if (alcoholicDoc.exists) {
-          Map<String, dynamic>? map =
-              alcoholicDoc.data() as Map<String, dynamic>?;
-          bool result = map!['phoneNumber'].toString().contains(phoneNumber) &&
-              phoneNumber.contains(map['phoneNumber'].toString());
-          if (result) {
-            Alcoholic alcoholic = Alcoholic.fromJson(map);
-            _currentlyLoggedInUser = Rx(alcoholic);
-          }
-        }
-      });
-    });
-  }
-}
-
-void loginUserUsingObject(myUser.User user) {
-  _currentlyLoggedInUser = Rx(user);
-  auth.authStateChanges();
-}
-
-void logoutUser() {
-  _currentlyLoggedInUser = Rx(null);
-  auth.signOut();
-}
-
 bool isLoggedInAdmin() {
-  if (_currentlyLoggedInUser.value != null) {
-    return _currentlyLoggedInUser.value is Admin;
-  }
-  return false;
+  return adminController.currentlyLoggedInAdmin != null;
 }
 
 bool containsPlusAndNumbersOnly(String phoneNumber) {

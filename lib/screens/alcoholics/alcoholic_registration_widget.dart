@@ -395,7 +395,8 @@ class AlcoholicRegistrationWidget extends StatelessWidget {
                                         '1. Successfully Signed In User From AlcoholicRegistrationScreen...');
                                     Future<AlcoholicSavingStatus>
                                         adminSavingStatus =
-                                        alcoholicController.saveAlcoholic();
+                                        alcoholicController.saveAlcoholic(
+                                            auth.currentUser!.uid);
 
                                     adminSavingStatus.then((value) {
                                       if (value ==

@@ -569,7 +569,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
           const SizedBox(
             height: 15,
           ),
-          /*
+
           Container(
             margin: const EdgeInsets.only(right: 15),
             child: Align(
@@ -587,7 +587,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
                 ),
               ),
             ),
-          )*/
+          )
         ],
       ),
     );

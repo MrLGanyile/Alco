@@ -6,6 +6,7 @@ class DUTFakeGroups {
 
     }
 
+    // Images exist on emulator [Real Areas & Fake Members]
     async dutBereaGroups() {
         const host = "dut";
         const group1Members = ["+27701111111", "+27711111111", "+27721111111", "+27731111111", "+27741111111"];
@@ -142,6 +143,7 @@ class DUTFakeGroups {
 
     }
 
+    // Images exist on emulator [Real Areas & Fake Members]
     async dutSydenhamGroups() {
         const host = "dut";
         const group1Members = ["+27701111110", "+27711111110", "+27721111110", "+27731111110", "+27741111110"];
@@ -278,6 +280,7 @@ class DUTFakeGroups {
 
     }
 
+    // Images exist on emulator [Real Areas & Fake Members]
     async dutMixedGroups() {
         const host = "dut";
         const group1Members = ["+27837766452", "+27837766453", "+27837766454", "+27837766455", "+27837766456"];

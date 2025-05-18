@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer' as debug;
 
 class AdminsWidget extends StatelessWidget {
-  AdminController adminController = AdminController.instance;
+  AdminController adminController = AdminController.adminController;
   Reference storageReference = FirebaseStorage.instance
       .refFromURL("gs://alcoholic-expressions.appspot.com/");
 

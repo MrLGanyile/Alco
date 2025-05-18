@@ -32,7 +32,19 @@ class AdminController extends GetxController {
       .refFromURL("gs://alcoholic-expressions.appspot.com/");
   final auth = FirebaseAuth.instance;
 
-  static AdminController instance = Get.find();
+  static AdminController adminController = Get.find();
+
+  // ignore: prefer_final_fields
+  Rx<Admin?> _currentlyLoggedInAdmin = Rx(//null
+      Admin(
+          userId: '5DRhqbH3NYtwpgMNnG4zTVhz7lpp',
+          phoneNumber: '+27611111111',
+          password: 'qwerty321',
+          profileImageURL: 'admins/profile_images/+27611111111.png',
+          isFemale: false,
+          isSuperiorAdmin: true,
+          key: "000"));
+  Admin? get currentlyLoggedInAdmin => _currentlyLoggedInAdmin.value;
 
   // ignore: prefer_final_fields
   late Rx<File?> _newAdminProfileImage = Rx(null);
@@ -63,6 +75,31 @@ class AdminController extends GetxController {
   // ignore: prefer_final_fields
   late Rx<String?> _superiorAdminEntranceCode = Rx<String?>(null);
   String? get superiorAdminEntranceCode => _superiorAdminEntranceCode.value;
+
+  void loginUser(String uid) async {
+    DocumentReference reference = firestore.collection('admins').doc(uid);
+
+    reference.get().then((adminDoc) {
+      if (adminDoc.exists) {
+        Admin admin = Admin.fromJson(adminDoc.data());
+        _currentlyLoggedInAdmin = Rx(admin);
+        auth.authStateChanges();
+        debug.log('${adminDoc.id}[${admin.phoneNumber}] has logged in');
+      }
+    });
+  }
+
+  void loginAdminUsingObject(Admin admin) {
+    _currentlyLoggedInAdmin = Rx(admin);
+    auth.authStateChanges();
+  }
+
+  void logoutAdmin() {
+    if (_currentlyLoggedInAdmin.value != null) {
+      _currentlyLoggedInAdmin = Rx(null);
+      auth.signOut();
+    }
+  }
 
   void chooseAdminProfileImageFromGallery(String phoneNumber) async {
     if (phoneNumber.isEmpty) {
@@ -160,14 +197,13 @@ class AdminController extends GetxController {
     return stream;
   }
 
-  Future<AdminSavingStatus> saveAdmin() async {
-    DocumentReference adminReference = firestore.collection('admins').doc();
+  Future<AdminSavingStatus> saveAdmin(String uid) async {
+    DocumentReference adminReference = firestore.collection('admins').doc(uid);
 
     return adminReference
         .snapshots()
         .map((adminDoc) async {
-          if (currentlyLoggedInUser == null ||
-              currentlyLoggedInUser is Alcoholic) {
+          if (currentlyLoggedInAdmin == null) {
             return AdminSavingStatus.loginRequired;
           }
 
@@ -177,7 +213,7 @@ class AdminController extends GetxController {
             return AdminSavingStatus.invalidInput;
           }
 
-          if (!(currentlyLoggedInUser as Admin).isSuperiorAdmin) {
+          if (!(currentlyLoggedInAdmin as Admin).isSuperiorAdmin) {
             return AdminSavingStatus.unathourized;
           }
 
@@ -208,7 +244,7 @@ class AdminController extends GetxController {
             );
 
             await adminReference.set(admin.toJson());
-            loginUserUsingObject(admin);
+            loginAdminUsingObject(admin);
             return AdminSavingStatus.saved;
           } else {
             return AdminSavingStatus.adminAlreadyExist;
