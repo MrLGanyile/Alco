@@ -43,7 +43,7 @@ class Alcoholic extends User {
       userId: json['userId'],
       profileImageURL: json['profileImageURL'],
       phoneNumber: json['phoneNumber'],
-      area: SupportedArea.fromJson(json['sectionName']),
+      area: SupportedArea.fromJson(json['area']),
       username: json['username'],
       password: json['password']);
 }

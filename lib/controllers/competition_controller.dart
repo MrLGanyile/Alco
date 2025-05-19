@@ -172,7 +172,6 @@ class CompetitionController extends GetxController {
               comments[commentIndex].setWonPriceCommentId(reference.id);
               await reference.set(comments[commentIndex].toJson());
             }
-            debug.log('saveFakeWonPriceComments() saved comments');
           }
         });
       });
@@ -190,30 +189,50 @@ class CompetitionController extends GetxController {
       return;
     }
 
-    DocumentReference reference = firestore
-        .collection('won_prices_summaries')
-        .doc(wonPriceSummaryFK)
-        .collection('comments')
-        .doc();
+    DocumentReference wonPriceSummaryRef =
+        firestore.collection('won_prices_summaries').doc(wonPriceSummaryFK);
 
-    WonPriceComment? comment;
-    if (alcoholicController.currentlyLoggedInAlcoholic != null) {
-      comment = WonPriceComment(
-          wonPriceCommentId: reference.id,
-          wonPriceSummaryFK: wonPriceSummaryFK,
-          message: message,
-          imageURL:
-              alcoholicController.currentlyLoggedInAlcoholic!.profileImageURL,
-          username: alcoholicController.currentlyLoggedInAlcoholic!.username);
-    } else if (adminController.currentlyLoggedInAdmin != null) {
-      comment = WonPriceComment(
-          wonPriceCommentId: reference.id,
-          wonPriceSummaryFK: wonPriceSummaryFK,
-          message: message,
-          imageURL: adminController.currentlyLoggedInAdmin!.profileImageURL,
-          username: 'Admin');
-    }
+    wonPriceSummaryRef.get().then((wonPriceSummaryDoc) async {
+      if (wonPriceSummaryDoc.exists) {
+        WonPriceSummary wonPriceSummary =
+            WonPriceSummary.fromJson(wonPriceSummaryDoc.data());
 
-    await reference.set(comment!.toJson());
+        int one =
+            int.parse(wonPriceSummary.townOrInstitution.townOrInstitutionNo);
+        int two = int.parse(alcoholicController
+            .currentlyLoggedInAlcoholic!.area.townOrInstitutionFK);
+        bool result = one == two;
+
+        if (result) {
+          DocumentReference commentReference =
+              wonPriceSummaryRef.collection('comments').doc();
+          WonPriceComment? comment;
+          if (alcoholicController.currentlyLoggedInAlcoholic != null) {
+            comment = WonPriceComment(
+                wonPriceCommentId: commentReference.id,
+                wonPriceSummaryFK: wonPriceSummaryFK,
+                message: message,
+                imageURL: alcoholicController
+                    .currentlyLoggedInAlcoholic!.profileImageURL,
+                username:
+                    alcoholicController.currentlyLoggedInAlcoholic!.username);
+          } else if (adminController.currentlyLoggedInAdmin != null) {
+            comment = WonPriceComment(
+                wonPriceCommentId: commentReference.id,
+                wonPriceSummaryFK: wonPriceSummaryFK,
+                message: message,
+                imageURL:
+                    adminController.currentlyLoggedInAdmin!.profileImageURL,
+                username: 'Admin');
+          }
+
+          await commentReference.set(comment!.toJson());
+        } else {
+          String host = Converter.townOrInstitutionAsString(
+              wonPriceSummary.townOrInstitution.townOrInstitutionName);
+          Get.snackbar('Error', 'Only $host Users May Comment.');
+        }
+      }
+    });
   }
 }

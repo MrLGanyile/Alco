@@ -174,6 +174,7 @@ class LoginWidget extends StatelessWidget {
                             phoneNumber: phoneNumber,
                             verificationId: verificationId,
                             forAdmin: forAdmin,
+                            forLogin: true,
                           ));
                     },
                     codeAutoRetrievalTimeout: (String verificationId) {},

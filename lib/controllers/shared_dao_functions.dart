@@ -40,6 +40,16 @@ myUser.User? getCurrentlyLoggenInUser() {
   return alcoholicController.currentlyLoggedInAlcoholic;
 }
 
+void logoutUser() {
+  if (adminController.currentlyLoggedInAdmin != null) {
+    adminController.logoutAdmin();
+  }
+
+  if (alcoholicController.currentlyLoggedInAlcoholic != null) {
+    alcoholicController.logoutAlcoholic();
+  }
+}
+
 // Upload an image into a particular firebase storage bucket.
 Future<String> uploadResource(File resource, String storagePath) async {
   Reference reference = FirebaseStorage.instance.ref().child(storagePath);

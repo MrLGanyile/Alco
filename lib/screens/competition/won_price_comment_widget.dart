@@ -20,8 +20,9 @@ class WonPriceCommentWidget extends StatelessWidget {
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(left: 10),
-              height: MediaQuery.of(context).size.height,
+              // height: MediaQuery.of(context).size.height,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   FutureBuilder(
                       future: findFullImageURL(wonPriceComment.imageURL),
@@ -40,31 +41,31 @@ class WonPriceCommentWidget extends StatelessWidget {
                           return getCircularProgressBar();
                         }
                       })),
-                  // Used to have no expanded and no maxlines property.
-                  Expanded(
-                    child: Text(
-                      '@${wonPriceComment.username}',
-                      maxLines: 5,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        decoration: TextDecoration.none,
-                        color: MyApplication.logoColor2,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        // overflow: TextOverflow.ellipsis
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      wonPriceComment.passedTimeRepresentation(),
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: MyApplication.logoColor1,
+                  Column(
+                    children: [
+                      Text(
+                        '@${wonPriceComment.username}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
                           decoration: TextDecoration.none,
-                          overflow: TextOverflow.ellipsis),
-                    ),
+                          color: MyApplication.logoColor2,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          // overflow: TextOverflow.ellipsis
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          wonPriceComment.passedTimeRepresentation(),
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: MyApplication.logoColor1,
+                              decoration: TextDecoration.none,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

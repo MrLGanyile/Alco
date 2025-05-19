@@ -161,16 +161,16 @@ class AreasCreation extends LocationCreation {
 
     async createDurbanCentralSupportedAreas() {
         const glenwood = new SupportedArea("7",
-            "Glenwood-Durban-Kwa Zulu Natal-South Africa", "43");
+            "Glenwood-Durban Central-Durban-Kwa Zulu Natal-South Africa", "43");
         await this.locationController.createSupportedArea(glenwood.toJson());
         const berea = new SupportedArea("7",
-            "Berea-Durban-Kwa Zulu Natal-South Africa", "44");
+            "Berea-Durban Central-Durban-Kwa Zulu Natal-South Africa", "44");
         await this.locationController.createSupportedArea(berea.toJson());
         const southBeach = new SupportedArea("7",
-            "South Beach-Durban-Kwa Zulu Natal-South Africa", "45");
+            "South Beach-Durban Central-Durban-Kwa Zulu Natal-South Africa", "45");
         await this.locationController.createSupportedArea(southBeach.toJson());
         const masgrave = new SupportedArea("7",
-            "Masgrave-Durban-Kwa Zulu Natal-South Africa", "46");
+            "Masgrave-Durban Central-Durban-Kwa Zulu Natal-South Africa", "46");
         await this.locationController.createSupportedArea(masgrave.toJson());
     };
 

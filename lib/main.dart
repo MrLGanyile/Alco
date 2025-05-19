@@ -47,15 +47,17 @@ Future main() async {
         .refFromURL("gs://alcoholic-expressions.appspot.com/");
     final auth = FirebaseAuth.instance;
 
+    Get.put(AlcoholicController());
+    Get.put(AdminController());
     Get.put(PostController());
     Get.put(LocationController());
-    Get.put(AlcoholicController());
+
     Get.put(GroupController(
         firestore: firestore,
         functions: functions,
         storage: storage,
         auth: auth));
-    Get.put(AdminController());
+
     Get.put(StoreController());
     Get.put(CompetitionController());
   });

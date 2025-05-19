@@ -44,7 +44,6 @@ class WonPriceSummaryCommentsWidgets extends StatelessWidget {
             if (alcoholicController.currentlyLoggedInAlcoholic == null) {
               Get.to(() => AlcoholicRegistrationWidget());
             } else {
-              debug.log('About to save a comment');
               competitionController.saveWonPriceComment(
                   wonPriceSummaryFK, controller.text);
               controller.clear();

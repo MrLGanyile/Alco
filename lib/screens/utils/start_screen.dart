@@ -59,7 +59,7 @@ class _StartScreenState extends State<StartScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        /*drawer: Drawer(
+        drawer: Drawer(
           width: MediaQuery.of(context).size.width * 0.5,
           backgroundColor: Colors.black.withOpacity(0.9),
           child: ListView(
@@ -157,7 +157,7 @@ class _StartScreenState extends State<StartScreen>
                     ),
                   ),
                   onTap: () {
-                    if (currentlyLoggedInUser != null) {
+                    if (getCurrentlyLoggenInUser() != null) {
                       logoutUser();
 
                       Get.to(() => AlertDialog(
@@ -184,7 +184,6 @@ class _StartScreenState extends State<StartScreen>
             ],
           ),
         ),
-        */
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: currentIndex != 2
             ? const SizedBox.shrink()

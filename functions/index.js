@@ -1610,6 +1610,39 @@ export const createFakeAlcoholics = onRequest(async (req, res) => {
   };
   await reference.set(alcoholic);
 
+  // DUT
+  reference = getFirestore().collection("alcoholics").doc("FjfBwPidh4pg6jHHjEAXcEIR6f9f");
+  alcoholic = {
+    userId: reference.id,
+    profileImageURL: "dut/alcoholics/profile_images/+27667890123.jpg",
+    phoneNumber: "+27667890123",
+    area: {
+      townOrInstitutionFK: "3",
+      areaName: "DUT-Durban-Kwa Zulu Natal-South Africa",
+      areaNo: "29",
+    },
+    username: "Jiyane",
+    password: "ytcc",
+  };
+  await reference.set(alcoholic);
+
+  // DUT
+
+  reference = getFirestore().collection("alcoholics").doc("FjfBwPidh4pg6jHHjEAXcEIR6f9g");
+  alcoholic = {
+    userId: reference.id,
+    profileImageURL: "dut/alcoholics/profile_images/+27601234567.jpg",
+    phoneNumber: "+27601234567",
+    area: {
+      townOrInstitutionFK: "3",
+      areaName: "DUT-Durban-Kwa Zulu Natal-South Africa",
+      areaNo: "29",
+    },
+    username: "Jiyane",
+    password: "ytcc",
+  };
+  await reference.set(alcoholic);
+
 
   // Send back a message that we"ve successfully written to the db.
   res.json({ result: `Fake Alcoholics Saved.` });

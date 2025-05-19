@@ -21,12 +21,14 @@ class VerificationScreen extends StatefulWidget {
   String phoneNumber;
   String verificationId;
   bool forAdmin;
+  bool forLogin;
 
   VerificationScreen({
     Key? key,
     required this.phoneNumber,
     required this.verificationId,
     required this.forAdmin,
+    required this.forLogin,
   }) : super(key: key);
 
   @override
@@ -217,6 +219,59 @@ class _VerificationScreenState extends State<VerificationScreen> {
     }
   }
 
+  void verifyLogin() async {
+    showProgressBar = true;
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: widget.verificationId, smsCode: otpController.text);
+      final auth = FirebaseAuth.instance;
+      await auth.signInWithCredential(credential);
+
+      auth.currentUser!.getIdToken(true).then((token) async {
+        // Send token to backend
+        HttpsCallable callableFuntion =
+            FirebaseFunctions.instance.httpsCallable(
+          'setCurrentUID',
+          options: HttpsCallableOptions(
+            timeout: const Duration(seconds: 1),
+          ),
+        );
+
+        Map<String, dynamic> data = {
+          'token': token,
+          'userId': auth.currentUser!.uid,
+        };
+
+        bool hasSignedIn = (await callableFuntion.call(data)) as bool;
+
+        if (hasSignedIn) {
+          if (widget.forAdmin) {
+            adminController.loginAdmin(auth.currentUser!.uid);
+            // Alert message required
+
+          } else {
+            alcoholicController.loginAlcoholic(auth.currentUser!.uid);
+            // Alert message required
+          }
+
+          // Go back two times.
+          Get.close(2);
+        }
+      }).catchError((onError) {});
+    } catch (error) {
+      Get.snackbar(
+          // backgroundColor: snackBarBackgroundColor,
+          // duration: snackBarDuration,
+          // colorText: snackBarColorText,
+          // borderColor: snackBarBorderColor,
+          'Error',
+          'Wrong Verification Code.');
+      debug.log('Wrong Verification Code');
+    } finally {
+      showProgressBar = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -286,7 +341,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       ),
                       child: InkWell(
                         onTap: () async {
-                          verifySignin();
+                          widget.forLogin ? verifyLogin() : verifySignin();
                         },
                         child: const Center(
                           child: Text(

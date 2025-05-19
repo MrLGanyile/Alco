@@ -118,10 +118,23 @@ class AlcoholicController extends GetxController {
           await ImagePicker().pickImage(source: ImageSource.camera);
 
       if (pickedImageFile != null) {
+        String host = Converter.townOrInstitutionAsString(
+                Converter.toSupportedTownOrInstitution(
+                        _newAlcoholicArea.value.sectionName)
+                    .townOrInstitutionName)
+            .toLowerCase();
+
+        if (host.contains('howard college ukzn') &&
+            'howard college ukzn'.contains(host)) {
+          host = 'ukzn'; // Supposed to be ukzn-howard
+        } else if (host.contains('mangosuthu (mut)') &&
+            'mangosuthu (mut)'.contains(host)) {
+          host = 'mut';
+        }
         _newAlcoholicProfileImageFile = Rx<File?>(File(pickedImageFile.path));
         _newAlcoholicImageURL = Rx<String?>(await uploadResource(
             _newAlcoholicProfileImageFile.value!,
-            '/alcoholics/profile_images/$phoneNumber'));
+            '$host/alcoholics/profile_images/$phoneNumber'));
         _newAlcoholicPhoneNumber = Rx<String?>(phoneNumber);
         _newAlcoholicUsername = Rx<String?>(username);
         debug.log('Image File Successfully Captured.');
@@ -149,9 +162,22 @@ class AlcoholicController extends GetxController {
 
       if (pickedImageFile != null) {
         _newAlcoholicProfileImageFile = Rx<File?>(File(pickedImageFile.path));
+        String host = Converter.townOrInstitutionAsString(
+                Converter.toSupportedTownOrInstitution(
+                        _newAlcoholicArea.value.sectionName)
+                    .townOrInstitutionName)
+            .toLowerCase();
+
+        if (host.contains('howard college ukzn') &&
+            'howard college ukzn'.contains(host)) {
+          host = 'ukzn'; // Supposed to be ukzn-howard
+        } else if (host.contains('mangosuthu (mut)') &&
+            'mangosuthu (mut)'.contains(host)) {
+          host = 'mut';
+        }
         _newAlcoholicImageURL = Rx<String?>(await uploadResource(
             _newAlcoholicProfileImageFile.value!,
-            '/alcoholics/profile_images/$phoneNumber'));
+            '$host/alcoholics/profile_images/$phoneNumber'));
         _newAlcoholicPhoneNumber = Rx<String?>(phoneNumber);
         _newAlcoholicUsername = Rx<String?>(username);
         debug.log('Image File Successfully Captured');
@@ -165,35 +191,27 @@ class AlcoholicController extends GetxController {
   }
 
   String trimmedImageURL() {
+    String host = Converter.townOrInstitutionAsString(
+        Converter.toSupportedTownOrInstitution(newAlcoholicArea.sectionName)
+            .townOrInstitutionName);
     return _newAlcoholicImageURL.value!
-        .substring(_newAlcoholicImageURL.value!.indexOf('/alcoholics'),
+        .substring(_newAlcoholicImageURL.value!.indexOf('/$host/alcoholics'),
             _newAlcoholicImageURL.value!.indexOf('?'))
         .replaceAll('%2F', '/');
   }
 
   Stream<List<Alcoholic>> readAlcoholics() {
-    Stream<List<Alcoholic>> stream;
-    if (locateableSectionName.value == null) {
-      stream = firestore
-          .collection('alcoholics')
-          .snapshots()
-          .map((snapshot) => snapshot.docs.map((doc) {
-                Alcoholic alcoholic = Alcoholic.fromJson(doc.data());
-                return alcoholic;
-              }).toList());
-    } else {
-      stream = firestore
-          .collection('alcoholics')
-          .where('sectionName',
-              isEqualTo: Converter.asString(locateableSectionName.value!))
-          .snapshots()
-          .map((snapshot) => snapshot.docs.map((doc) {
-                Alcoholic alcoholic = Alcoholic.fromJson(doc.data());
-                return alcoholic;
-              }).toList());
-    }
-
-    return stream;
+    return firestore
+        .collection(
+            'alcoholics') /*
+        .where('area.areaNo',
+            isEqualTo:
+                Converter.toSupportedArea(locateableSectionName.value!).areaNo) */
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) {
+              Alcoholic alcoholic = Alcoholic.fromJson(doc.data());
+              return alcoholic;
+            }).toList());
   }
 
   void setNewAlcoholicArea(String chosenSectionName) {

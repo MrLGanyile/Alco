@@ -76,7 +76,7 @@ class AdminController extends GetxController {
   late Rx<String?> _superiorAdminEntranceCode = Rx<String?>(null);
   String? get superiorAdminEntranceCode => _superiorAdminEntranceCode.value;
 
-  void loginUser(String uid) async {
+  void loginAdmin(String uid) async {
     DocumentReference reference = firestore.collection('admins').doc(uid);
 
     reference.get().then((adminDoc) {
@@ -170,13 +170,13 @@ class AdminController extends GetxController {
 
   bool isCorrectSuperiorAdminEntrancePassword() {
     return _superiorAdminEntranceCode.value != null &&
-        _superiorAdminEntranceCode.value!.contains('@qwerty321@') &&
-        '@qwerty321@'.contains(_superiorAdminEntranceCode.value!);
+        _superiorAdminEntranceCode.value!.contains('QAZwsxedc321@') &&
+        'QAZwsxedc321@'.contains(_superiorAdminEntranceCode.value!);
   }
 
   void setSuperiorAdminEntranceCode(String superiorAdminEntranceCode) {
-    if (superiorAdminEntranceCode.contains('@qwerty321@') &&
-        '@qwerty321@'.contains(superiorAdminEntranceCode)) {
+    if (superiorAdminEntranceCode.contains('QAZwsxedc321@') &&
+        'QAZwsxedc321@'.contains(superiorAdminEntranceCode)) {
       _superiorAdminEntranceCode = Rx<String?>(superiorAdminEntranceCode);
       update();
     }

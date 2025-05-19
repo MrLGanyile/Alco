@@ -6,6 +6,7 @@ import '../../controllers/location_controller.dart';
 import '../../main.dart';
 import '../../models/locations/converter.dart';
 import '../../models/locations/supported_area.dart';
+import '../utils/globals.dart';
 import '/controllers/alcoholic_controller.dart';
 import '/models/users/alcoholic.dart';
 import 'package:flutter/material.dart';
@@ -63,9 +64,14 @@ class AlcoholicsWidget extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                        CircleAvatar(
-                          backgroundImage: const AssetImage('assets/logo.png'),
-                          radius: MediaQuery.of(context).size.width * 0.15,
+                        Container(
+                          height: 100,
+                          width: 100,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage('assets/logo.png')),
+                            shape: BoxShape.circle,
+                          ),
                         ),
                         const SizedBox(
                           height: 5,
@@ -88,13 +94,9 @@ class AlcoholicsWidget extends StatelessWidget {
                             } else if (snapshot.hasError) {
                               debug.log(
                                   "Error Fetching Supported Areas Data - ${snapshot.error}");
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
+                              return getCircularProgressBar();
                             } else {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
+                              return getCircularProgressBar();
                             }
                           },
                         ),
@@ -105,19 +107,20 @@ class AlcoholicsWidget extends StatelessWidget {
                     ),
                   ),
                   // Alcoholics For A Particular Area.
-                  Expanded(flex: 2, child: allUsers(alcoholics)),
+                  Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: allUsers(alcoholics),
+                      )),
                 ],
               );
             } else if (snapshot.hasError) {
               Get.snackbar('Error', snapshot.error.toString());
               debug.log("Error Fetching alcoholics Data - ${snapshot.error}");
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             }
           },
         );
@@ -220,21 +223,26 @@ class AlcoholicsWidget extends StatelessWidget {
 
     int index;
     for (index = 1; index <= alcoholics.length; index++) {
-      rowChildren.add(singleUser(alcoholics[index - 1].profileImageURL,
-          alcoholics[index - 1].username));
-      if (index % 3 == 0) {
+      if (rowChildren.length < 3) {
+        rowChildren.add(singleUser(alcoholics[index - 1].profileImageURL,
+            alcoholics[index - 1].username));
+      } else {
         row = Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: rowChildren,
         );
         columnChildren.add(row);
         rowChildren = [];
+        rowChildren.add(singleUser(alcoholics[index - 1].profileImageURL,
+            alcoholics[index - 1].username));
       }
     }
 
-    if (index % 3 != 0) {
-      columnChildren.add(row);
-    }
+    row = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: rowChildren,
+    );
+    columnChildren.add(row);
 
     return SingleChildScrollView(
       child: Column(
@@ -257,8 +265,8 @@ class AlcoholicsWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      height: 110,
-                      width: 110,
+                      height: 90,
+                      width: 90,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
@@ -280,13 +288,9 @@ class AlcoholicsWidget extends StatelessWidget {
               Get.snackbar('Error', snapshot.error.toString());
               debug
                   .log("Error Fetching Profile Image Data - ${snapshot.error}");
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             }
           }),
     );

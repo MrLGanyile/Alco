@@ -13,6 +13,8 @@ import '../../models/users/admin.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as debug;
 
+import '../utils/globals.dart';
+
 class AdminsWidget extends StatelessWidget {
   AdminController adminController = AdminController.adminController;
   Reference storageReference = FirebaseStorage.instance
@@ -50,13 +52,9 @@ class AdminsWidget extends StatelessWidget {
             } else if (snapshot.hasError) {
               Get.snackbar('Error', snapshot.error.toString());
               debug.log("Error Fetching admin Data - ${snapshot.error}");
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             }
           },
         );
@@ -100,15 +98,11 @@ class AdminsWidget extends StatelessWidget {
               Get.snackbar('Error', snapshot.error.toString());
               debug
                   .log("Error Fetching Profile Image Data - ${snapshot.error}");
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             } else {
               debug.log(
                   "Error Fetching Admin Profile Image Data - ${snapshot.error}");
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return getCircularProgressBar();
             }
           }),
     );
@@ -134,13 +128,9 @@ class AdminsWidget extends StatelessWidget {
             );
           } else if (snapshot.hasError) {
             debug.log("Error Fetching Data - ${snapshot.error}");
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           }
         });
   }
@@ -174,13 +164,9 @@ class AdminsWidget extends StatelessWidget {
             return createAdmins(context);
           } else if (snapshot.hasError) {
             debug.log("Error Fetching Data - ${snapshot.error}");
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return getCircularProgressBar();
           }
         });
   }

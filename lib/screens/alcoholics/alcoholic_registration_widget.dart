@@ -69,9 +69,13 @@ class AlcoholicRegistrationWidget extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 15, left: 15, right: 15),
           child: SingleChildScrollView(
             child: Column(children: [
-              CircleAvatar(
-                backgroundImage: const AssetImage('assets/logo.png'),
-                radius: MediaQuery.of(context).size.width * 0.15,
+              Container(
+                height: 100,
+                width: 100,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(image: AssetImage('assets/logo.png')),
+                  shape: BoxShape.circle,
+                ),
               ),
 
               const SizedBox(
@@ -440,6 +444,7 @@ class AlcoholicRegistrationWidget extends StatelessWidget {
                                               '$countryDialCode${phoneNumberEditingController.text}',
                                           verificationId: verificationId,
                                           forAdmin: false,
+                                          forLogin: false,
                                         ));
                                   },
                                   codeAutoRetrievalTimeout:
@@ -475,7 +480,8 @@ class AlcoholicRegistrationWidget extends StatelessWidget {
                             InkWell(
                               onTap: () {
                                 // Send User To Login Screen.
-                                logoutUser(); // Logout currently logged in user.
+                                alcoholicController
+                                    .logoutAlcoholic(); // Logout currently logged in user.
                                 Get.to(() => LoginWidget(
                                       forAdmin: false,
                                     ));

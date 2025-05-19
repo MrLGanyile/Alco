@@ -97,7 +97,7 @@ service firebase.storage {
     // Done Unit Testing, Except For The Update Operation.
     match /{host}/alcoholics/profile_images/{profileImage} {
 
-      allow create: if request.auth != null;// && 
+      allow create;//: if request.auth != null;// && 
 
       // Make sure authenticated user's uid is the same as the document id of this image.
       //request.auth.uid == profileImage &&

@@ -400,6 +400,7 @@ class AdminRegistrationWidget extends StatelessWidget {
                                               '+27${phoneNumberEditingController.text}',
                                           verificationId: verificationId,
                                           forAdmin: true,
+                                          forLogin: false,
                                         ));
                                   },
                                   codeAutoRetrievalTimeout:
