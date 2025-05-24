@@ -33,17 +33,17 @@ service firebase.storage {
     // /Auabdnah/past_posts/where_were_you/images/23-04-2025@12h34.jpg
     // /Auabdnah/past_posts/where_were_you/records/23-04-2025@12h34.wav
     // /Auabdnah/past_posts/where_were_you/videos/23-04-2025@12h34.mp4
-    match /{userUID}/past_posts/where_were_you/{resource=**}{
+    match /{host}/past_posts/where_were_you/{resource=**}{
       allow write;
       allow read;
     }
 
-    match /{userUID}/past_posts/who_were_you_with/{resource=**}{
+    match /{host}/past_posts/who_were_you_with/{resource=**}{
       allow write;
       allow read;
     }
 
-    match /{userUID}/past_posts/what_happened/{resource=**}{
+    match /{host}/past_posts/what_happened/{resource=**}{
       allow write;
       allow read;
     }

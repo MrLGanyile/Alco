@@ -1,9 +1,10 @@
 import '../users/alcoholic.dart';
+import '../users/user.dart';
 
 class PastPost implements Comparable<PastPost> {
   String postId;
   Alcoholic postCreator;
-  DateTime dateCreated;
+  DateTime? dateCreated;
 
   String whereWereYouText;
   String whereWereYouImageURL;
@@ -22,7 +23,7 @@ class PastPost implements Comparable<PastPost> {
   PastPost(
       {required this.postId,
       required this.postCreator,
-      required this.dateCreated,
+      this.dateCreated,
       this.whereWereYouImageURL = '',
       this.whereWereYouText = '',
       this.whereWereYouVoiceRecordURL = '',
@@ -38,16 +39,39 @@ class PastPost implements Comparable<PastPost> {
   Map<String, dynamic> toJson() => {
         'postId': postId,
         'postCreator': postCreator.toJson(),
-        'dateCreated': dateCreated
+        'dateCreated': dateCreated,
+        'whereWereYouText': whereWereYouText,
+        'whereWereYouImageURL': whereWereYouImageURL,
+        'whereWereYouVoiceRecordURL': whereWereYouVoiceRecordURL,
+        'whereWereYouVideoURL': whereWereYouVideoURL,
+        'whoWereYouWithText': whoWereYouWithText,
+        'whoWereYouWithImageURL': whoWereYouWithImageURL,
+        'whoWereYouWithVoiceRecordURL': whoWereYouWithVoiceRecordURL,
+        'whoWereYouWithVideoURL': whoWereYouWithVideoURL,
+        'whatHappenedText': whatHappenedText,
+        'whatHappenedVoiceRecordURL': whatHappenedVoiceRecordURL,
+        'whatHappenedVideoURL': whatHappenedVideoURL
       };
 
   factory PastPost.fromJson(dynamic json) => PastPost(
-      postId: json['postId'],
-      postCreator: Alcoholic.fromJson(json['postCreator']),
-      dateCreated: json['dateCreated']);
+        postId: json['postId'],
+        postCreator: Alcoholic.fromJson(json['postCreator']),
+        dateCreated: json['dateCreated'],
+        whereWereYouText: json['whereWereYouText'],
+        whereWereYouImageURL: json['whereWereYouImageURL'],
+        whereWereYouVoiceRecordURL: json['whereWereYouVoiceRecordURL'],
+        whereWereYouVideoURL: json['whereWereYouVideoURL'],
+        whoWereYouWithText: json['whoWereYouWithText'],
+        whoWereYouWithImageURL: json['whoWereYouWithImageURL'],
+        whoWereYouWithVoiceRecordURL: json['whoWereYouWithVoiceRecordURL'],
+        whoWereYouWithVideoURL: json['whoWereYouWithVideoURL'],
+        whatHappenedText: json['whatHappenedText'],
+        whatHappenedVoiceRecordURL: json['whatHappenedVoiceRecordURL'],
+        whatHappenedVideoURL: json['whatHappenedVideoURL'],
+      );
 
   @override
   int compareTo(PastPost other) {
-    return dateCreated.compareTo(other.dateCreated);
+    return dateCreated!.compareTo(other.dateCreated!);
   }
 }

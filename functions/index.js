@@ -1168,6 +1168,32 @@ export const createWonPriceSummary =
         }
       });
     });
+
+export const setPostDate = onDocumentCreated("/past_posts/" +
+  "{postId}", async (event) => {
+
+    const docReference = getFirestore()
+      .collection("past_posts").doc(event.params.postId);
+
+    const dateObject = Timestamp.now().toDate();
+
+    const year = dateObject.getFullYear();
+    const month = dateObject.getMonth() + 1;
+    const date = dateObject.getDate();
+    const hour = dateObject.getHours() + 2;
+    const minute = dateObject.getMinutes();
+
+    const dateMap = {
+      'year': year,
+      'month': month,
+      'date': date,
+      'hour': hour,
+      'minute': minute
+    };
+
+    await docReference.update({ dateCreated: dateMap });
+    log('Update Performed...');
+  });
 // ##################Production Functions [End]########################
 
 // ########Development Functions [Start]###############

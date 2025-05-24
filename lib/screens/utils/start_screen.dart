@@ -1,6 +1,9 @@
 import 'package:alco/controllers/shared_dao_functions.dart';
 import 'package:alco/screens/admins/admin_entrance_widget.dart';
+import 'package:alco/screens/utils/login_widget.dart';
 
+import '../posts/past_post_creation_widget.dart';
+import '../posts/showoff_screen.dart';
 import '../store/store_draw_registration_widget.dart';
 import '../alcoholics/alcoholic_registration_widget.dart';
 import '../alcoholics/alcoholics_widgets.dart';
@@ -34,6 +37,7 @@ class _StartScreenState extends State<StartScreen>
     'All Stores',
     'Groups',
     'Administration'
+    // 'Posts'
   ];
 
   void updateCurrentIndex(int index) {
@@ -130,6 +134,20 @@ class _StartScreenState extends State<StartScreen>
                   ),
                 ),
                 onTap: () => Get.to(() => AlcoholicsWidget()),
+              ),
+              ListTile(
+                leading: Icon(Icons.post_add, size: listTilesIconSize),
+                iconColor: MyApplication.logoColor1,
+                textColor: MyApplication.logoColor2,
+                title: Text(
+                  'Post',
+                  style: TextStyle(
+                    fontSize: listTilesFontSize,
+                  ),
+                ),
+                onTap: () => Get.to(() => getCurrentlyLoggenInUser() == null
+                    ? AlcoholicRegistrationWidget()
+                    : PastPostCreationWidget()),
               ),
               ListTile(
                 leading: Icon(Icons.account_circle, size: listTilesIconSize),
@@ -268,7 +286,12 @@ class _StartScreenState extends State<StartScreen>
                 icon: Icon(Icons.admin_panel_settings,
                     color: MyApplication.attractiveColor1),
                 text: 'Admin',
-              ),
+              ), /*
+              Tab(
+                icon:
+                    Icon(Icons.post_add, color: MyApplication.attractiveColor1),
+                text: 'Posts',
+              ), */
             ],
           ),
         ),
@@ -282,6 +305,7 @@ class _StartScreenState extends State<StartScreen>
               StoresWidget(),
               const GroupsScreen(),
               const StoreDrawRegistrationWidget(),
+              // ShowoffScreen()
             ]),
           ),
         ),

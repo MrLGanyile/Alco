@@ -1,4 +1,7 @@
 import 'package:alco/controllers/post_controller.dart';
+import 'package:alco/screens/posts/showoff_screen.dart';
+import 'package:alco/screens/utils/home_widget.dart';
+import 'package:alco/screens/utils/start_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -50,24 +53,25 @@ class PastPostCreationWidget extends StatelessWidget {
   }
 
   Widget buildVideoDisplay(int questionNumberIndex) {
-    Widget? widget;
-    /*
+    VideoPlayer? widget;
     switch (questionNumberIndex) {
       case 0:
+        debug.log('whereWereYouVideoController != null ???');
         if (whereWereYouVideoController != null) {
-          widget = VideoPlayer(whereWereYouVideoController);
+          debug.log('whereWereYouVideoController != null true');
+          widget = VideoPlayer(whereWereYouVideoController!);
         }
         break;
       case 1:
         if (whoWereYouWithVideoController != null) {
-          widget = VideoPlayer(whoWereYouWithVideoController);
+          widget = VideoPlayer(whoWereYouWithVideoController!);
         }
         break;
       case 2:
         if (whatHappenedVideoController != null) {
-          widget = VideoPlayer(whatHappenedVideoController);
+          widget = VideoPlayer(whatHappenedVideoController!);
         }
-    } */
+    }
 
     if (widget == null) return const SizedBox.square();
 
@@ -75,7 +79,10 @@ class PastPostCreationWidget extends StatelessWidget {
       return SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 1.8,
-        child: widget,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: widget,
+        ),
       );
     });
   }
@@ -115,24 +122,22 @@ class PastPostCreationWidget extends StatelessWidget {
     // Where were you? Image Uploaded
     if (postController.whereWereYouImage != null &&
         postController.whereWereYouImageURL.isNotEmpty) {
-      // whereWereYouController.clear();
-      disposeVideoControllers();
-      // postController.clearForWhereWereYouImage();
       return whereWereYouDisplayImage();
     }
     // Where were you? Voice Record Uploaded
     else if (postController.whereWereYouVoiceRecord != null &&
         postController.whereWereYouVoiceRecordURL.isNotEmpty) {
-      // whereWereYouController.clear();
-      disposeVideoControllers();
-      // postController.clearForWhereWereYouVoiceRecord();
       return buildPlayIcon(false, postController.whereWereYouVoiceRecordURL);
     }
     // Where were you? Video Uploaded
     else if (postController.whereWereYouVideo != null &&
         postController.whereWereYouVideoURL.isNotEmpty) {
-      // whereWereYouController.clear();
-      // postController.clearForWhereWereYouVideo();
+      debug.log('About to display the video.');
+      whereWereYouVideoController =
+          VideoPlayerController.file(postController.whereWereYouVideo!);
+      whereWereYouVideoController!.initialize();
+      whereWereYouVideoController!.setVolume(10);
+      whereWereYouVideoController!.setLooping(false);
       return buildVideoDisplay(0);
     } else {
       // Where were you? Text Written
@@ -146,16 +151,20 @@ class PastPostCreationWidget extends StatelessWidget {
         Expanded(
           child: IconButton(
             onPressed: () {
-              postController.chooseWhereWereYouImageFromGallery();
+              postController.clearForWhereWereYouImage();
+              postController.captureWhereWereYouImage();
             },
-            icon: const Icon(Icons.image),
+            icon: const Icon(Icons.camera_alt),
             iconSize: uploadIconsSize,
             color: uploadIconColor,
           ),
         ),
         Expanded(
             child: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            postController.clearForWhereWereYouVoiceRecord();
+            // record
+          },
           icon: const Icon(Icons.mic),
           iconSize: uploadIconsSize,
           color: uploadIconColor,
@@ -163,14 +172,8 @@ class PastPostCreationWidget extends StatelessWidget {
         Expanded(
             child: IconButton(
           onPressed: () {
-            postController.pickWhereWereYouVideo(ImageSource.gallery);
-            if (postController.whereWereYouVideo != null) {
-              whereWereYouVideoController =
-                  VideoPlayerController.file(postController.whereWereYouVideo!);
-              whereWereYouVideoController!.initialize();
-              whereWereYouVideoController!.setVolume(10);
-              whereWereYouVideoController!.setLooping(false);
-            }
+            postController.clearForWhereWereYouVideo();
+            postController.captureWhereWereYouVideo(ImageSource.camera);
           },
           icon: const Icon(Icons.video_camera_back),
           iconSize: uploadIconsSize,
@@ -203,24 +206,21 @@ class PastPostCreationWidget extends StatelessWidget {
     // Who were you with? Image Uploaded
     if (postController.whoWereYouWithImage != null &&
         postController.whoWereYouWithImageURL.isNotEmpty) {
-      // whoWereYouWithController.clear();
-      disposeVideoControllers();
-      // postController.clearForWhoWereYouWithImage();
       return whoWereYouWithDisplayImage();
     }
     // Who were you with? Voice Record Uploaded
     else if (postController.whoWereYouWithVoiceRecord != null &&
         postController.whoWereYouWithVoiceRecordURL.isNotEmpty) {
-      // whoWereYouWithController.clear();
-      disposeVideoControllers();
-      // postController.clearForWhoWereYouWithVoiceRecord();
       return buildPlayIcon(false, postController.whoWereYouWithVoiceRecordURL);
     }
     // Who were you with? Video Uploaded
     else if (postController.whoWereYouWithVideo != null &&
         postController.whoWereYouWithVideoURL.isNotEmpty) {
-      // whoWereYouWithController.clear();
-      // postController.clearForWhoWereYouWithVideo();
+      whoWereYouWithVideoController =
+          VideoPlayerController.file(postController.whoWereYouWithVideo!);
+      whoWereYouWithVideoController!.initialize();
+      whoWereYouWithVideoController!.setVolume(10);
+      whoWereYouWithVideoController!.setLooping(false);
       return buildVideoDisplay(1);
     } else {
       // Who were you with? Text Written
@@ -234,16 +234,20 @@ class PastPostCreationWidget extends StatelessWidget {
         Expanded(
           child: IconButton(
             onPressed: () {
-              postController.chooseWhoWereYouWithImageFromGallery();
+              postController.clearForWhoWereYouWithImage();
+              postController.captureWhoWereYouWithImage();
             },
-            icon: const Icon(Icons.image),
+            icon: const Icon(Icons.camera_alt),
             iconSize: uploadIconsSize,
             color: uploadIconColor,
           ),
         ),
         Expanded(
             child: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            postController.clearForWhoWereYouWithVoiceRecord();
+            // Record
+          },
           icon: const Icon(Icons.mic),
           iconSize: uploadIconsSize,
           color: uploadIconColor,
@@ -251,15 +255,8 @@ class PastPostCreationWidget extends StatelessWidget {
         Expanded(
             child: IconButton(
           onPressed: () {
-            postController.pickWhoWereYouWithVideo(ImageSource.gallery);
-
-            if (postController.whoWereYouWithVideo != null) {
-              whoWereYouWithVideoController = VideoPlayerController.file(
-                  postController.whoWereYouWithVideo!);
-              whoWereYouWithVideoController!.initialize();
-              whoWereYouWithVideoController!.setVolume(10);
-              whoWereYouWithVideoController!.setLooping(false);
-            }
+            postController.clearForWhoWereYouWithVideo();
+            postController.captureWhoWereYouWithVideo(ImageSource.camera);
           },
           icon: const Icon(Icons.video_camera_back),
           iconSize: uploadIconsSize,
@@ -273,16 +270,17 @@ class PastPostCreationWidget extends StatelessWidget {
     // What happened? Voice Record Uploaded
     if (postController.whatHappenedVoiceRecord != null &&
         postController.whatHappenedVoiceRecordURL.isNotEmpty) {
-      // whatHappenedController.clear();
-      disposeVideoControllers();
-      // postController.clearForWhatHappenedVoiceRecord();
       return buildPlayIcon(false, postController.whatHappenedVoiceRecordURL);
     }
     // What happened? Video Uploaded
     else if (postController.whatHappenedVideo != null &&
         postController.whatHappenedVideoURL.isNotEmpty) {
-      // whatHappenedController.clear();
-      // postController.clearForWhatHappenedVideo();
+      whatHappenedVideoController =
+          VideoPlayerController.file(postController.whatHappenedVideo!);
+      whatHappenedVideoController!.initialize();
+      whatHappenedVideoController!.setVolume(10);
+      whatHappenedVideoController!.setLooping(false);
+
       return buildVideoDisplay(2);
     }
 
@@ -295,7 +293,10 @@ class PastPostCreationWidget extends StatelessWidget {
       children: [
         Expanded(
             child: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            postController.clearForWhatHappenedVoiceRecord();
+            // Record
+          },
           icon: const Icon(Icons.mic),
           iconSize: uploadIconsSize,
           color: uploadIconColor,
@@ -303,15 +304,8 @@ class PastPostCreationWidget extends StatelessWidget {
         Expanded(
             child: IconButton(
           onPressed: () {
-            postController.pickWhatHappenedVideo(ImageSource.gallery);
-
-            if (postController.whatHappenedVideo != null) {
-              whatHappenedVideoController =
-                  VideoPlayerController.file(postController.whatHappenedVideo!);
-              whatHappenedVideoController!.initialize();
-              whatHappenedVideoController!.setVolume(10);
-              whatHappenedVideoController!.setLooping(false);
-            }
+            postController.clearForWhatHappenedVideo();
+            postController.captureWhatHappenedVideo(ImageSource.camera);
           },
           icon: const Icon(Icons.video_camera_back),
           iconSize: uploadIconsSize,
@@ -402,7 +396,17 @@ class PastPostCreationWidget extends StatelessWidget {
                     Radius.circular(10),
                   )),
               child: InkWell(
-                onTap: () async {},
+                onTap: () async {
+                  // Save post
+                  postController.savePastPost().then(
+                    (value) {
+                      if (value == PastPostStatus.postSaved) {
+                        disposeVideoControllers();
+                        Get.to(() => StartScreen());
+                      }
+                    },
+                  );
+                },
                 child: const Center(
                   child: Text(
                     'Post',
