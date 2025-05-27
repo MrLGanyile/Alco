@@ -56,9 +56,7 @@ class PastPostCreationWidget extends StatelessWidget {
     VideoPlayer? widget;
     switch (questionNumberIndex) {
       case 0:
-        debug.log('whereWereYouVideoController != null ???');
         if (whereWereYouVideoController != null) {
-          debug.log('whereWereYouVideoController != null true');
           widget = VideoPlayer(whereWereYouVideoController!);
         }
         break;
@@ -120,8 +118,7 @@ class PastPostCreationWidget extends StatelessWidget {
 
   Widget whereWereYouDisplay() {
     // Where were you? Image Uploaded
-    if (postController.whereWereYouImage != null &&
-        postController.whereWereYouImageURL.isNotEmpty) {
+    if (postController.whereWereYouImage != null) {
       return whereWereYouDisplayImage();
     }
     // Where were you? Voice Record Uploaded
@@ -130,8 +127,7 @@ class PastPostCreationWidget extends StatelessWidget {
       return buildPlayIcon(false, postController.whereWereYouVoiceRecordURL);
     }
     // Where were you? Video Uploaded
-    else if (postController.whereWereYouVideo != null &&
-        postController.whereWereYouVideoURL.isNotEmpty) {
+    else if (postController.whereWereYouVideo != null) {
       debug.log('About to display the video.');
       whereWereYouVideoController =
           VideoPlayerController.file(postController.whereWereYouVideo!);
@@ -204,8 +200,7 @@ class PastPostCreationWidget extends StatelessWidget {
 
   Widget whoWereYouWithDisplay() {
     // Who were you with? Image Uploaded
-    if (postController.whoWereYouWithImage != null &&
-        postController.whoWereYouWithImageURL.isNotEmpty) {
+    if (postController.whoWereYouWithImage != null) {
       return whoWereYouWithDisplayImage();
     }
     // Who were you with? Voice Record Uploaded
@@ -214,8 +209,7 @@ class PastPostCreationWidget extends StatelessWidget {
       return buildPlayIcon(false, postController.whoWereYouWithVoiceRecordURL);
     }
     // Who were you with? Video Uploaded
-    else if (postController.whoWereYouWithVideo != null &&
-        postController.whoWereYouWithVideoURL.isNotEmpty) {
+    else if (postController.whoWereYouWithVideo != null) {
       whoWereYouWithVideoController =
           VideoPlayerController.file(postController.whoWereYouWithVideo!);
       whoWereYouWithVideoController!.initialize();
@@ -273,8 +267,7 @@ class PastPostCreationWidget extends StatelessWidget {
       return buildPlayIcon(false, postController.whatHappenedVoiceRecordURL);
     }
     // What happened? Video Uploaded
-    else if (postController.whatHappenedVideo != null &&
-        postController.whatHappenedVideoURL.isNotEmpty) {
+    else if (postController.whatHappenedVideo != null) {
       whatHappenedVideoController =
           VideoPlayerController.file(postController.whatHappenedVideo!);
       whatHappenedVideoController!.initialize();
@@ -397,6 +390,24 @@ class PastPostCreationWidget extends StatelessWidget {
                   )),
               child: InkWell(
                 onTap: () async {
+                  if (whereWereYouController.text.isNotEmpty) {
+                    postController.clearForWhereWereYouText();
+                    postController
+                        .setWhereWereYouText(whereWereYouController.text);
+                  }
+
+                  if (whoWereYouWithController.text.isNotEmpty) {
+                    postController.clearForWhoWereYouWithText();
+                    postController
+                        .setWhoWereYouWithText(whoWereYouWithController.text);
+                  }
+
+                  if (whatHappenedController.text.isNotEmpty) {
+                    postController.clearForWhatHappenedText();
+                    postController
+                        .setWhatHappedText(whatHappenedController.text);
+                  }
+
                   // Save post
                   postController.savePastPost().then(
                     (value) {

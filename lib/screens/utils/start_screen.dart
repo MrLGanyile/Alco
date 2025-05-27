@@ -36,8 +36,8 @@ class _StartScreenState extends State<StartScreen>
     'Recent Wins',
     'All Stores',
     'Groups',
-    'Administration'
-    // 'Posts'
+    // 'Administration'
+    'Posts'
   ];
 
   void updateCurrentIndex(int index) {
@@ -282,16 +282,17 @@ class _StartScreenState extends State<StartScreen>
                 icon: Icon(Icons.group, color: MyApplication.attractiveColor1),
                 text: 'Groups',
               ),
+              /*
               Tab(
                 icon: Icon(Icons.admin_panel_settings,
                     color: MyApplication.attractiveColor1),
                 text: 'Admin',
-              ), /*
+              ), */
               Tab(
                 icon:
                     Icon(Icons.post_add, color: MyApplication.attractiveColor1),
                 text: 'Posts',
-              ), */
+              ),
             ],
           ),
         ),
@@ -304,8 +305,8 @@ class _StartScreenState extends State<StartScreen>
               HomeWidget(),
               StoresWidget(),
               const GroupsScreen(),
-              const StoreDrawRegistrationWidget(),
-              // ShowoffScreen()
+              // const StoreDrawRegistrationWidget(),
+              ShowOffScreen()
             ]),
           ),
         ),

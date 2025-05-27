@@ -336,6 +336,11 @@ service cloud.firestore {
     match /past_posts/{postId}{
       allow read;
       allow write;
+
+      match /comments/{commentId}{
+        allow read;
+        allow write;
+      }
     }
   }
 }  

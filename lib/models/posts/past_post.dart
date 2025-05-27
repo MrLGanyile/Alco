@@ -56,7 +56,13 @@ class PastPost implements Comparable<PastPost> {
   factory PastPost.fromJson(dynamic json) => PastPost(
         postId: json['postId'],
         postCreator: Alcoholic.fromJson(json['postCreator']),
-        dateCreated: json['dateCreated'],
+        dateCreated: DateTime(
+          json['dateCreated']['year'],
+          json['dateCreated']['month'],
+          json['dateCreated']['date'],
+          json['dateCreated']['hour'],
+          json['dateCreated']['minute'],
+        ),
         whereWereYouText: json['whereWereYouText'],
         whereWereYouImageURL: json['whereWereYouImageURL'],
         whereWereYouVoiceRecordURL: json['whereWereYouVoiceRecordURL'],
@@ -70,8 +76,82 @@ class PastPost implements Comparable<PastPost> {
         whatHappenedVideoURL: json['whatHappenedVideoURL'],
       );
 
+  bool hasWhereWereYouText() {
+    return whereWereYouText.isNotEmpty;
+  }
+
+  bool hasWhereWereYouImage() {
+    return whereWereYouImageURL.isNotEmpty;
+  }
+
+  bool hasWhereWereYouVoiceRecord() {
+    return whereWereYouVoiceRecordURL.isNotEmpty;
+  }
+
+  bool hasWhereWereYouVideo() {
+    return whereWereYouVideoURL.isNotEmpty;
+  }
+
+  bool hasWhoWereYouWithText() {
+    return whoWereYouWithText.isNotEmpty;
+  }
+
+  bool hasWhoWereYouWithImage() {
+    return whoWereYouWithImageURL.isNotEmpty;
+  }
+
+  bool hasWhoWereYouWithVoiceRecord() {
+    return whoWereYouWithVoiceRecordURL.isNotEmpty;
+  }
+
+  bool hasWhoWereYouWithVideo() {
+    return whoWereYouWithVideoURL.isNotEmpty;
+  }
+
+  bool hasWhatHappenedText() {
+    return whatHappenedText.isNotEmpty;
+  }
+
+  bool hasWhatHappenedVoiceRecord() {
+    return whatHappenedVoiceRecordURL.isNotEmpty;
+  }
+
+  bool hasWhatHappenedVideo() {
+    return whatHappenedVideoURL.isNotEmpty;
+  }
+
+  String passedTimeRepresentation() {
+    Duration duration = dateCreated!.difference(DateTime.now());
+
+    String passedTimeRepresentation;
+    if (duration.inMinutes.abs() <= 1) {
+      passedTimeRepresentation = 'now';
+    } else if (duration.inMinutes.abs() <= 59) {
+      passedTimeRepresentation = '${duration.inMinutes.abs()}mins';
+    } else if (duration.inMinutes.abs() < 120) {
+      passedTimeRepresentation = '1h';
+    } else if (duration.inMinutes.abs() < 60 * 24) {
+      passedTimeRepresentation = '${duration.inHours.abs()}h';
+    } else if (duration.inMinutes.abs() < 60 * 24 * 7) {
+      passedTimeRepresentation = '${duration.inDays.abs()}d';
+    } else if (duration.inMinutes.abs() < 60 * 24 * 7 * 4) {
+      passedTimeRepresentation = '${duration.inDays.abs() ~/ 7}w';
+    } else if (duration.inMinutes.abs() < (60 * 24 * 7 * 4)) {
+      passedTimeRepresentation =
+          '${duration.inMinutes.abs() ~/ (60 * 24 * 7 * 4)}mo';
+    } else if (duration.inMinutes.abs() < (60 * 24 * 7 * 4 * 24)) {
+      passedTimeRepresentation =
+          '${duration.inMinutes.abs() ~/ (60 * 24 * 7 * 4 * 12)}yr';
+    } else {
+      passedTimeRepresentation =
+          '${duration.inMinutes.abs() ~/ (60 * 24 * 7 * 4 * 12)}yrs';
+    }
+
+    return passedTimeRepresentation;
+  }
+
   @override
   int compareTo(PastPost other) {
-    return dateCreated!.compareTo(other.dateCreated!);
+    return other.dateCreated!.compareTo(dateCreated!);
   }
 }

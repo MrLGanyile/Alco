@@ -51,10 +51,11 @@ void logoutUser() {
 }
 
 // Upload an image into a particular firebase storage bucket.
-Future<String> uploadResource(File resource, String storagePath) async {
+Future<String> uploadResource(File resource, String storagePath,
+    {String contentType = "image/jpeg"}) async {
   Reference reference = FirebaseStorage.instance.ref().child(storagePath);
 
-  final metadata = SettableMetadata(contentType: "image/jpeg");
+  final metadata = SettableMetadata(contentType: contentType);
 
   UploadTask uploadTask = reference.putFile(resource, metadata);
   TaskSnapshot taskSnapshot = await uploadTask;

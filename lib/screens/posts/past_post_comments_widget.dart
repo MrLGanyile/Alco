@@ -1,29 +1,32 @@
 import 'package:alco/controllers/competition_controller.dart';
 import 'package:alco/controllers/group_controller.dart';
+import 'package:alco/controllers/post_controller.dart';
 import 'package:alco/models/users/won_price_comment.dart';
+import 'package:alco/screens/utils/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/shared_dao_functions.dart';
 import '../../controllers/alcoholic_controller.dart';
 import '../../main.dart';
+import '../../models/posts/post_comment.dart';
 import '../alcoholics/alcoholic_registration_widget.dart';
-import 'won_price_comment_widget.dart';
 
 import 'dart:developer' as debug;
 
-class WonPriceSummaryCommentsWidgets extends StatelessWidget {
-  String wonPriceSummaryFK;
-  final CompetitionController competitionController =
-      CompetitionController.competitionController;
+import 'post_comment_widget.dart';
+
+class PastPostCommentsWidgets extends StatelessWidget {
+  String postFK;
+  final PostController postController = PostController.postController;
   final AlcoholicController alcoholicController =
       AlcoholicController.alcoholicController;
   final GroupController groupController = GroupController.instance;
-  late List<WonPriceComment> comments;
+  late List<PostComment> comments;
 
-  WonPriceSummaryCommentsWidgets({
+  PastPostCommentsWidgets({
     Key? key,
-    required this.wonPriceSummaryFK,
+    required this.postFK,
   }) : super(key: key);
 
   Widget retrieveCommentTextField(BuildContext context) {
@@ -44,8 +47,7 @@ class WonPriceSummaryCommentsWidgets extends StatelessWidget {
             if (alcoholicController.currentlyLoggedInAlcoholic == null) {
               Get.to(() => AlcoholicRegistrationWidget());
             } else {
-              competitionController.saveWonPriceComment(
-                  wonPriceSummaryFK, controller.text);
+              postController.savePostComment(postFK, controller.text);
               controller.clear();
             }
           },
@@ -94,25 +96,20 @@ class WonPriceSummaryCommentsWidgets extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Column(children: [
         Expanded(
-          child: StreamBuilder<List<WonPriceComment>>(
-              stream:
-                  competitionController.readWonPriceComments(wonPriceSummaryFK),
+          child: StreamBuilder<List<PostComment>>(
+              stream: postController.readPastPostComments(postFK),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   comments = snapshot.data!;
                   return ListView.builder(
                       itemCount: comments.length,
-                      itemBuilder: ((context, index) => WonPriceCommentWidget(
-                          wonPriceComment: comments[index])));
+                      itemBuilder: ((context, index) =>
+                          PostCommentWidget(postComment: comments[index])));
                 } else if (snapshot.hasError) {
                   debug.log('Error: ${snapshot.error.toString()} ');
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return getCircularProgressBar();
                 } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return getCircularProgressBar();
                 }
               }),
         ),

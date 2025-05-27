@@ -6,11 +6,13 @@ import 'package:alco/controllers/shared_dao_functions.dart';
 import 'package:alco/models/locations/converter.dart';
 import 'package:alco/models/posts/past_post.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'dart:developer' as debug;
 
+import '../models/posts/post_comment.dart';
 import '../models/users/admin.dart';
 import '../models/users/alcoholic.dart';
 import '../models/users/user.dart';
@@ -52,6 +54,8 @@ class PostController extends GetxController {
 
   Rx<File?> _whereWereYouVideo = Rx(null);
   File? get whereWereYouVideo => _whereWereYouVideo.value;
+
+  String? host;
 
   // ======================Where Were You? [End]======================
 
@@ -176,7 +180,6 @@ class PostController extends GetxController {
       if (pickedImageFile != null) {
         _whereWereYouImage = Rx<File?>(File(pickedImageFile.path));
 
-        String host;
         if (user is Admin) {
           debug.log('logged in user is as an admin');
           Admin admin = user;
@@ -192,19 +195,11 @@ class PostController extends GetxController {
               .toLowerCase();
         }
 
-        if (host.contains('howard college ukzn') &&
-            'howard college ukzn'.contains(host)) {
-          host = 'ukzn'; // Supposed to be ukzn-howard
-        } else if (host.contains('mangosuthu (mut)') &&
-            'mangosuthu (mut)'.contains(host)) {
-          host = 'mut';
-        }
-
-        postController.setPostReference();
-
         _whereWereYouImageURL = Rx<String>(await uploadResource(
             _whereWereYouImage.value!,
             '$host/past_posts/where_were_you/images/${_postReference.value!.id}'));
+
+        postController.setPostReference();
 
         Get.snackbar('Image Status', 'Image File Successfully Captured.');
         update();
@@ -226,7 +221,6 @@ class PostController extends GetxController {
       File file = File(pickedVideoFile.path);
       _whereWereYouVideo = Rx<File?>(file);
 
-      String host;
       if (user is Admin) {
         Admin admin = user;
         host = Converter.townOrInstitutionAsString(admin.townOrInstitution)
@@ -240,19 +234,10 @@ class PostController extends GetxController {
             .toLowerCase();
       }
 
-      if (host.contains('howard college ukzn') &&
-          'howard college ukzn'.contains(host)) {
-        host = 'ukzn'; // Supposed to be ukzn-howard
-      } else if (host.contains('mangosuthu (mut)') &&
-          'mangosuthu (mut)'.contains(host)) {
-        host = 'mut';
-      }
-
       postController.setPostReference();
-      _whereWereYouVideoURL = Rx<String>(await uploadResource(
-          _whereWereYouVideo.value!,
-          '$host/past_posts/where_were_you/videos/${_postReference.value!.id}'));
+
       debug.log('Video File Successfully Captured');
+      debug.log('Created AT ${_whereWereYouVideoURL.value}');
       Get.snackbar('Video Status', 'Video File Successfully Captured.');
       update();
     } else {
@@ -316,7 +301,7 @@ class PostController extends GetxController {
 
       if (pickedImageFile != null) {
         _whoWereYouWithImage = Rx<File?>(File(pickedImageFile.path));
-        String host;
+
         if (user is Admin) {
           Admin admin = user;
           host = Converter.townOrInstitutionAsString(admin.townOrInstitution)
@@ -330,18 +315,11 @@ class PostController extends GetxController {
               .toLowerCase();
         }
 
-        if (host.contains('howard college ukzn') &&
-            'howard college ukzn'.contains(host)) {
-          host = 'ukzn'; // Supposed to be ukzn-howard
-        } else if (host.contains('mangosuthu (mut)') &&
-            'mangosuthu (mut)'.contains(host)) {
-          host = 'mut';
-        }
-
-        setPostReference();
         _whoWereYouWithImageURL = Rx<String>(await uploadResource(
             _whoWereYouWithImage.value!,
             '$host/past_posts/who_were_you_with/images/${_postReference.value!.id}'));
+
+        setPostReference();
 
         Get.snackbar('Image Status', 'Image File Successfully Captured.');
         update();
@@ -362,7 +340,7 @@ class PostController extends GetxController {
     if (pickedVideoFile != null) {
       File file = File(pickedVideoFile.path);
       _whoWereYouWithVideo = Rx<File?>(file);
-      String host;
+
       if (user is Admin) {
         Admin admin = user;
         host = Converter.townOrInstitutionAsString(admin.townOrInstitution)
@@ -376,18 +354,7 @@ class PostController extends GetxController {
             .toLowerCase();
       }
 
-      if (host.contains('howard college ukzn') &&
-          'howard college ukzn'.contains(host)) {
-        host = 'ukzn'; // Supposed to be ukzn-howard
-      } else if (host.contains('mangosuthu (mut)') &&
-          'mangosuthu (mut)'.contains(host)) {
-        host = 'mut';
-      }
-
       postController.setPostReference();
-      _whoWereYouWithVideoURL = Rx<String>(await uploadResource(
-          _whoWereYouWithVideo.value!,
-          '$host/past_posts/who_were_you_with/videos/${_postReference.value!.id}'));
 
       Get.snackbar('Video Status', 'Video File Successfully Picked.');
       update();
@@ -438,7 +405,7 @@ class PostController extends GetxController {
     if (pickedVideoFile != null) {
       File file = File(pickedVideoFile.path);
       _whatHappenedVideo = Rx<File?>(file);
-      String host;
+
       if (user is Admin) {
         Admin admin = user;
         host = Converter.townOrInstitutionAsString(admin.townOrInstitution)
@@ -452,18 +419,7 @@ class PostController extends GetxController {
             .toLowerCase();
       }
 
-      if (host.contains('howard college ukzn') &&
-          'howard college ukzn'.contains(host)) {
-        host = 'ukzn'; // Supposed to be ukzn-howard
-      } else if (host.contains('mangosuthu (mut)') &&
-          'mangosuthu (mut)'.contains(host)) {
-        host = 'mut';
-      }
-
       postController.setPostReference();
-      _whatHappenedVideoURL = Rx<String>(await uploadResource(
-          _whatHappenedVideo.value!,
-          '$host/past_posts/what_happened/videos/${_postReference.value!.id}'));
 
       Get.snackbar('Video Status', 'Video File Successfully Captured.');
       update();
@@ -472,6 +428,10 @@ class PostController extends GetxController {
     }
   }
   // ======================What happended? [End]======================
+
+  compressVideo(String videoPath) {
+    // Add video_compress dependency and watch Tik Tack Clone video 27
+  }
 
   void clear() {
     _whereWereYouText = Rx('');
@@ -527,26 +487,37 @@ class PostController extends GetxController {
     }
 
     // No image shared.
-    if (whereWereYouImageURL.isNotEmpty || whoWereYouWithImageURL.isNotEmpty) {
+    if ((whereWereYouImage != null && whereWereYouImageURL.isNotEmpty) ||
+        (whoWereYouWithImage != null && whoWereYouWithImageURL.isNotEmpty)) {
       return true;
     }
 
     // No voice record shared.
-    if (whereWereYouVoiceRecordURL.isNotEmpty ||
-        whoWereYouWithVoiceRecordURL.isNotEmpty ||
-        whatHappenedVoiceRecordURL.isNotEmpty) {
+    if (whereWereYouVoiceRecord != null ||
+        whoWereYouWithVoiceRecord != null ||
+        whatHappenedVoiceRecord != null) {
       return true;
     }
 
     // No video shared.
-    if (whereWereYouVideoURL.isNotEmpty ||
-        whoWereYouWithVideoURL.isNotEmpty ||
-        _whatHappenedVideoURL.isNotEmpty) {
+    if (whereWereYouVideo != null ||
+        whoWereYouWithVideo != null ||
+        whatHappenedVideo != null) {
       return true;
     }
 
     return false;
   }
+
+  Stream<List<PastPost>> readAllPastPost() =>
+      firestore.collection('past_posts').snapshots().map((postsSnapshot) {
+        List<PastPost> list = postsSnapshot.docs.map((postDoc) {
+          PastPost post = PastPost.fromJson(postDoc.data());
+          return post;
+        }).toList();
+        list.sort();
+        return list;
+      });
 
   Future<PastPostStatus> savePastPost() async {
     User? user = getCurrentlyLoggenInUser();
@@ -558,6 +529,61 @@ class PostController extends GetxController {
       Get.snackbar('Error', 'Answerd Atleast One Question.');
       return PastPostStatus.answerAtleastOneQuestion;
     } else {
+      if (whereWereYouText.isNotEmpty) {
+        clearForWhereWereYouText();
+      }
+
+      if (whoWereYouWithText.isNotEmpty) {
+        clearForWhoWereYouWithText();
+      }
+
+      if (whatHappenedText.isNotEmpty) {
+        clearForWhatHappenedText();
+      }
+
+      setPostReference();
+
+      if (host == null) {
+        Alcoholic? alcoholic = getCurrentlyLoggenInUser() as Alcoholic;
+
+        host = Converter.townOrInstitutionAsString(
+                Converter.toSupportedTownOrInstitution(
+                        alcoholic.area.sectionName)
+                    .townOrInstitutionName)
+            .toLowerCase();
+      }
+
+      if (host!.contains('howard college ukzn') &&
+          'howard college ukzn'.contains(host!)) {
+        host = 'ukzn'; // Supposed to be ukzn-howard
+      } else if (host!.contains('mangosuthu (mut)') &&
+          'mangosuthu (mut)'.contains(host!)) {
+        host = 'mut';
+      }
+
+      String videoContentType = "audio/raw";
+
+      if (whereWereYouVideo != null) {
+        _whereWereYouVideoURL = Rx<String>(await uploadResource(
+            _whereWereYouVideo.value!,
+            '$host/past_posts/where_were_you/videos/${_postReference.value!.id}',
+            contentType: videoContentType));
+      }
+
+      if (whoWereYouWithVideo != null) {
+        _whoWereYouWithVideoURL = Rx<String>(await uploadResource(
+            _whoWereYouWithVideo.value!,
+            '$host/past_posts/who_were_you_with/videos/${_postReference.value!.id}',
+            contentType: videoContentType));
+      }
+
+      if (whatHappenedVideo != null) {
+        _whatHappenedVideoURL = Rx<String>(await uploadResource(
+            _whatHappenedVideo.value!,
+            '$host/past_posts/what_happened/videos/${_postReference.value!.id}',
+            contentType: videoContentType));
+      }
+
       PastPost pastPost = PastPost(
         postId: _postReference.value!.id,
         postCreator: user as Alcoholic,
@@ -580,4 +606,73 @@ class PostController extends GetxController {
       return PastPostStatus.postSaved;
     }
   }
+
+  Future<void> savePostComment(String postFK, String message) async {
+    // Suppose to be an xor
+    if (alcoholicController.currentlyLoggedInAlcoholic == null &&
+        adminController.currentlyLoggedInAdmin == null) {
+      return;
+    }
+
+    DocumentReference pastPostRef =
+        firestore.collection('past_posts').doc(postFK);
+
+    pastPostRef.get().then((pastPostDoc) async {
+      if (pastPostDoc.exists) {
+        PastPost pastPost = PastPost.fromJson(pastPostDoc.data());
+
+        int one = int.parse(pastPost.postCreator.area.townOrInstitutionFK);
+        int two = int.parse(alcoholicController
+            .currentlyLoggedInAlcoholic!.area.townOrInstitutionFK);
+        bool result = one == two;
+
+        if (result) {
+          DocumentReference commentReference =
+              pastPostRef.collection('comments').doc();
+          PostComment? comment;
+          if (alcoholicController.currentlyLoggedInAlcoholic != null) {
+            comment = PostComment(
+                postCommentId: commentReference.id,
+                postFK: postFK,
+                message: message,
+                imageURL: alcoholicController
+                    .currentlyLoggedInAlcoholic!.profileImageURL,
+                username:
+                    alcoholicController.currentlyLoggedInAlcoholic!.username);
+          } else if (adminController.currentlyLoggedInAdmin != null) {
+            comment = PostComment(
+                postCommentId: commentReference.id,
+                postFK: postFK,
+                message: message,
+                imageURL:
+                    adminController.currentlyLoggedInAdmin!.profileImageURL,
+                username: 'Admin');
+          }
+
+          await commentReference.set(comment!.toJson());
+        } else {
+          String host = Converter.townOrInstitutionAsString(
+              Converter.toSupportedTownOrInstitution(
+                      pastPost.postCreator.area.sectionName)
+                  .townOrInstitutionName);
+          ;
+          Get.snackbar('Error', 'Only $host Users May Comment.');
+        }
+      }
+    });
+  }
+
+  Stream<List<PostComment>> readPastPostComments(String postFK) => firestore
+          .collection('past_posts')
+          .doc(postFK)
+          .collection('comments')
+          .snapshots()
+          .map((commentsSnapshot) {
+        List<PostComment> list = commentsSnapshot.docs.map((commentDoc) {
+          PostComment comment = PostComment.fromJson(commentDoc.data());
+          return comment;
+        }).toList();
+        list.sort();
+        return list;
+      });
 }
