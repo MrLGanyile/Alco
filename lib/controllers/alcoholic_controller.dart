@@ -30,8 +30,8 @@ class AlcoholicController extends GetxController {
       .refFromURL("gs://alcoholic-expressions.appspot.com/");
 
   // ignore: prefer_final_fields
-  Rx<Alcoholic?> _currentlyLoggedInAlcoholic = Rx(//null
-      Alcoholic(
+  Rx<Alcoholic?> _currentlyLoggedInAlcoholic = Rx(null
+      /*Alcoholic(
           userId: 'xHylOxUqu7JZJLTaLsqzmK0pNSX0',
           phoneNumber: '+27612345678',
           profileImageURL:
@@ -43,7 +43,8 @@ class AlcoholicController extends GetxController {
             "areaNo": "31",
           }),
           username: 'Sakhile',
-          password: "12abc12"));
+          password: "12abc12")*/
+      );
   Alcoholic? get currentlyLoggedInAlcoholic =>
       _currentlyLoggedInAlcoholic.value;
 

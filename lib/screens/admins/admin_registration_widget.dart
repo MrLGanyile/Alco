@@ -1,6 +1,7 @@
 import 'package:alco/models/locations/supported_town_or_institution.dart';
 
-import '../../controllers/shared_dao_functions.dart';
+import '../../controllers/shared_dao_functions.dart' as shared;
+import '../utils/globals.dart';
 import '/controllers/admin_controller.dart';
 import '/models/locations/converter.dart';
 import 'package:get/get.dart';
@@ -230,13 +231,13 @@ class AdminRegistrationWidget extends StatelessWidget {
                               icon: Icon(Icons.camera_alt,
                                   color: MyApplication.logoColor2),
                               onPressed: () {
-                                if (isValidPhoneNumber(
+                                if (shared.isValidPhoneNumber(
                                     '+27${phoneNumberEditingController.text}')) {
                                   adminController
                                       .captureAdminProfileImageWithCamera(
                                           '+27${phoneNumberEditingController.text}');
                                 } else {
-                                  Get.snackbar('Error', 'Invalid Phone Number');
+                                  getSnapbar('Error', 'Invalid Phone Number');
                                 }
                               },
                             ),
@@ -249,14 +250,14 @@ class AdminRegistrationWidget extends StatelessWidget {
                               icon: Icon(Icons.upload,
                                   color: MyApplication.logoColor2),
                               onPressed: () {
-                                if (isValidPhoneNumber(
+                                if (shared.isValidPhoneNumber(
                                     '+27${phoneNumberEditingController.text}')) {
                                   adminController
                                       .chooseAdminProfileImageFromGallery(
                                     '+27${phoneNumberEditingController.text}',
                                   );
                                 } else {
-                                  Get.snackbar('Error', 'Invalid Phone Number');
+                                  getSnapbar('Error', 'Invalid Phone Number');
                                 }
                               },
                             ),
@@ -306,7 +307,7 @@ class AdminRegistrationWidget extends StatelessWidget {
                 height: 5,
               ),
 
-              showProgressBar
+              shared.showProgressBar
                   ? const SizedBox(
                       child: SimpleCircularProgressBar(
                         animationDuration: 3,
@@ -328,7 +329,7 @@ class AdminRegistrationWidget extends StatelessWidget {
                               )),
                           child: InkWell(
                             onTap: () async {
-                              showProgressBar = true;
+                              shared.showProgressBar = true;
 
                               adminController.setAdminPassword(
                                   passwordEditingController.text);
@@ -407,7 +408,7 @@ class AdminRegistrationWidget extends StatelessWidget {
                                       (String verificationId) {},
                                 );
 
-                                showProgressBar = false;
+                                shared.showProgressBar = false;
                               }
                             },
                             child: const Center(

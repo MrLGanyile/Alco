@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../main.dart';
+import '../utils/globals.dart';
 import 'admin_screens_widget.dart';
 
 class AdminEntranceWidget extends StatelessWidget {
@@ -124,7 +125,7 @@ class AdminEntranceWidget extends StatelessWidget {
               adminController.setSuperiorAdminEntranceCode(
                   adminCodeEditingController.text);
               if (!adminController.isCorrectSuperiorAdminEntrancePassword()) {
-                Get.snackbar('Error',
+                getSnapbar('Error',
                     'Not Authorized To Enter Superior Admin Territory.');
               } else {
                 Get.to(() => isLoggedInAdmin()

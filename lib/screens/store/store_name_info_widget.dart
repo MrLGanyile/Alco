@@ -1,5 +1,6 @@
 import 'package:alco/models/locations/supported_town_or_institution.dart';
 import 'package:alco/screens/competition/competition_finished_widget.dart';
+import 'package:alco/screens/store/notification_display_widget.dart';
 
 import '../../controllers/group_controller.dart';
 import '../competition/won_grand_price_widget.dart';
@@ -249,7 +250,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       competition = Competition.fromJson(snapshot.data);
-                      int grandPricePickingDuration =
+                      /*int grandPricePickingDuration =
                           competition.grandPricesOrder.length *
                               competition.pickingMultipleInSeconds;
                       int groupPickingDuration =
@@ -259,7 +260,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                                   competition.pickingMultipleInSeconds;
                       int competitionTotalDuration = grandPricePickingDuration +
                           competition.timeBetweenPricePickingAndGroupPicking! +
-                          groupPickingDuration;
+                          groupPickingDuration; */
 
                       int day = nextStoreDraw.drawDateAndTime.day;
                       int month = nextStoreDraw.drawDateAndTime.month;
@@ -394,7 +395,17 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                   competition.pickingMultipleInSeconds;
               return displayGroupCompetitors();
             }
-            //  pickingMultipleInSeconds * 30 // Competition Result Display
+            //  pickingMultipleInSeconds * 2 // Notification Display
+            else if (widget.storeNameInfo.notification != null &&
+                widget.storeNameInfo.notification!.endDate
+                    .isAfter(DateTime.now()) &&
+                countDownClock.remainingTime <=
+                    competitionTotalDuration +
+                        competition.pickingMultipleInSeconds * 2) {
+              return NotificationDisplayWidget(
+                  notification: widget.storeNameInfo.notification!);
+            }
+            //  pickingMultipleInSeconds * (28 or 30) // Competition Result Display
             // Show Won Price Summary For The Next Certain Amount Of Minute.
             else if (countDownClock.remainingTime <=
                 competitionTotalDuration +

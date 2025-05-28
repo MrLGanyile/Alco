@@ -5,11 +5,13 @@ import 'package:get/get.dart';
 
 import '../../controllers/group_controller.dart';
 import '../../main.dart';
-import '../../controllers/shared_dao_functions.dart';
+import '../../controllers/shared_dao_functions.dart' as shared;
 
 import 'package:flutter/material.dart';
 
 import 'dart:developer' as debug;
+
+import '../utils/globals.dart';
 
 class GroupVerificationWidget extends StatefulWidget {
   String verificationId;
@@ -35,7 +37,7 @@ class _GroupVerificationWidgetState extends State<GroupVerificationWidget> {
   Color snackBarBorderColor = Colors.white;
 
   void verify() async {
-    showProgressBar = true;
+    shared.showProgressBar = true;
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: widget.verificationId, smsCode: otpController.text);
@@ -70,7 +72,7 @@ class _GroupVerificationWidgetState extends State<GroupVerificationWidget> {
         }
       }).catchError((onError) {});
     } catch (error) {
-      Get.snackbar(
+      getSnapbar(
           // backgroundColor: snackBarBackgroundColor,
           // duration: snackBarDuration,
           // colorText: snackBarColorText,
@@ -79,7 +81,7 @@ class _GroupVerificationWidgetState extends State<GroupVerificationWidget> {
           'Wrong Verification Code.');
       debug.log('Wrong Verification Code');
     } finally {
-      showProgressBar = false;
+      shared.showProgressBar = false;
     }
   }
 
@@ -138,7 +140,7 @@ class _GroupVerificationWidgetState extends State<GroupVerificationWidget> {
                   obscureText: false,
                 ),
               ),
-              showProgressBar
+              shared.showProgressBar
                   ? const Center(child: CircularProgressIndicator())
                   : Container(
                       width: MediaQuery.of(context).size.width,

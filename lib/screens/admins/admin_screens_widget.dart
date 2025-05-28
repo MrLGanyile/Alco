@@ -1,3 +1,5 @@
+import 'package:alco/screens/admins/notification_creation_widget.dart';
+
 import '../store/store_draw_registration_widget.dart';
 import 'admin_registration_widget.dart';
 import 'package:get/get.dart';
@@ -108,12 +110,7 @@ class _AdminScreensWidgetState extends State<AdminScreensWidget>
               AdminsWidget(),
               AdminRegistrationWidget(),
               const StoreDrawRegistrationWidget(),
-              const Center(
-                child: Text(
-                  'Notification Creation',
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-              )
+              NotificationCreationWidget(),
             ]),
           ),
         ),

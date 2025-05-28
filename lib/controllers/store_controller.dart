@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:alco/controllers/shared_dao_functions.dart';
+import 'package:alco/models/stores/notification.dart';
 import 'package:alco/models/stores/store_draw_state.dart';
+import 'package:alco/models/users/alcoholic.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -14,8 +16,12 @@ import '../../models/stores/store.dart';
 import 'dart:developer' as debug;
 
 import '../models/locations/converter.dart';
+import '../models/users/user.dart';
+import '../screens/utils/globals.dart';
 
 enum StoreDrawSavingStatus { loginRequired, incomplete, saved, notSaved }
+
+enum NoticeSavingStatus { adminLoginRequired, incomplete, saved }
 
 // Branch : store_resources_crud ->  store_resources_crud_data_access
 class StoreController extends GetxController {
@@ -124,7 +130,7 @@ class StoreController extends GetxController {
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (storePickedImageFile != null) {
-      //Get.snackbar('Image Status', 'Image File Successfully Picked.');
+      //getSnapbar('Image Status', 'Image File Successfully Picked.');
 
     }
 
@@ -138,7 +144,7 @@ class StoreController extends GetxController {
         await ImagePicker().pickImage(source: ImageSource.camera);
 
     if (storePickedImageFile != null) {
-      Get.snackbar('Image Status', 'Image File Successfully Captured.');
+      getSnapbar('Image Status', 'Image File Successfully Captured.');
     }
 
     // Share the chosen image file on Getx State Management.
@@ -376,7 +382,7 @@ class StoreController extends GetxController {
 
   void chooseGrandPriceImageFromGallery(int grandPriceIndex) async {
     if (_hostingStore.value == null) {
-      Get.snackbar('Error', 'Host Not Chosen.');
+      getSnapbar('Error', 'Host Not Chosen.');
       return;
     }
     int year = _drawDateYear.value!,
@@ -421,7 +427,7 @@ class StoreController extends GetxController {
               _drawGrandPrice5ImageFile.value!,
               '$host/grand_prices_images/$grandPriceId'));
       }
-      Get.snackbar('Image Status', 'Image File Successfully Chosen.');
+      getSnapbar('Image Status', 'Image File Successfully Chosen.');
       update();
     }
   }
@@ -430,7 +436,7 @@ class StoreController extends GetxController {
     int grandPriceIndex,
   ) async {
     if (_hostingStore.value == null) {
-      Get.snackbar('Error', 'Host Not Chosen.');
+      getSnapbar('Error', 'Host Not Chosen.');
       return;
     }
 
@@ -475,7 +481,7 @@ class StoreController extends GetxController {
               _drawGrandPrice5ImageFile.value!,
               '$host/grand_prices_images/$grandPriceId'));
       }
-      Get.snackbar('Image Status', 'Image File Successfully Captured.');
+      getSnapbar('Image Status', 'Image File Successfully Captured.');
       update();
     }
   }
@@ -510,7 +516,7 @@ class StoreController extends GetxController {
         'QAZwsxedc321@DBNB'.contains(adminCode)) {
       initiateHostingStore('+27782578628');
     } else if (adminCode.isNotEmpty) {
-      Get.snackbar('Error', 'Incorrect Admin Code.');
+      getSnapbar('Error', 'Incorrect Admin Code.');
     }
 
     _adminCode = Rx<String?>(adminCode);
@@ -579,37 +585,37 @@ class StoreController extends GetxController {
         _adminCode.value!.compareTo('QAZwsxedc321@DBNB') != 0) {
       return StoreDrawSavingStatus.loginRequired;
     } else if (!hasDate()) {
-      Get.snackbar('Error', 'Date Info Missing.');
+      getSnapbar('Error', 'Date Info Missing.');
       return StoreDrawSavingStatus.incomplete;
     }
 
     if (!hasTime()) {
-      Get.snackbar('Error', 'Time Info Missing.');
+      getSnapbar('Error', 'Time Info Missing.');
       return StoreDrawSavingStatus.incomplete;
     }
 
     if (!hasGrandPrice(1)) {
-      Get.snackbar('Error', 'First Price Info Missing.');
+      getSnapbar('Error', 'First Price Info Missing.');
       return StoreDrawSavingStatus.incomplete;
     }
 
     if (!hasGrandPrice(2)) {
-      Get.snackbar('Error', 'Second Price Info Missing.');
+      getSnapbar('Error', 'Second Price Info Missing.');
       return StoreDrawSavingStatus.incomplete;
     }
 
     if (!hasGrandPrice(3)) {
-      Get.snackbar('Error', 'Third Price Info Missing.');
+      getSnapbar('Error', 'Third Price Info Missing.');
       return StoreDrawSavingStatus.incomplete;
     }
 
     if (!hasGrandPrice(4)) {
-      Get.snackbar('Error', 'Forth Price Info Missing.');
+      getSnapbar('Error', 'Forth Price Info Missing.');
       return StoreDrawSavingStatus.incomplete;
     }
 
     if (!hasGrandPrice(5)) {
-      Get.snackbar('Error', 'Fifth Price Info Missing.');
+      getSnapbar('Error', 'Fifth Price Info Missing.');
       return StoreDrawSavingStatus.incomplete;
     }
 
@@ -725,4 +731,28 @@ class StoreController extends GetxController {
               .toList());
 
   /*======================Draw Grand Price[End]============================ */
+
+  Future<NoticeSavingStatus> saveNotice(String message, List<String> audience,
+      {bool forAll = false, DateTime? endTime}) async {
+    User? user = getCurrentlyLoggenInUser();
+    if (user == null || user is Alcoholic) {
+      getSnapbar('Saving Failed', 'Admin Logging Required.');
+      return NoticeSavingStatus.adminLoginRequired;
+    } else if (message.isEmpty || (audience.isEmpty && !forAll)) {
+      getSnapbar('Saving Failed', 'Incomplete Info.');
+      return NoticeSavingStatus.incomplete;
+    } else {
+      DocumentReference reference = firestore.collection('notifications').doc();
+
+      Notification notification = Notification(
+          notificationId: reference.id,
+          message: message,
+          audience: audience,
+          endDate: endTime ?? DateTime.now().add(const Duration(days: 7)),
+          forAll: forAll);
+
+      await reference.set(notification.toJson());
+      return NoticeSavingStatus.saved;
+    }
+  }
 }

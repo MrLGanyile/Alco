@@ -50,7 +50,7 @@ class AdminsWidget extends StatelessWidget {
                 ],
               );
             } else if (snapshot.hasError) {
-              Get.snackbar('Error', snapshot.error.toString());
+              getSnapbar('Error', snapshot.error.toString());
               debug.log("Error Fetching admin Data - ${snapshot.error}");
               return getCircularProgressBar();
             } else {
@@ -95,7 +95,7 @@ class AdminsWidget extends StatelessWidget {
                 ),
               );
             } else if (snapshot.hasError) {
-              Get.snackbar('Error', snapshot.error.toString());
+              getSnapbar('Error', snapshot.error.toString());
               debug
                   .log("Error Fetching Profile Image Data - ${snapshot.error}");
               return getCircularProgressBar();

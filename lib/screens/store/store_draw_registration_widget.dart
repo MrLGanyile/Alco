@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../main.dart';
+import '../utils/globals.dart';
 import 'date_picker.dart';
 import 'dart:developer' as debug;
 import 'time_picker.dart';
@@ -307,10 +308,10 @@ class StoreDrawRegistrationWidgetState
                 Get.to(() => StartScreen());
                 return;
               } else if (result == StoreDrawSavingStatus.incomplete) {
-                Get.snackbar('Error', 'Incomplete Draw Info');
+                getSnapbar('Error', 'Incomplete Draw Info');
                 return;
               } else if (result == StoreDrawSavingStatus.loginRequired) {
-                Get.snackbar('Error', 'Not Authorized To Create Draw.');
+                getSnapbar('Error', 'Not Authorized To Create Draw.');
                 return;
               }
             }
@@ -342,7 +343,7 @@ class StoreDrawRegistrationWidgetState
           onTap: () async {
             storeController.setAdminCode(adminCodeEditingController.text);
             if (!storeController.hasAcceptableAdminCredentials()) {
-              Get.snackbar('Error', 'Not Authorized To Create Draw.');
+              getSnapbar('Error', 'Not Authorized To Create Draw.');
             }
           },
           child: const Center(

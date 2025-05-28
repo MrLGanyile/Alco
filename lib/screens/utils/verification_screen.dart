@@ -1,6 +1,6 @@
 import 'package:alco/controllers/admin_controller.dart';
 import 'package:alco/controllers/alcoholic_controller.dart';
-import 'package:alco/controllers/shared_dao_functions.dart';
+import 'package:alco/controllers/shared_dao_functions.dart' as shared;
 import 'package:alco/screens/alcoholics/alcoholic_registration_widget.dart';
 import 'package:alco/screens/utils/login_widget.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer' as debug;
 
 import '../admins/admin_screens_widget.dart';
+import 'globals.dart';
 
 // Branch : group_resources_crud ->  create_group_resources_front_end
 class VerificationScreen extends StatefulWidget {
@@ -49,7 +50,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   Color snackBarBorderColor = Colors.white;
 
   void verifySignin() async {
-    showProgressBar = true;
+    shared.showProgressBar = true;
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: widget.verificationId, smsCode: otpController.text);
@@ -84,19 +85,19 @@ class _VerificationScreenState extends State<VerificationScreen> {
               if (value == AdminSavingStatus.unathourized) {
                 debug.log(
                     'AdminSavingStatus.unathourized From VerificationScreen...');
-                Get.snackbar(
+                getSnapbar(
                     // backgroundColor: snackBarBackgroundColor,
                     // duration: snackBarDuration,
                     // colorText: snackBarColorText,
                     // borderColor: snackBarBorderColor,
-                    borderColor: snackBarBorderColor,
+                    // borderColor: snackBarBorderColor,
                     'Error',
                     'You Are Not Authorized To Register An Admin.');
                 Get.close(2);
               } else if (value == AdminSavingStatus.adminAlreadyExist) {
                 debug.log(
                     'AdminSavingStatus.adminAlreadyExist From VerificationScreen...');
-                Get.snackbar(
+                getSnapbar(
                     // backgroundColor: snackBarBackgroundColor,
                     // duration: snackBarDuration,
                     // colorText: snackBarColorText,
@@ -107,7 +108,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               } else if (value == AdminSavingStatus.loginRequired) {
                 debug.log(
                     'AdminSavingStatus.loginRequired From VerificationScreen...');
-                Get.snackbar(
+                getSnapbar(
                     // backgroundColor: snackBarBackgroundColor,
                     // duration: snackBarDuration,
                     // colorText: snackBarColorText,
@@ -118,7 +119,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               } else if (value == AdminSavingStatus.incompleteData) {
                 debug.log(
                     'AdminSavingStatus.incompleteData From VerificationScreen...');
-                Get.snackbar(
+                getSnapbar(
                     // backgroundColor: snackBarBackgroundColor,
                     // duration: snackBarDuration,
                     // colorText: snackBarColorText,
@@ -130,7 +131,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 debug.log(
                     '2. Successfully Saved User From VerificationScreen...');
 
-                Get.snackbar(
+                getSnapbar(
                     // backgroundColor: snackBarBackgroundColor,
                     // duration: snackBarDuration,
                     // colorText: snackBarColorText,
@@ -145,11 +146,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 alcoholicController.saveAlcoholic(auth.currentUser!.uid);
 
             alcoholSavingStatus.then((value) {
-              showProgressBar = false;
+              shared.showProgressBar = false;
               if (value == AlcoholicSavingStatus.unathourized) {
                 debug.log(
                     'AlcoholicSavingStatus.unathourized From VerificationScreen...');
-                Get.snackbar(
+                getSnapbar(
                     // backgroundColor: snackBarBackgroundColor,
                     // duration: snackBarDuration,
                     // colorText: snackBarColorText,
@@ -160,7 +161,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               } else if (value == AlcoholicSavingStatus.adminAlreadyExist) {
                 debug.log(
                     'AlcoholicSavingStatus.adminAlreadyExist From VerificationScreen...');
-                Get.snackbar(
+                getSnapbar(
                     // backgroundColor: snackBarBackgroundColor,
                     // duration: snackBarDuration,
                     // colorText: snackBarColorText,
@@ -171,7 +172,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               } else if (value == AlcoholicSavingStatus.loginRequired) {
                 debug.log(
                     'AlcoholicSavingStatus.loginRequired From VerificationScreen...');
-                Get.snackbar(
+                getSnapbar(
                     // backgroundColor: snackBarBackgroundColor,
                     // duration: snackBarDuration,
                     // colorText: snackBarColorText,
@@ -182,7 +183,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               } else if (value == AlcoholicSavingStatus.incompleteData) {
                 debug.log(
                     'AlcoholicSavingStatus.incompleteData From VerificationScreen...');
-                Get.snackbar(
+                getSnapbar(
                     // backgroundColor: snackBarBackgroundColor,
                     // duration: snackBarDuration,
                     // colorText: snackBarColorText,
@@ -192,7 +193,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 Get.back();
               } else {
                 debug.log('Successfully Saved User From VerificationScreen...');
-                Get.snackbar(
+                getSnapbar(
                     // backgroundColor: snackBarBackgroundColor,
                     // duration: snackBarDuration,
                     // colorText: snackBarColorText,
@@ -206,7 +207,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
         }
       }).catchError((onError) {});
     } catch (error) {
-      Get.snackbar(
+      getSnapbar(
           // backgroundColor: snackBarBackgroundColor,
           // duration: snackBarDuration,
           // colorText: snackBarColorText,
@@ -215,7 +216,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           'Wrong Verification Code.');
       debug.log('Wrong Verification Code');
     } finally {
-      showProgressBar = false;
+      shared.showProgressBar = false;
     }
   }
 
@@ -259,7 +260,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
         }
       }).catchError((onError) {});
     } catch (error) {
-      Get.snackbar(
+      getSnapbar(
           // backgroundColor: snackBarBackgroundColor,
           // duration: snackBarDuration,
           // colorText: snackBarColorText,
@@ -327,7 +328,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   obscureText: false,
                 ),
               ),
-              showProgressBar
+              shared.showProgressBar
                   ? const Center(child: CircularProgressIndicator())
                   : Container(
                       width: MediaQuery.of(context).size.width,

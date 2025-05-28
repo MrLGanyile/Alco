@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import '../../main.dart';
 
 import '../groups/groups_screen.dart';
+import 'globals.dart';
 import 'home_widget.dart';
 
 class StartScreen extends StatefulWidget {
@@ -196,7 +197,7 @@ class _StartScreenState extends State<StartScreen>
                                 )),
                           ));
                     } else {
-                      Get.snackbar('Error', 'You Are Not Currently Logged In.');
+                      getSnapbar('Error', 'You Are Not Currently Logged In.');
                     }
                   }),
             ],

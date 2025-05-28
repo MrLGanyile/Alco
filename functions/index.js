@@ -271,12 +271,55 @@ export const createStoreNameInfo = onDocumentCreated("/stores/" +
       canAddStoreDraw: true,
       latestStoreDrawId: "-",
       drawsOrder: [],
+      notification: null,
     };
     logger.log(`About To Add A Store Name Info Object With ID
     ${storeNameInfo.storeNameInfoId} To The Database.`);
 
     // Push the new store into Firestore using the Firebase Admin SDK.
     return await docReference.set(storeNameInfo);
+  });
+
+export const addNotification = onDocumentCreated("/notifications/" +
+  "{notificationId}", async (event) => {
+
+    const notification = {
+      notificationId: event.data.data().notificationId,
+      message: event.data.data().message,
+      audience: event.data.data().audience,
+      endDate: {
+        year: event.data.data().endDate.year,
+        month: event.data.data().endDate.month,
+        day: event.data.data().endDate.day
+      },
+      forAll: event.data.data().forAll
+    }
+
+    if (notification.forAll) {
+      getFirestore().collection("stores_names_info").onSnapshot((storeNamesInfoSnapshot) => {
+        // const batch = getFirestore().batch();
+        storeNamesInfoSnapshot.docs.map(async (storeNameInfoDoc) => {
+          if (storeNameInfoDoc.exists) {
+            await storeNameInfoDoc.ref.update({ notification: notification });
+            // batch.update(storeNameInfoDoc.ref, { notification: notification })
+          }
+        })
+        // batch.commit()
+      })
+    } else {
+      getFirestore().collection("stores_names_info").onSnapshot((storeNamesInfoSnapshot) => {
+        storeNamesInfoSnapshot.docs.map(async (storeNameInfoDoc) => {
+          if (storeNameInfoDoc.exists) {
+            if (notification.audience.indexOf(storeNameInfoDoc.id) >= 0) {
+              await storeNameInfoDoc.ref.update({ notification: notification });
+            }
+          }
+        })
+      })
+    }
+
+
+
   });
 
 // Branch : group_resources_crud -> create_group_back_end
@@ -980,9 +1023,10 @@ export const maintainCountDownClocks =
            * Next 18 seconds - Grand Price Picking
            * Next 3 seconds - Won Price Display
            * Next 600 seconds Max - Group Picking
+           * Next 6 seconds - Display Notification
            * Next 30 Seconds - Competition Result Display
            * Last 12 seconds - Game Over
-           * Total Time = 1 min + 10 min + 30 sec + 18 sec + 12 sec = 12 min seconds
+           * Total Time = 1 min + 10 min + 6 seconds + 30 sec + 18 sec + 12 sec = 12 min 6 seconds
            * Gap Between Competitions - 1 minute
            */
 
@@ -996,14 +1040,14 @@ export const maintainCountDownClocks =
             max = pickingMultipleInSeconds * 6 + // Grand Price Picking
               pickingMultipleInSeconds * 1 + // Won Price Display
               pickingMultipleInSeconds * 200 + // Group Picking Max Time
-              pickingMultipleInSeconds * 30 + // Competition Result Display
+              pickingMultipleInSeconds * 30 + // [Optional 6 Seconds For Notification Display] & Competition Result Display  
               pickingMultipleInSeconds * 12; // Game Over
           }
           else {
             pickingMultipleInSeconds * 6 + // Grand Price Picking
               pickingMultipleInSeconds * 1 + // Won Price Display
               pickingMultipleInSeconds * competitorsOrder.length + // Group Picking Max Time
-              pickingMultipleInSeconds * 30 + // Competition Result Display
+              pickingMultipleInSeconds * 30 + // [Optional 6 Seconds For Notification Display] & Competition Result Display 
               pickingMultipleInSeconds * 12; // Game Over
           }
 

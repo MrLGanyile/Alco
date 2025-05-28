@@ -3,7 +3,8 @@ import 'package:alco/screens/utils/verification_screen.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/alcoholic_controller.dart';
-import '../../controllers/shared_dao_functions.dart';
+import '../../controllers/shared_dao_functions.dart' as shared;
+import '../utils/globals.dart';
 import '/models/locations/supported_area.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_container/easy_container.dart';
@@ -261,14 +262,14 @@ class AlcoholicRegistrationWidget extends StatelessWidget {
                                   color: MyApplication.logoColor2),
                               onPressed: () {
                                 // Every once in a white dirty profile images should be deleted from storage.
-                                if (isValidPhoneNumber(
+                                if (shared.isValidPhoneNumber(
                                     '$countryDialCode${phoneNumberEditingController.text}')) {
                                   alcoholicController
                                       .captureAlcoholicProfileImageWithCamera(
                                           '$countryDialCode${phoneNumberEditingController.text}',
                                           usernameEditingController.text);
                                 } else {
-                                  Get.snackbar(
+                                  getSnapbar(
                                       'Error', 'Enter Valid Phone Number');
                                   debug.log('Invalid Number');
                                 }
@@ -284,14 +285,14 @@ class AlcoholicRegistrationWidget extends StatelessWidget {
                                   color: MyApplication.logoColor2),
                               onPressed: () {
                                 // Every once in a white dirty profile images should be deleted from storage.
-                                if (isValidPhoneNumber(
+                                if (shared.isValidPhoneNumber(
                                     '$countryDialCode${phoneNumberEditingController.text}')) {
                                   alcoholicController
                                       .chooseAlcoholicProfileImageFromGallery(
                                           '$countryDialCode${phoneNumberEditingController.text}',
                                           usernameEditingController.text);
                                 } else {
-                                  Get.snackbar(
+                                  getSnapbar(
                                       'Error', 'Enter Valid Phone Number');
                                   debug.log('Invalid Number');
                                 }
@@ -347,7 +348,7 @@ class AlcoholicRegistrationWidget extends StatelessWidget {
                 height: 5,
               ),
 
-              showProgressBar
+              shared.showProgressBar
                   ? const Center(child: CircularProgressIndicator())
                   : Column(
                       children: [
@@ -363,7 +364,7 @@ class AlcoholicRegistrationWidget extends StatelessWidget {
                               )),
                           child: InkWell(
                             onTap: () async {
-                              showProgressBar = true;
+                              shared.showProgressBar = true;
                               alcoholicController.setNewAlcoholicPassword(
                                   passwordEditingController.text);
                               debug.log(
@@ -438,7 +439,7 @@ class AlcoholicRegistrationWidget extends StatelessWidget {
                                   },
                                   codeSent: (String verificationId,
                                       int? resendToken) async {
-                                    showProgressBar = false;
+                                    shared.showProgressBar = false;
                                     Get.to(() => VerificationScreen(
                                           phoneNumber:
                                               '$countryDialCode${phoneNumberEditingController.text}',

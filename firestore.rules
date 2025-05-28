@@ -342,5 +342,10 @@ service cloud.firestore {
         allow write;
       }
     }
+
+    match /notifications/{notificationId}{
+      allow read;
+      allow write;
+    }
   }
 }  

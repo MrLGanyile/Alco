@@ -1,6 +1,7 @@
 import '../locations/converter.dart';
 import 'dart:developer' as debug;
 import '../locations/section_name.dart';
+import 'notification.dart';
 
 // Branch : store_resources_crud ->  create_store_resources_store_front_end
 class StoreNameInfo implements Comparable<StoreNameInfo> {
@@ -13,6 +14,7 @@ class StoreNameInfo implements Comparable<StoreNameInfo> {
   late String latestStoreDrawId;
   bool isCurrentlyViewed = false;
   List<String>? drawsOrder;
+  Notification? notification;
 
   StoreNameInfo(
       {required this.storeNameInfoId,
@@ -22,7 +24,8 @@ class StoreNameInfo implements Comparable<StoreNameInfo> {
       required this.storeArea,
       required this.storeImageURL,
       required this.canAddStoreDraw,
-      this.drawsOrder = const []});
+      this.drawsOrder = const [],
+      this.notification});
 
   factory StoreNameInfo.fromJson(dynamic json) => StoreNameInfo(
       storeNameInfoId: json['storeNameInfoId'],
@@ -32,7 +35,10 @@ class StoreNameInfo implements Comparable<StoreNameInfo> {
       storeImageURL: json['storeImageURL'],
       latestStoreDrawId: json['latestStoreDrawId'],
       drawsOrder: convert(json['drawsOrder']),
-      canAddStoreDraw: json['canAddStoreDraw']);
+      canAddStoreDraw: json['canAddStoreDraw'],
+      notification: json["notification"] != null
+          ? Notification.fromJson(json["notification"])
+          : null);
 
   void setIsCurrentlyViewed(bool isCurrentlyViewed) {
     this.isCurrentlyViewed = isCurrentlyViewed;

@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import '../../main.dart';
 import 'dart:developer' as debug;
 
+import 'globals.dart';
+
 class LoginWidget extends StatelessWidget {
   TextEditingController phoneNumberEditingController = TextEditingController();
   TextEditingController passwordEditingController = TextEditingController();
@@ -183,7 +185,7 @@ class LoginWidget extends StatelessWidget {
                   debug.log('Credentials Are Incorrect...');
                   phoneNumberEditingController.clear();
                   passwordEditingController.clear();
-                  Get.snackbar('Error', 'Try Again, Incorrect Credentials.');
+                  getSnapbar('Error', 'Try Again, Incorrect Credentials.');
                 }
               },
             );

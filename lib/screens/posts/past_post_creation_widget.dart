@@ -10,6 +10,8 @@ import 'dart:developer' as debug;
 import '../../main.dart';
 import 'package:video_player/video_player.dart';
 
+import '../utils/globals.dart';
+
 class PastPostCreationWidget extends StatelessWidget {
   PostController postController = PostController.postController;
   TextEditingController whereWereYouController = TextEditingController();
@@ -436,41 +438,6 @@ class PastPostCreationWidget extends StatelessWidget {
           ],
         ),
       )),
-    );
-  }
-
-  Widget retrieveTextField(
-      String description, TextEditingController controller) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      child: TextField(
-        maxLines: 10,
-        minLines: 1,
-        style: TextStyle(color: MyApplication.scaffoldBodyColor),
-        cursorColor: MyApplication.scaffoldBodyColor,
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: description,
-          helperMaxLines: 10,
-          labelStyle: TextStyle(
-            fontSize: 14,
-            color: MyApplication.logoColor1,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6),
-            borderSide: BorderSide(
-              color: MyApplication.logoColor1,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6),
-            borderSide: BorderSide(
-              color: MyApplication.logoColor1,
-            ),
-          ),
-        ),
-        obscureText: false,
-      ),
     );
   }
 }
