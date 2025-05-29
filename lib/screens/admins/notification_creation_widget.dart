@@ -1,8 +1,12 @@
+import 'package:alco/controllers/shared_dao_functions.dart';
 import 'package:alco/controllers/store_controller.dart';
+import 'package:alco/models/users/admin.dart';
+import 'package:alco/models/users/alcoholic.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../main.dart';
+import '../../models/users/user.dart';
 import '../utils/globals.dart';
 
 class NotificationCreationWidget extends StatefulWidget {
@@ -108,11 +112,32 @@ class NotificationCreationWidgetState
                           .text.isEmpty
                       ? []
                       : audienceIdsTextEditingController.text.trim().split(" ");
+
+                  User? user = getCurrentlyLoggenInUser();
+                  if (user == null) {
+                    getSnapbar('Unauthorized', 'Login Required');
+                    return;
+                  }
+
+                  if (user is Alcoholic) {
+                    getSnapbar('Unauthorized', 'Only Admins May Publish');
+                    return;
+                  }
+
+                  if (user is Admin) {
+                    if (!user.isSuperiorAdmin) {
+                      getSnapbar(
+                          'Unauthorized', 'Only Superior Admins May Publish');
+                      return;
+                    }
+                  }
+
                   // Save notice
-                  storeController
+                  Future<NoticeSavingStatus> status = storeController
                       .saveNotice(messageTextEditingController.text, audience,
-                          forAll: storesIndex == 0)
-                      .then(
+                          forAll: storesIndex == 0);
+
+                  status.then(
                     (value) {
                       if (value == NoticeSavingStatus.saved) {
                         messageTextEditingController.clear();

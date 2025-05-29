@@ -1,5 +1,9 @@
+import 'package:alco/controllers/shared_dao_functions.dart';
 import 'package:alco/screens/admins/notification_creation_widget.dart';
 
+import '../../controllers/admin_controller.dart';
+import '../../controllers/group_controller.dart';
+import '../../models/users/admin.dart';
 import '../store/store_draw_registration_widget.dart';
 import 'admin_registration_widget.dart';
 import 'package:get/get.dart';
@@ -9,6 +13,7 @@ import 'package:flutter/material.dart';
 import '../../main.dart';
 
 import 'admins_widget.dart';
+import 'recruitment_widget.dart';
 
 class AdminScreensWidget extends StatefulWidget {
   AdminScreensWidget({
@@ -21,14 +26,12 @@ class AdminScreensWidget extends StatefulWidget {
 
 class _AdminScreensWidgetState extends State<AdminScreensWidget>
     with SingleTickerProviderStateMixin {
+  late GroupController groupController;
   int currentIndex = 0;
   double listTilesFontSize = 15;
   double listTilesIconSize = 30;
-  List<String> titles = ['Admins', 'Recruit', 'Draws', 'Notify'];
-
-  void updateCurrentIndex(int index) {
-    setState(() => currentIndex = index);
-  }
+  List<String> titles = ['Admins', 'Recruit', 'Draws', 'Notify', 'Activation'];
+  bool groupsDeactivated = false;
 
   late TabController _tabController;
 
@@ -36,15 +39,36 @@ class _AdminScreensWidgetState extends State<AdminScreensWidget>
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: 4,
+      length: 5,
       vsync: this,
     );
+    groupController = GroupController.instance;
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void updateCurrentIndex(int index) {
+    setState(() => currentIndex = index);
+  }
+
+  void refresh() {
+    setState(() {
+      groupsDeactivated = !groupsDeactivated;
+      groupController.activateOrDeactivateAllGroups(groupsDeactivated);
+    });
+  }
+
+  mayDeactivateAllGroups() {
+    Admin? admin = adminController.currentlyLoggedInAdmin;
+    if (admin != null) {
+      return admin.isSuperiorAdmin;
+    }
+
+    return false;
   }
 
   @override
@@ -66,6 +90,18 @@ class _AdminScreensWidgetState extends State<AdminScreensWidget>
               fontWeight: FontWeight.bold,
             ),
           ),
+          actions: [
+            mayDeactivateAllGroups()
+                ? IconButton(
+                    icon: const Icon(Icons.refresh),
+                    iconSize: MyApplication.backArrowFontSize,
+                    color: MyApplication.backArrowColor,
+                    onPressed: (() {
+                      refresh();
+                    }),
+                  )
+                : const SizedBox.shrink(),
+          ],
           elevation: 0,
           centerTitle: true,
           bottom: TabBar(
@@ -98,6 +134,11 @@ class _AdminScreensWidgetState extends State<AdminScreensWidget>
                     color: MyApplication.attractiveColor1),
                 text: 'Notify',
               ),
+              Tab(
+                icon: Icon(Icons.card_membership,
+                    color: MyApplication.attractiveColor1),
+                text: 'Activation',
+              ),
             ],
           ),
         ),
@@ -111,6 +152,7 @@ class _AdminScreensWidgetState extends State<AdminScreensWidget>
               AdminRegistrationWidget(),
               const StoreDrawRegistrationWidget(),
               NotificationCreationWidget(),
+              RecruitmentWidget(),
             ]),
           ),
         ),

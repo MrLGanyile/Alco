@@ -121,7 +121,7 @@ service cloud.firestore {
       allow read;
 
       // Let users join or leave groups.
-      allow update:if false; //request.auth != null && 
+      allow update:if true; //request.auth != null && 
 
       // isSuperiorAdmin() == false &&
       

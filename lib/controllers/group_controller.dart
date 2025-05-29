@@ -71,7 +71,7 @@ class GroupController extends GetxController {
   late Rx<String> _groupSpecificArea = Rx('');
   String get groupSpecificArea => _groupSpecificArea.value;
 
-  late Rx<bool> _isActive; // A group is active if it has atleast 10 members.
+  late Rx<bool> _isActive;
   bool get isActive => _isActive.value;
   Rx<int> _maxNoOfMembers = Rx(5);
   int get maxNoOfMembers => _maxNoOfMembers.value;
@@ -735,5 +735,32 @@ class GroupController extends GetxController {
       Group group = Group.fromJson(doc);
       return group;
     })).toList();
+  }
+
+  activateOrDeactivateAllGroups(action) {
+    CollectionReference reference = firestore.collection('groups');
+
+    reference.get().then((groupsSnapshot) {
+      debug.log('Size ${groupsSnapshot.size}');
+      groupsSnapshot.docs.map((groupDoc) async {
+        // if (groupDoc.exists) {
+        debug.log('Exist...');
+        await groupDoc.reference.update({"isActive": action});
+        // }
+      });
+    });
+  }
+
+  Future<void> activateOrDeactivateGroup(groupId, bool action) async {
+    DocumentReference reference = firestore.collection('groups').doc(groupId);
+
+    reference.get().then((value) async {
+      if (value.exists) {
+        debug.log('Exist');
+        await value.reference.update({"isActive": action});
+      } else {
+        debug.log('Do Not Exist');
+      }
+    });
   }
 }
