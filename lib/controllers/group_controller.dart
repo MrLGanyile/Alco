@@ -3,6 +3,8 @@ import 'dart:developer' as debug;
 
 import 'package:alco/models/locations/supported_area.dart';
 import 'package:alco/models/locations/supported_town_or_institution.dart';
+import 'package:alco/models/users/recruitment_history.dart';
+import 'package:alco/screens/utils/globals.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +16,7 @@ import '../models/locations/converter.dart';
 import '../models/locations/section_name.dart';
 import '../models/users/group.dart';
 import 'shared_dao_functions.dart';
+import '../models/users/user.dart' as my;
 
 enum GroupSavingStatus {
   incorrectData,
@@ -30,6 +33,8 @@ enum GroupUpdatingStatus {
   unathourized,
   updated,
 }
+
+enum RecruitmentHistorySavingStatus { loginRequired, notSaved, saved }
 
 // Some Unit Test Strucutures Exist.
 // Branch : group_resources_crud ->  group_crud_data_access
@@ -762,5 +767,33 @@ class GroupController extends GetxController {
         debug.log('Do Not Exist');
       }
     });
+  }
+
+  Future<RecruitmentHistorySavingStatus> saveRecruitmentHistory(
+      String groupId, bool? addingTo) async {
+    my.User? user = getCurrentlyLoggenInUser();
+    if (user == null) {
+      getSnapbar('Unauthorized', 'Update Failed, Login Required.');
+      return RecruitmentHistorySavingStatus.loginRequired;
+    } else {
+      String action;
+
+      if (addingTo == null) {
+        action = "None";
+      } else if (addingTo == false) {
+        action = "Removed Group";
+      } else {
+        action = "Added Group";
+      }
+
+      DocumentReference reference =
+          firestore.collection('recruitment_history').doc();
+
+      RecruitmentHistory recruitmentHistory = RecruitmentHistory(
+          adminId: user.userId!, historyId: reference.id, action: action);
+
+      await reference.set(recruitmentHistory.toJson());
+      return RecruitmentHistorySavingStatus.saved;
+    }
   }
 }

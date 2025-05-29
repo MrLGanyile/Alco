@@ -1238,6 +1238,32 @@ export const setPostDate = onDocumentCreated("/past_posts/" +
     await docReference.update({ dateCreated: dateMap });
     log('Update Performed...');
   });
+
+export const setRecruitmentHistoryDate = onDocumentCreated("/recruitment_history/" +
+  "{recruitmentHistoryId}", async (event) => {
+
+    const docReference = getFirestore()
+      .collection("recruitment_history").doc(event.params.recruitmentHistoryId);
+
+    const dateObject = Timestamp.now().toDate();
+
+    const year = dateObject.getFullYear();
+    const month = dateObject.getMonth() + 1;
+    const date = dateObject.getDate();
+    const hour = dateObject.getHours() + 2;
+    const minute = dateObject.getMinutes();
+
+    const dateMap = {
+      'year': year,
+      'month': month,
+      'date': date,
+      'hour': hour,
+      'minute': minute
+    };
+
+    await docReference.update({ dateCreated: dateMap });
+    log('Update Performed...');
+  });
 // ##################Production Functions [End]########################
 
 // ########Development Functions [Start]###############
@@ -1330,7 +1356,7 @@ export const createFakeDraws = onRequest(async (req, res) => {
   const drawDateAndTime = new Date();
   const year = drawDateAndTime.getFullYear();
   const month = drawDateAndTime.getMonth() + 1;
-  const date = drawDateAndTime.getDate();
+  const date = drawDateAndTime.getDate() + 1; // Remove + 1
   const hour = drawDateAndTime.getHours() + 2;
   const minute = drawDateAndTime.getMinutes() + 3;
 

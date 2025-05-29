@@ -7,6 +7,7 @@ import '../../main.dart';
 import '../../models/locations/converter.dart';
 import '../../models/users/admin.dart';
 import '../../models/users/group.dart';
+import '../../models/users/user.dart';
 import '../utils/globals.dart';
 import 'dart:developer' as debug;
 
@@ -22,12 +23,6 @@ class RecruitmentWidgetState extends State<RecruitmentWidget> {
   late AdminController adminController;
   late Stream<List<Group>> groupsStream;
 
-  List<String> groupAction = ["No Action", "Activate", "Deactivate"];
-  int groupActionIndex = 0;
-
-  List<String> groupsAction = ["No Action", "Activate", "Deactivate"];
-  int groupsActionIndex = 0;
-
   @override
   void initState() {
     super.initState();
@@ -36,25 +31,31 @@ class RecruitmentWidgetState extends State<RecruitmentWidget> {
     groupsStream = groupController.readAllGroups();
   }
 
-  void updateGroupsAction(index) {
-    setState(() {
-      groupsActionIndex = index;
-    });
-  }
-
-  updateGroupAction(index) {
-    setState(() {
-      groupActionIndex = index;
-    });
-  }
-
   Widget groupInfo(Group group) => Container(
         margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
         child: InkWell(
-          onTap: (() => setState(() {
-                groupController.activateOrDeactivateGroup(
-                    group.groupCreatorPhoneNumber, !group.active);
-              })),
+          onTap: (() {
+            User? user = getCurrentlyLoggenInUser();
+
+            if (user is Admin) {
+              setState(() {
+                bool newValue = !group.active;
+
+                groupController
+                    .saveRecruitmentHistory(
+                        group.groupCreatorPhoneNumber, newValue)
+                    .then((value) {
+                  if (value == RecruitmentHistorySavingStatus.saved) {
+                    groupController.activateOrDeactivateGroup(
+                        group.groupCreatorPhoneNumber, !group.active);
+                  }
+                });
+              });
+            } else {
+              getSnapbar('Update Failed',
+                  'Make sure the date is valid and you are logged in as an admin.');
+            }
+          }),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

@@ -347,5 +347,10 @@ service cloud.firestore {
       allow read;
       allow write;
     }
+
+    match /recruitment_history/{recruitmentHistoryId}{
+      allow read;
+      allow write;
+    }
   }
 }  
