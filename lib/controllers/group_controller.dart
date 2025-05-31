@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../models/locations/converter.dart';
 import '../models/locations/section_name.dart';
+import '../models/users/admin.dart';
 import '../models/users/group.dart';
 import 'shared_dao_functions.dart';
 import '../models/users/user.dart' as my;
@@ -34,7 +35,13 @@ enum GroupUpdatingStatus {
   updated,
 }
 
-enum RecruitmentHistorySavingStatus { loginRequired, notSaved, saved }
+enum RecruitmentHistorySavingStatus {
+  loginRequired,
+  blocked,
+  unauthorized,
+  notSaved,
+  saved
+}
 
 // Some Unit Test Strucutures Exist.
 // Branch : group_resources_crud ->  group_crud_data_access
@@ -710,12 +717,19 @@ class GroupController extends GetxController {
   Stream<List<Group>> readAllGroups() {
     Stream<List<Group>> stream = firestore
         .collection('groups')
+        .orderBy('groupArea')
+        .orderBy('groupName')
         //.where("groupTownOrInstitution.townOrInstitutionNo", isEqualTo: "4")
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) {
-              Group group = Group.fromJson(doc.data());
-              return group;
-            }).toList());
+        .map((snapshot) {
+      List<Group> list = snapshot.docs.map((doc) {
+        Group group = Group.fromJson(doc.data());
+        return group;
+      }).toList();
+
+      list.sort();
+      return list;
+    });
 
     return stream;
   }
@@ -748,10 +762,8 @@ class GroupController extends GetxController {
     reference.get().then((groupsSnapshot) {
       debug.log('Size ${groupsSnapshot.size}');
       groupsSnapshot.docs.map((groupDoc) async {
-        // if (groupDoc.exists) {
         debug.log('Exist...');
         await groupDoc.reference.update({"isActive": action});
-        // }
       });
     });
   }
@@ -761,10 +773,9 @@ class GroupController extends GetxController {
 
     reference.get().then((value) async {
       if (value.exists) {
-        debug.log('Exist');
         await value.reference.update({"isActive": action});
       } else {
-        debug.log('Do Not Exist');
+        getSnapbar('No Such Group', 'Group Do Not Exist');
       }
     });
   }
@@ -775,6 +786,13 @@ class GroupController extends GetxController {
     if (user == null) {
       getSnapbar('Unauthorized', 'Update Failed, Login Required.');
       return RecruitmentHistorySavingStatus.loginRequired;
+    } else if ((user is Admin) == false) {
+      getSnapbar('Unauthorized', 'Only Admins May Add/Remove Groups.');
+      return RecruitmentHistorySavingStatus.unauthorized;
+    } else if ((user as Admin).isBlocked) {
+      getSnapbar(
+          'Admin Blocked', 'You Are No Longer Allowed To Add/Remove Groups.');
+      return RecruitmentHistorySavingStatus.blocked;
     } else {
       String action;
 

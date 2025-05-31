@@ -14,12 +14,10 @@ import 'controllers/alcoholic_controller.dart';
 import 'controllers/competition_controller.dart';
 import 'controllers/location_controller.dart';
 
-import 'controllers/shared_dao_functions.dart';
 import 'controllers/store_controller.dart';
 import 'controllers/group_controller.dart';
 
 import 'screens/utils/firebase_options.dart';
-import 'screens/alcoholics/alcoholic_registration_widget.dart';
 import 'screens/utils/start_screen.dart';
 
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
@@ -28,7 +26,6 @@ import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 /* 
    FNB ACC No 63117824359
    Mlu NERD 0842457343
-   Skho 0797710544
    Crouch 0762816517
    Njabulo 0835367834
    Mafungwashe, 0766915230

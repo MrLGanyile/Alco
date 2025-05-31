@@ -48,16 +48,19 @@ import SydenhamFakeGroups from "./models/users/groups/sydenham_fake_groups.js";
 import HowardFakeGroups from "./models/users/groups/howard_fake_groups.js";
 import DUTFakeGroups from "./models/users/groups/dut_fake_groups.js";
 import DurbanCentralFakeGroups from "./models/users/groups/durban_central_fake_groups.js";
+import FakeAdmins from "./models/users/admins/fake_admins.js";
 
 const mayvilleFakeGroups = new MayvilleFakeGroups();
 const sydenhamFakeGroups = new SydenhamFakeGroups();
 const howardFakeGroups = new HowardFakeGroups();
 const dutFakeGroups = new DUTFakeGroups();
 const durbanCentralFakeGroups = new DurbanCentralFakeGroups();
+const fakeAdmins = new FakeAdmins();
 
 
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createSupportedLocations/
-// http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveStoreAndAdmins
+// http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveStores
+// http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveFakeAdmins
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createFakeGroups?hostIndex=2
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createFakeDraws?hostIndex=2
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/convertStoreDrawsToCompetitions
@@ -114,25 +117,8 @@ export const createSupportedLocations = onRequest(async (req, res) => {
   res.json({ result: `Supported Areas Created Successfully.` });
 });
 
-// http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveStoreAndAdmins
-export const saveStoreAndAdmins = onRequest(async (req, res) => {
-  const adminReference = getFirestore().collection("admins").doc(superiorAdminId);
-
-  // Superior Admin
-  const admin =
-  {
-    userId: adminReference.id,
-    isSuperior: true,
-    key: "000",
-    isFemale: false,
-    townOrInstitution: "Mayville",
-    phoneNumber: "+27611111111",
-    profileImageURL: "/admins/profile_images/+27611111111.png",
-    password: "qwerty321",
-  };
-
-  await adminReference.set(admin);
-
+// http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveStores
+export const saveStores = onRequest(async (req, res) => {
 
   let store;
   let storeReference;
@@ -242,7 +228,7 @@ export const saveStoreAndAdmins = onRequest(async (req, res) => {
   await storeReference.set(store);
 
   // Send back a message that we"ve successfully written to the db.
-  res.json({ result: `All Admins And Store Are Saved.` });
+  res.json({ result: `All Stores Are Saved.` });
 });
 
 // Branch : store_resources_crud -> create_resources_store_back_end
@@ -881,16 +867,19 @@ export const createCompetitions =
         .where("drawDateAndTime.hour",
           "==", justNow.getHours() + 2, // GTM
         )
-
+        .where("drawDateAndTime.minute",
+          "==", justNow.getMinutes() + 1,
+        )
         // Can Be A Bit Tricky If You Think About It.
         // As a result competitions shouldn't start at o'clock.
         // Find competitions starting in the next minute.
+        /*
         .where("drawDateAndTime.minute",
           "<=", justNow.getMinutes() + 1,
         )
         .where("drawDateAndTime.minute",
           ">=", justNow.getMinutes(),
-        )
+        )*/
         .onSnapshot(async (storeDrawsSnapshot) => {
 
           if (storeDrawsSnapshot.size > 0) {
@@ -1264,6 +1253,7 @@ export const setRecruitmentHistoryDate = onDocumentCreated("/recruitment_history
     await docReference.update({ dateCreated: dateMap });
     log('Update Performed...');
   });
+
 // ##################Production Functions [End]########################
 
 // ########Development Functions [Start]###############
@@ -1356,7 +1346,7 @@ export const createFakeDraws = onRequest(async (req, res) => {
   const drawDateAndTime = new Date();
   const year = drawDateAndTime.getFullYear();
   const month = drawDateAndTime.getMonth() + 1;
-  const date = drawDateAndTime.getDate() + 1; // Remove + 1
+  const date = drawDateAndTime.getDate();
   const hour = drawDateAndTime.getHours() + 2;
   const minute = drawDateAndTime.getMinutes() + 3;
 
@@ -1759,6 +1749,12 @@ export const listFruit = onCall((data, context) => {
 export const updateFakeGroups = onRequest(async (req, res) => {
   batchWriteTester();
   res.json({ result: `group batch updated.` });
+});
+
+// http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveFakeAdmins
+export const saveFakeAdmins = onRequest(async (req, res) => {
+  fakeAdmins.createFakeAdmin();
+  res.json({ result: `Fake Admins Successfully Created.` });
 });
 
 // ########################################Development Functions [End]#######################################################

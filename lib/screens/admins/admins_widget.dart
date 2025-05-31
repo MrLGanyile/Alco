@@ -1,173 +1,154 @@
-import 'dart:math';
-
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 
 import '../../controllers/admin_controller.dart';
-import '../../controllers/location_controller.dart';
+import '../../controllers/group_controller.dart';
+import '../../controllers/shared_dao_functions.dart';
 import '../../main.dart';
 import '../../models/locations/converter.dart';
-import '../../models/locations/supported_town_or_institution.dart';
 import '../../models/users/admin.dart';
-import 'package:flutter/material.dart';
+import '../../models/users/group.dart';
+import '../../models/users/user.dart';
+import '../utils/globals.dart';
 import 'dart:developer' as debug;
 
-import '../utils/globals.dart';
-
-class AdminsWidget extends StatelessWidget {
-  AdminController adminController = AdminController.adminController;
-  Reference storageReference = FirebaseStorage.instance
-      .refFromURL("gs://alcoholic-expressions.appspot.com/");
-
-  late Stream<List<SupportedTownOrInstitution>>
-      supportedTownOrInstitutionStream =
-      locationController.readAllSupportedTownsOrSuburbsOrInstitutions();
-  late List<String> items;
-  LocationController locationController = LocationController.locationController;
-  late DropdownButton2<String> dropDowButton;
-  late List<Reference> groupMembersImageReferences;
-
-  AdminsWidget({Key? key}) : super(key: key);
-
-  Future<String> findProfileImageURL(String imageURL) async {
-    return await storageReference.child(imageURL).getDownloadURL();
-  }
+class AdminsWidget extends StatefulWidget {
+  AdminsWidget();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MyApplication.scaffoldColor,
-      body: GetBuilder<AdminController>(builder: (_) {
-        return StreamBuilder<List<Admin>>(
-          stream: adminController.readAdmins(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              List<Admin> admins = snapshot.data!;
-              return Column(
-                children: [
-                  Expanded(child: adminMembers()),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              getSnapbar('Error', snapshot.error.toString());
-              debug.log("Error Fetching admin Data - ${snapshot.error}");
-              return getCircularProgressBar();
-            } else {
-              return getCircularProgressBar();
-            }
-          },
-        );
-      }),
-    );
+  State<StatefulWidget> createState() => AdminsWidgetState();
+}
+
+class AdminsWidgetState extends State<AdminsWidget> {
+  late AdminController adminController;
+  late Stream<List<Admin>> adminsStream;
+
+  @override
+  void initState() {
+    super.initState();
+    adminController = AdminController.adminController;
+    adminsStream = adminController.readAdmins();
   }
 
-  Widget singleUser(String profileImageURL, String phoneNumber) {
-    return Expanded(
-      child: FutureBuilder(
-          future: findProfileImageURL(profileImageURL),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return SizedBox(
-                height: 150,
-                width: 150,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: 110,
-                      width: 110,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: NetworkImage(snapshot.data! as String),
-                            fit: BoxFit.contain),
-                      ),
-                    ),
-                    Text(
-                      phoneNumber,
-                      style: TextStyle(
-                          color: MyApplication.storesTextColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              );
-            } else if (snapshot.hasError) {
-              getSnapbar('Error', snapshot.error.toString());
-              debug
-                  .log("Error Fetching Profile Image Data - ${snapshot.error}");
-              return getCircularProgressBar();
+  Widget adminInfo(Admin admin) => Container(
+        margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+        child: InkWell(
+          onTap: (() {
+            User? user = getCurrentlyLoggenInUser();
+
+            if (user is Admin) {
+              if (user.isSuperiorAdmin) {
+                getSnapbar(
+                    'Action Prohibited', 'Cannot Block A Superior Admin');
+                return;
+              }
+              setState(() {
+                bool newValue = !admin.isBlocked;
+
+                adminController.blockOrUnblockAdmin(admin.userId!, newValue);
+              });
             } else {
-              debug.log(
-                  "Error Fetching Admin Profile Image Data - ${snapshot.error}");
-              return getCircularProgressBar();
+              getSnapbar('Unauthorized User', 'Update Failed');
             }
           }),
-    );
-  }
-
-  Widget createAdmin(BuildContext context, int memberIndex) {
-    return FutureBuilder(
-        future: groupMembersImageReferences[memberIndex].getDownloadURL(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 5, right: 5, bottom: 5),
-              child: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.lightBlue,
-                ),
-                child: CircleAvatar(
-                  radius: MediaQuery.of(context).size.width / 8,
-                  backgroundImage: NetworkImage(snapshot.data as String),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: FutureBuilder(
+                    future: findFullImageURL(admin.profileImageURL),
+                    builder: ((context, snapshot) {
+                      if (snapshot.hasData) {
+                        return CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.09,
+                          backgroundColor: Colors.grey,
+                          backgroundImage:
+                              NetworkImage(snapshot.data as String),
+                        );
+                      } else if (snapshot.hasError) {
+                        return getCircularProgressBar();
+                      } else {
+                        return getCircularProgressBar();
+                      }
+                    })),
+              ),
+              Expanded(
+                flex: 4,
+                child: Container(
+                  margin: const EdgeInsets.only(left: 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '@${Converter.townOrInstitutionAsString(admin.townOrInstitution)}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: MyApplication.logoColor1,
+                                decoration: TextDecoration.none,
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                          CircleAvatar(
+                            radius: 7,
+                            backgroundColor:
+                                !admin.isBlocked ? Colors.green : Colors.grey,
+                          )
+                        ],
+                      ),
+                      Text(
+                        'Contact No ${admin.phoneNumber}',
+                        //textAlign: TextAlign.center,
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                          color: MyApplication.logoColor2,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          // overflow: TextOverflow.ellipsis
+                        ),
+                      ),
+                      Text(
+                        'Joined On ${admin.joinedOn.toString().substring(0, 10)}',
+                        // textAlign: TextAlign.center,
+                        style: TextStyle(
+                            decoration: TextDecoration.none,
+                            color: MyApplication.attractiveColor1,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            );
-          } else if (snapshot.hasError) {
-            debug.log("Error Fetching Data - ${snapshot.error}");
-            return getCircularProgressBar();
-          } else {
-            return getCircularProgressBar();
-          }
-        });
-  }
+            ],
+          ),
+        ),
+      );
 
-  Widget createAdmins(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      child: GridView.builder(
-          itemCount: groupMembersImageReferences.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisSpacing: 10, crossAxisCount: 3),
-          itemBuilder: (context, index) {
-            return createAdmin(context, index);
-          }),
-    );
-  }
-
-  Future<ListResult> findGroupMembersImageURLs() async {
-    return storageReference.child('admins/profile_images').listAll();
-  }
-
-  Widget adminMembers() {
-    return FutureBuilder(
-        future: findGroupMembersImageURLs(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            ListResult allDownloadURLs = snapshot.data! as ListResult;
-
-            groupMembersImageReferences = allDownloadURLs.items;
-
-            return createAdmins(context);
-          } else if (snapshot.hasError) {
-            debug.log("Error Fetching Data - ${snapshot.error}");
-            return getCircularProgressBar();
-          } else {
-            return getCircularProgressBar();
-          }
-        });
-  }
+  @override
+  Widget build(BuildContext context) => Column(children: [
+        const SizedBox(
+          height: 5,
+        ),
+        Expanded(
+          child: StreamBuilder(
+              stream: adminsStream,
+              builder: ((context, snapshot) {
+                if (snapshot.hasData) {
+                  List<Admin> admins = snapshot.data as List<Admin>;
+                  return ListView.builder(
+                      itemCount: admins.length,
+                      itemBuilder: ((context, index) {
+                        return adminInfo(admins[index]);
+                      }));
+                } else if (snapshot.hasError) {
+                  debug.log('Error Groups Data');
+                  return getCircularProgressBar();
+                } else {
+                  return getCircularProgressBar();
+                }
+              })),
+        ),
+      ]);
 }

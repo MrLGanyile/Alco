@@ -52,8 +52,8 @@ class RecruitmentWidgetState extends State<RecruitmentWidget> {
                 });
               });
             } else {
-              getSnapbar('Update Failed',
-                  'Make sure the date is valid and you are logged in as an admin.');
+              getSnapbar(
+                  'Update Failed', 'Make sure you are logged in as an admin.');
             }
           }),
           child: Row(

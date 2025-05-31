@@ -1,6 +1,8 @@
 import 'package:alco/models/locations/supported_town_or_institution.dart';
 
 import '../../controllers/shared_dao_functions.dart' as shared;
+import '../../models/users/admin.dart';
+import '../../models/users/alcoholic.dart';
 import '../utils/globals.dart';
 import '/controllers/admin_controller.dart';
 import '/models/locations/converter.dart';
@@ -19,6 +21,7 @@ import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import '../../controllers/location_controller.dart';
 import '../../controllers/group_controller.dart';
 import '../../main.dart';
+import '../../models/users/user.dart' as my;
 
 import 'dart:developer' as debug;
 
@@ -329,6 +332,21 @@ class AdminRegistrationWidget extends StatelessWidget {
                               )),
                           child: InkWell(
                             onTap: () async {
+                              my.User? user = shared.getCurrentlyLoggenInUser();
+                              if (user == null) {
+                                getSnapbar('Unauthorized', 'Login Required');
+                                return;
+                              } else if (user is Alcoholic) {
+                                getSnapbar('Unauthorized',
+                                    'Only Admins May Register Other Admins');
+                                return;
+                              } else if (user is Admin &&
+                                  !user.isSuperiorAdmin) {
+                                getSnapbar('Unauthorized',
+                                    'Only Superior Admins May Register Other Admins');
+                                return;
+                              }
+
                               shared.showProgressBar = true;
 
                               adminController.setAdminPassword(

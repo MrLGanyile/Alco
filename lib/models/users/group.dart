@@ -73,7 +73,7 @@ class Group implements Comparable<Group> {
 
   @override
   int compareTo(Group other) {
-    return groupName.compareTo(other.groupName);
+    return groupArea.compareTo(other.groupArea);
   }
 
   @override

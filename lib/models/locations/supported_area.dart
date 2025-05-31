@@ -3,7 +3,7 @@
 import 'package:alco/models/locations/converter.dart';
 import 'package:alco/models/locations/section_name.dart';
 
-class SupportedArea {
+class SupportedArea implements Comparable<SupportedArea> {
   String areaNo;
   String townOrInstitutionFK;
   SectionName sectionName;
@@ -28,5 +28,10 @@ class SupportedArea {
   @override
   String toString() {
     return Converter.asString(sectionName);
+  }
+
+  @override
+  int compareTo(SupportedArea other) {
+    return toString().compareTo(other.toString());
   }
 }

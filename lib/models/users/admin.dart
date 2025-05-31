@@ -8,15 +8,19 @@ class Admin extends User {
   String key;
   bool isFemale;
   TownOrInstitution townOrInstitution;
+  bool isBlocked;
+  DateTime joinedOn;
 
   Admin(
       {userId,
       required phoneNumber,
+      required this.joinedOn,
       this.townOrInstitution = TownOrInstitution.umlazi,
       required profileImageURL,
       required this.isFemale,
       required this.isSuperiorAdmin,
       required password,
+      this.isBlocked = false,
       required this.key})
       : super(
             userId: userId,
@@ -29,8 +33,14 @@ class Admin extends User {
     Map<String, dynamic> map = super.toJson();
 
     map.addAll({
+      'joinedOn': {
+        'year': joinedOn.year,
+        'month': joinedOn.month,
+        'day': joinedOn.day
+      },
       'isSuperior': isSuperiorAdmin,
       'key': key,
+      'isBlocked': isBlocked,
       'isFemale': isFemale,
       'townOrInstitution':
           Converter.townOrInstitutionAsString(townOrInstitution)
@@ -41,6 +51,11 @@ class Admin extends User {
 
   factory Admin.fromJson(dynamic json) => Admin(
       userId: json['userId'],
+      joinedOn: DateTime(
+        json['joinedOn']['year'],
+        json['joinedOn']['month'],
+        json['joinedOn']['day'],
+      ),
       phoneNumber: json['phoneNumber'],
       townOrInstitution:
           Converter.toTownOrInstitution(json['townOrInstitution']),
@@ -48,5 +63,6 @@ class Admin extends User {
       isFemale: json['isFemale'],
       isSuperiorAdmin: json['isSuperior'],
       password: json['password'],
+      isBlocked: json['isBlocked'],
       key: json['key']);
 }

@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../models/users/admin.dart';
 import '../models/users/alcoholic.dart';
+import '../screens/utils/globals.dart';
 import 'shared_dao_functions.dart';
 import 'dart:math';
 import 'dart:developer' as debug;
@@ -40,6 +41,7 @@ class AdminController extends GetxController {
           userId: '5DRhqbH3NYtwpgMNnG4zTVhz7lpp',
           phoneNumber: '+27611111111',
           password: 'qwerty321',
+          joinedOn: DateTime(2025, 5, 15),
           profileImageURL: 'admins/profile_images/+27611111111.png',
           isFemale: false,
           isSuperiorAdmin: true,
@@ -184,10 +186,11 @@ class AdminController extends GetxController {
 
   Stream<List<Admin>> readAdmins() {
     Stream<List<Admin>> stream = firestore
-        .collection('admins')
+        .collection(
+            'admins') /*
         .where('townOrInstitution',
             isEqualTo:
-                Converter.townOrInstitutionAsString(newTownOrInstitutionName))
+                Converter.townOrInstitutionAsString(newTownOrInstitutionName)) */
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) {
               Admin admin = Admin.fromJson(doc.data());
@@ -227,6 +230,7 @@ class AdminController extends GetxController {
             String characters =
                 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             Random random = Random();
+            DateTime joinedOn = DateTime.now();
 
             String key = '';
             key += characters[random.nextInt(characters.length)];
@@ -235,6 +239,7 @@ class AdminController extends GetxController {
 
             Admin admin = Admin(
               userId: adminReference.id,
+              joinedOn: joinedOn,
               phoneNumber: _newAdminPhoneNumber.value,
               profileImageURL: _newAdminProfileImageURL.value,
               key: key,
@@ -252,5 +257,17 @@ class AdminController extends GetxController {
         })
         .first
         .then((value) => value);
+  }
+
+  Future<void> blockOrUnblockAdmin(String adminId, bool action) async {
+    DocumentReference reference = firestore.collection('admins').doc(adminId);
+
+    reference.get().then((value) async {
+      if (value.exists) {
+        await value.reference.update({"blocked": action});
+      } else {
+        getSnapbar('No Such Admin', 'Admin Do Not Exist');
+      }
+    });
   }
 }
